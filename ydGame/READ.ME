@@ -1,0 +1,34 @@
+#工程模块
+connection 连接层，负责接收客户端（app）的连接，并且将命令转发给对应的业务端。
+generator  生成工程，主要负责生成项目中的 dao， jprotobuf的 .proto文件提供给客户端（app） 端使用。
+lobby      项目的大厅业务逻辑
+bs4rummy   拉米的业务逻辑
+pokerCommon 项目的公共信息
+
+proto文件夹用于存放生成的proto协议
+sql文件夹存放mysql的语句，用版本号区分
+
+#项目的使用
+1、消息的分发，默认使用 Dispatch 继续分发，可以继承IDispatchMessage接口进行自定义，详见 connection模块的dispatch
+2、@ServerHandler(command = 1000001, module = "playerLogin")  commond为命令ID， module为模块名称，与module.properties进行对应
+3、@ReceiveCommandAnnotation(command = 1000001) 代表接收的协议
+4、@SendCommandAnnotation(command = 1000000) 代表发送的协议
+5、@GenProto(modulePro = "lobby") 根据jprotobuf生成.proto文件的注解， modulePro 代码模块名称
+
+#连接顺序
+connection ->lobby
+connection -> bs_XX
+
+#配置说明
+clientConf.xml 配置连接的节点（lobby， bs），其中 <serverCode> 代码该节点的命令前两位，由connection去路由
+config.properties 配置端口和扫描路径
+jdbcDruid.properties 数据库的配置
+module.properties 这个是服务端内部根据具体的业务需求进行划分，key代表模块名， value代码启动的线程数量
+
+#protobuf
+如果使用原生的，去下载二进制的包，解压后就可以了。
+# protoc -I=源地址 --csharp_out=目标地址   xxx.proto
+例子：D:\ruanjian\proto3.8\bin\protoc.exe  -I=D:\yanfa\youxi\qp\ydGame\proto\ --java_out=D:\yanfa\youxi\qp\proto\ lobby.proto
+
+#jprotobuf
+使用jprotobuf，直接使用注解即可。

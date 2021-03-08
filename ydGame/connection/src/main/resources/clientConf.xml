@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<connectInfo>
+  <bs_1>
+    <addr>ws://127.0.0.1</addr>
+	<port>8887</port>
+    <serverCode>10</serverCode>
+  </bs_1>
+  <bs_5>
+    <addr>ws://127.0.0.1</addr>
+    <port>8895</port>
+    <serverCode>50</serverCode>
+  </bs_5>
+</connectInfo>

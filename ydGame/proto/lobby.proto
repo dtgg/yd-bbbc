@@ -1,0 +1,174 @@
+syntax="proto3";
+package com.ydqp.common.receiveProtoMsg;
+option java_outer_classname = "lobby";
+message PlayerLogin {  
+ string playerName=1;
+ string passWord=2;
+}
+message PlayerLogout {  
+ string playerName=1;
+}
+message LoginSuccess {  
+// 房间id
+ int32 roomId=1;
+// 用户的zj
+ double playerZJPoint=2;
+// 用户的筹码金币数量
+ double playerCoinPoint=3;
+// 用户的手机号
+ string playerName=4;
+// 用户的昵称
+ string playerNickName=5;
+// 用户的头像地址
+ string playerUrl=6;
+// 用户id
+ int64 playerId=7;
+ int32 grade=8;
+ int32 loginType=9;
+ bool bindFb=10;
+ double experience=11;
+ string openGames=12;
+ string fbUserId=13;
+}
+
+message LobbyError {
+	int32 errorCode=1;
+	string errorMsg=2;
+}
+
+message LobbyKickPlayer {
+	int64 playerId=1;
+}
+
+message BattleCheckCanEnterRoom {  
+ int64 playerId=1;
+// 默认为0，当明确知道roomId时要传入id
+ int32 roomId=2;
+ double roomPoint=3;
+ bool isZJ=4;
+}
+
+message BattleCanEnterRoomSuc {  
+// 200 可以进入，400不行
+ int32 code=1;
+}
+
+message GuestRegister {
+	bool isGuest=1;
+	string deviceId=2;
+	int32 appId=3;
+}
+
+message GuestRegisterSuccess {
+	string playerName=1;
+	string passWord=2;
+}
+
+
+message CoinPointSuccess {
+    int64 playerId = 1;     //玩家ID
+    double coinPoint = 2;   //coin
+    int32 coinType = 3;     //1:筹码;2:金币
+}
+
+message RoomChat{
+    int64 playerId=1;
+    int32 roomId=2;
+    int32 type=3;
+    string info=4;
+}
+
+message RoomChatInfo{
+    int64 playerId=1;
+    int32 roomId=2;
+    int32 type=3;
+    string info=4;
+    int32 posNum=5;
+    string nickName=6;
+}
+
+message PlayerFbLogin {
+    string fbUserId=1;
+    string accessToken=2;
+    string fbNickName=3;
+    int32 appId=4;
+}
+
+message PlayerFbBind{
+    string fbUserId=1;
+    string accessToken=2;
+    string fbNickName=3;
+}
+
+message PlayerFbBindSuccess {
+    int64 playerId=1;
+    int32 status=2;
+}
+
+message Refresh {
+    int32 type=1;   //0:筹码;1:金币
+}
+
+message GetGameVersion{
+    int64 playerId=1;
+}
+
+message SGameVersion {
+    string apkVersion=1;
+    string jsVersion=2;
+    bool isMandatoryApk=3;
+    string apkUrl=4;
+}
+
+message HeadUrl {
+    int64 playerId = 1;
+    string headUrl = 2;
+}
+
+message HeadUrlSuccess {
+    bool success = 1;
+    string message = 2;
+    int64 playerId = 3;
+    string headUrl = 4;
+}
+
+
+message MobileRegister {
+    string mobile = 1;
+    string password = 2;
+    string repeatPassword = 3;
+    string verificationCode = 4;
+    string referralCode = 5;
+    int32 appId = 6;
+}
+
+message MobileRegisterSuc {
+    bool success = 1;
+    string message = 2;
+    string playerName = 3;
+    string password = 4;
+}
+
+message SmsSend {
+    string mobile = 1;
+    int32 areaCode = 2;
+}
+
+message SmsSendSuc {
+    int32 sendTime = 1;
+    string message = 2;
+}
+
+message PlayerResetPassword {
+  string mobile=1;
+  string password=2;
+  string repeatPassword=3;
+  string verificationCode=4;
+}
+
+message PlayerResetPasswordSuc {
+  bool success=1;
+  string message=2;
+  string playerName=3;
+  string password=4;
+}

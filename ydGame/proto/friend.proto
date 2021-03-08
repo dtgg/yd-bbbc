@@ -1,0 +1,155 @@
+syntax = "proto3";
+package com.ydqp.common.receiveProtoMsg;
+option java_outer_classname = "lobby";
+
+message FriendsData
+{
+    int32 id = 1;
+    int64 playerId = 2;
+    int64 friendId = 3;
+    int32 createTime = 4;
+    string playerName = 5;
+    string headUrl = 6;
+    bool isOnline = 7;
+    int32 grade = 8;
+    double experience = 9;
+}
+
+message BlockDelete
+{
+    int32 id = 1;               //黑名单ID
+}
+
+message BlockDeleteSuccess
+{
+    bool isDeleteSuccess = 1;   //黑名单是否删除成功
+    int64 friendId=2;
+}
+
+message BlockList
+{
+    int64 playerId = 1;         //玩家ID
+    string queryCondition = 2;  //查询条件
+    int32 page = 3;             //分页页数
+    int32 limit = 4;            //分页大小
+}
+
+message BlockListSuccess
+{
+    int32 page = 1;             //分页页数
+    int32 limit = 2;            //分页大小
+    int32 total = 3;            //总条数
+    repeated FriendsData records = 4;         //黑名单列表
+}
+
+message FriendsApply
+{
+    int64 applyPlayerId = 1;    //发起好友请求玩家ID
+    int64 playerId = 2;         //接收好友请求玩家ID
+}
+
+message FriendsApplySuccess
+{
+    bool isApplySuccess = 1;    //发起好友请求操作是否成功
+    string message = 2;         //发起好友请求操作返回信息
+    FriendsData friendsData = 3;//申请人信息
+}
+
+message FriendsApplyAgree
+{
+    int32 id = 1;               //好友请求ID
+    int64 playerId = 2;         //玩家ID
+    int64 friendId = 3;         //好友ID
+    bool isAgree = 4;           //同意、拒绝
+}
+
+message FriendsApplyAgreeSuccess
+{
+    bool isSuccess = 1;         //好友申请结果
+    string message = 2;         //好友申请结果信息
+    FriendsData friendsData = 3;//好友信息
+}
+
+message FriendsApplyList
+{
+    int64 playerId = 1;         //玩家ID
+    int32 page = 2;             //分页页数
+    int32 limit = 3;            //分页大小
+}
+
+message FriendsApplyListSuccess
+{
+    int32 page = 1;             //分页页数
+    int32 limit = 2;            //分页大小
+    int32 total = 3;            //总条数
+    repeated FriendsData records = 4;         //好友申请列表
+}
+
+message FriendsDelete
+{
+    int32 id = 1;               //好友信息ID
+    int64 playerId = 2;         //玩家ID
+    int64 friendId = 3;         //好友ID
+}
+
+message FriendsDeleteSuccess
+{
+    bool isDeleteSuccess = 1;   //删除好友结果
+    int64 friendId = 2;         //删除好友的玩家ID
+}
+
+message FriendsList
+{
+    int64 playerId = 1;         //玩家ID
+    string queryCondition = 2;  //查询条件
+    int32 page = 3;             //分页页数
+    int32 limit = 4;            //分页大小
+}
+
+message FriendsListSuccess
+{
+    int32 page = 1;             //分页页数
+    int32 limit = 2;            //分页大小
+    int32 total = 3;            //总条数
+    repeated FriendsData records = 4;         //好友列表
+}
+
+message FriendsChat
+{
+    int64 from = 1;             //发消息的玩家ID
+    int64 to = 2;               //接收消息的玩家ID
+    string message = 3;         //聊天内容
+}
+
+message FriendsChatSend
+{
+    int64 from = 1;             //发消息的玩家ID
+    string message = 2;         //聊天内容
+    bool success = 3;           //是否发送成功
+    string nickname = 4;
+}
+
+message FriendsSearch {
+    int64 friendId = 1;
+}
+
+message FriendsSearchSuccess {
+    string headUrl = 1;
+    int32 grade = 2;
+    double experience = 3;
+    double zjPoint = 4;
+    string name = 5;
+    int64 playerId = 6;
+    int32 winTimes = 7;
+    int32 totalTimes = 8;
+    bool success = 9;
+    string message = 10;
+}
+
+message BlockPlayer {
+    int64 blockPlayerId=1;
+}
+
+message BlockSuccess {
+    bool isBlockSuccess=1;
+}

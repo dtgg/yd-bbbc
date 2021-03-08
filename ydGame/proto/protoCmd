@@ -1,0 +1,7 @@
+# protoc -I=源地址 --csharp_out=目标地址   xxx.proto
+D:\ruanjian\proto3.8\bin\protoc.exe  -I=D:\yanfa\youxi\qp\genPro --java_out=D:\yanfa\youxi\qp\proto\ battle.proto
+
+
+message poker
+message BattleRoleInfo
+message BattleZhanjiDetail

@@ -1,0 +1,174 @@
+syntax = "proto3";
+package com.ydqp.common.receiveProtoMsg;
+option java_outer_classname = "lobby";
+
+message ProductData {
+    int32 id = 1;                           //商品ID
+    int32 type = 2;                         //商品类型
+    string name = 3;                        //商品名称
+    double amount = 4;                      //价格
+    double point = 5;                       //金币、筹码数量
+    string promotionName = 6;               //商品活动名称
+    double promotionAmount = 7;             //商品活动价格
+    double promotionPoint = 8;              //商品活动的金币、筹码数量
+    bool promotion = 9;                     //是否活动中
+}
+
+message PlayerAccountData {
+    int64 playerId = 1;
+    string name = 2;                        //姓名
+    string accNo = 3;                       //账户
+    string ifsc = 4;                        //ifsc
+    string mobile = 5;                      //号码
+    int32 withdrawalCount = 6;              //今日提现次数
+    string payMobile = 7;
+    string email = 8;
+    string bankCode = 9;
+}
+
+message WithdrawalData {
+    string orderNumber = 1;
+    double amount = 2;
+    string orderTime = 3;
+    int32 status = 4;                       //订单状态: 0(处理中), 1(成功), 2(失败)
+}
+
+message ProductList {
+    int64 playerId = 1;
+    int32 productType = 2;                  //商品类型（1：筹码；2：金币）
+}
+
+message PayChannel {
+    int64 playerId = 1;
+}
+
+message PlayerAccountUpdate {
+    int64 playerId = 1;
+    string name = 2;                        //收款人姓名
+    string accNo = 3;                       //收款账号
+    string isfc = 4;
+    string mobile = 5;                      //手机号
+    string bankCode = 6;
+}
+
+message PlayerShopping {
+    int64 playerId = 1;
+    int32 productId = 2;                    //商品ID
+    double amount = 3;                      //金额
+    string mobile = 4;                      //手机号
+    string name= 5;                         //姓名
+    string playerVA = 6;                    //付款账号
+    int32 payChannel = 7;                   //平台支付渠道
+}
+
+message PlayerWithdrawalApply {
+    int64 playerId = 1;
+    double amount = 2;                      //提现金额
+}
+
+message ProductListSuccess {
+    repeated ProductData productData = 1;   //商品列表
+}
+
+message PayChannelSuccess {
+    int32 payChannel = 1;
+}
+
+message PlayerAccountUpdateSuccess {
+    bool success = 1;
+    string message = 2;
+    PlayerAccountData playerAccountData = 3;
+}
+
+message PlayerShoppingSuccess {
+    bool success = 1;
+    string message = 2;
+    string token = 3;
+    string stage = 4;
+    string appId = 5;
+    string orderId = 6;
+    string orderCurrency = 7;
+    double orderAmount = 8;
+    string notifyUrl = 9;
+}
+
+message PlayerWithdrawalSuccess {
+    bool success = 1;
+    string message = 2;
+}
+
+message PlayerAccountInfo {
+    int64 playerId = 1;
+}
+
+message PlayerAccountInfoSuccess {
+    PlayerAccountData playerAccountData = 1;
+}
+
+message PlayerPayInfoSet {
+    string payMobile = 1;
+    string email = 2;
+    string depositName = 3;
+}
+
+message PlayerPayInfoSetSuccess {
+    bool success = 1;
+    string message = 2;
+}
+
+message WithdrawalList {
+    int64 playerId = 1;
+    int32 page = 2;
+    int32 limit = 3;
+}
+
+message WithdrawalListSuccess {
+    repeated WithdrawalData withdrawalData = 1;
+    bool success = 2;
+}
+
+
+message PlayerOrders {
+    int64 playerId = 1;
+    int32 productId = 2;                    //商品ID
+    double amount = 3;                      //金额
+    string mobile = 4;                      //手机号
+    string name= 5;                         //姓名
+    string playerVA = 6;                    //付款账号
+    int32 payChannel = 7;                   //平台支付渠道
+}
+
+message PlayerOrderSuccess {
+    bool success = 1;
+    string message = 2;
+    string payChannel = 3;                  //支付渠道
+    string data = 4;                        //json字符串
+}
+
+message PlayerWithdrawals {
+    int64 playerId = 1;
+    double amount = 2;
+}
+
+message PlayerWithdrawalSuc {
+    bool success = 1;
+    string message = 2;
+}
+
+message OrderCallback {
+    string orderId = 1;
+}
+
+message BankInfo {
+    int64 playerId = 1;
+}
+
+message BankInfoSuccess {
+    repeated YaarPayBankInfo bankInfos = 1;
+}
+
+message YaarPayBankInfo {
+    string bankCode = 1;
+    string bankName = 2;
+}
+

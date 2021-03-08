@@ -1,0 +1,216 @@
+package com.ydqp.lottery.task;
+
+import com.cfq.log.Logger;
+import com.cfq.log.LoggerFactory;
+import com.ydqp.common.dao.lottery.LotteryDao;
+import com.ydqp.common.dao.lottery.PlayerLotteryDao;
+import com.ydqp.common.entity.Lottery;
+import com.ydqp.common.entity.PlayerLottery;
+import com.ydqp.common.lottery.LotteryColorConstant;
+import com.ydqp.common.lottery.player.ILottery;
+import com.ydqp.common.lottery.player.ManageLottery;
+import com.ydqp.common.lottery.role.LotteryBattleRole;
+import com.ydqp.common.sendProtoMsg.lottery.LotteryDrawNum;
+import com.ydqp.common.sendProtoMsg.lottery.LotteryDrawNumInfo;
+import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeInfo;
+import com.ydqp.common.utils.LotteryUtil;
+import com.ydqp.lottery.Cache.LotteryCache;
+import com.ydqp.lottery.util.DateUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * 根据下注情况开奖
+ */
+public class LotteryDrawTask implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(LotteryDrawTask.class);
+
+    @Override
+    public void run() {
+        long startTime = System.currentTimeMillis();
+
+        int time = new Long(System.currentTimeMillis() / 1000).intValue();
+        //两分半前未开奖的期数
+        List<Lottery> lotteries = LotteryDao.getInstance().findByStatus(0, time - 160);
+        if (CollectionUtils.isEmpty(lotteries)) return;
+
+        List<Integer> lotteryIds = lotteries.stream().map(Lottery::getId).collect(Collectors.toList());
+        //未开奖的下注
+        List<PlayerLottery> playerLotteryList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(lotteryIds)) {
+            playerLotteryList = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIds);
+        }
+
+        int dbQueryTime = new Long(System.currentTimeMillis() / 1000).intValue();
+        if (dbQueryTime - startTime > 1000) {
+            logger.warn("lottery查询慢日志，执行时间：{}", dbQueryTime - startTime);
+        }
+
+        List<Lottery> updateLotteryList = new ArrayList<>();
+        List<PlayerLottery> updatePlayerLotteryList = new ArrayList<>();
+        Map<Long, LotteryBattleRole> lotteryBattleRoleMap = ManageLottery.getLotteryBattleRoleMap();
+        List<LotteryDrawNumInfo> drawNumInfos = new ArrayList<>();
+        for (Lottery lottery : lotteries) {
+            //达到开奖时间
+            if (time - lottery.getCreateTime() >= 160) {
+                ILottery iLottery = ManageLottery.getInstance().getLotteryByType(lottery.getType());
+
+                //计算开奖号码
+                List<PlayerLottery> playerLotteries = playerLotteryList.stream()
+                        .filter(playerLottery -> playerLottery.getLotteryId() == lottery.getId())
+                        .collect(Collectors.toList());
+
+                //各个号码开奖金额
+                Map<Integer, BigDecimal> drawNumMap = iLottery.settleAwardPrice(playerLotteries);
+                String num;
+                if (StringUtils.isBlank(lottery.getNumber())) {
+                    num = iLottery.lotteryDraw(lottery, playerLotteries);
+                } else {
+                    num = lottery.getNumber();
+                }
+                //更新lottery数据，已计算
+                lottery.setNumber(num);
+                lottery.setStatus(1);
+                lottery.setOpenTime(time + 30);
+                lottery.setPrice(LotteryUtil.getPrice() + lottery.getPeriod());
+
+                int drawNum = Integer.parseInt(num);
+                //开奖颜色
+                List<Integer> colorList = drawColorByNum(drawNum);
+
+                BigDecimal totalPay = BigDecimal.ZERO;
+                BigDecimal totalFee = BigDecimal.ZERO;
+                for (PlayerLottery playerLottery : playerLotteries) {
+                    totalPay = totalPay.add(playerLottery.getPay());
+                    totalFee = totalFee.add(playerLottery.getFee());
+
+                    //未中奖
+                    if ((playerLottery.getSelected() != null && !colorList.contains(playerLottery.getSelected())) ||
+                            (StringUtils.isNotBlank(playerLottery.getNumber()) && !playerLottery.getNumber().equals("" + drawNum))) {
+                        playerLottery.setStatus(2);
+                        playerLottery.setOpenTime(time + 30);
+                        playerLottery.setAward(BigDecimal.ZERO.subtract(playerLottery.getPay()));
+                        playerLottery.setResult(num);
+                        updatePlayerLotteryList.add(playerLottery);
+                        continue;
+                    }
+
+                    BigDecimal effectiveBet = playerLottery.getPay().subtract(playerLottery.getFee());
+                    BigDecimal award;
+                    //下注颜色中奖
+                    if (playerLottery.getSelected() != null && colorList.contains(playerLottery.getSelected())) {
+                        //紫色
+                        if (playerLottery.getSelected().equals(LotteryColorConstant.VIOLET)) {
+                            award = effectiveBet.multiply(new BigDecimal("4.5"));
+                        } else {
+                            //红绿
+                            BigDecimal awardRate = new BigDecimal((drawNum == 0 || drawNum == 5) ? "1.5" : "2");
+                            award = effectiveBet.multiply(awardRate);
+                        }
+                    } else if (StringUtils.isNotBlank(playerLottery.getNumber()) && playerLottery.getNumber().equals("" + drawNum)) {
+                        //下注数字中奖
+                        award = effectiveBet.multiply(new BigDecimal("9"));
+                    } else {
+                        continue;
+                    }
+                    playerLottery.setStatus(1);
+                    playerLottery.setOpenTime(time + 30);
+                    playerLottery.setAward(award);
+                    playerLottery.setResult(num);
+
+                    updatePlayerLotteryList.add(playerLottery);
+                }
+
+                lottery.setTotalPay(totalPay);
+                lottery.setTotalFee(totalFee);
+                lottery.setTotalAward(drawNumMap.get(drawNum));
+                lottery.setTotalProfit(lottery.getTotalPay().subtract(lottery.getTotalAward()));
+                updateLotteryList.add(lottery);
+
+                //开奖结果通知客户端
+                if (time - lottery.getCreateTime() <= 180) {
+                    LotteryDrawNumInfo lotteryDrawNum = new LotteryDrawNumInfo();
+                    lotteryDrawNum.setLotteryId(lottery.getId());
+                    lotteryDrawNum.setType(lottery.getType());
+                    lotteryDrawNum.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
+                    lotteryDrawNum.setDrawNum(drawNum);
+                    drawNumInfos.add(lotteryDrawNum);
+                }
+            }
+        }
+
+        long dbUpdateStartTime = System.currentTimeMillis();
+        //更新lottery
+        Object[][] lotteryParams = new Object[updateLotteryList.size()][4];
+        for (int i = 0; i < updateLotteryList.size(); i++) {
+            Lottery lottery = updateLotteryList.get(i);
+            lotteryParams[i] = new Object[]{lottery.getPrice(), lottery.getNumber(), lottery.getStatus(),
+                    lottery.getOpenTime(), lottery.getTotalPay(), lottery.getTotalAward(), lottery.getTotalProfit(),
+                    lottery.getTotalFee(), lottery.getId()};
+        }
+        if (lotteryParams.length > 0)
+            LotteryDao.getInstance().batchUpdate(lotteryParams);
+
+        //更新用户彩票状态
+        Object[][] playerLotteryParams = new Object[updatePlayerLotteryList.size()][4];
+        for (int i = 0; i < updatePlayerLotteryList.size(); i++) {
+            PlayerLottery playerLottery = updatePlayerLotteryList.get(i);
+            playerLotteryParams[i] = new Object[]{playerLottery.getStatus(), playerLottery.getAward(),
+                    playerLottery.getOpenTime(), playerLottery.getResult(), playerLottery.getId()};
+        }
+        if (playerLotteryParams.length > 0)
+            PlayerLotteryDao.getInstance().batchUpdate(playerLotteryParams);
+
+        long dbUpdateEndTime = System.currentTimeMillis();
+        if (dbUpdateEndTime - dbUpdateStartTime > 500) {
+            logger.warn("lottery更新慢日志， 执行时间：{}", dbUpdateEndTime - dbUpdateStartTime);
+        }
+
+        //下一期
+        List<Lottery> nextLotteries = LotteryDao.getInstance().findNextLottery();
+        List<LotteryTypeInfo> infos = nextLotteries.stream().map(lottery -> {
+            LotteryTypeInfo info = new LotteryTypeInfo();
+            info.setLotteryId(lottery.getId());
+            info.setType(lottery.getType());
+            info.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
+            info.setCreateTime(lottery.getCreateTime());
+            return info;
+        }).collect(Collectors.toList());
+
+        //发送开奖号码
+        LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
+        lotteryDrawNum.setDrawNumInfos(drawNumInfos);
+        lotteryDrawNum.setLotteryTypeInfos(infos);
+        lotteryBattleRoleMap.forEach((key, value) -> {
+            value.getISession().sendMessageByID(lotteryDrawNum, value.getConnId());
+        });
+        //缓存开奖结果
+        LotteryCache.getInstance().addDrawInfo(lotteryDrawNum);
+
+        long endTime = System.currentTimeMillis();
+        if (endTime -  startTime> 2000) {
+            logger.warn("开奖慢日志，执行时间：{}", endTime - startTime);
+        }
+    }
+
+    //根据开奖数字，判断开奖颜色
+    private List<Integer> drawColorByNum(int num) {
+        List<Integer> colorList = new ArrayList<>();
+        if (num == 0 || num == 5) {
+            colorList.add(LotteryColorConstant.VIOLET);
+            colorList.add(num == 0 ? LotteryColorConstant.RED : LotteryColorConstant.GREEN);
+        } else if (num % 2 == 0) {
+            colorList.add(LotteryColorConstant.RED);
+        } else {
+            colorList.add(LotteryColorConstant.GREEN);
+        }
+        return colorList;
+    }
+}

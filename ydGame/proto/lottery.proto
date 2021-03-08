@@ -1,0 +1,222 @@
+syntax = "proto3";
+package com.ydqp.common.receiveProtoMsg;
+option java_outer_classname = "lottery";
+
+message LotteryEnterRoom {
+  int64 playerId = 1;
+  int32 roomId = 2;
+}
+
+message LotteryBuy {
+  int64 playerId = 1;                 //用户ID
+  int32 lotteryId = 2;                //彩票期数ID
+  int32 select = 3;                   //颜色选择
+  string number = 4;                  //数字选择
+  string pay = 5;                     //下注金额
+  int32 type = 6;                     //彩种
+}
+
+message LotteryQuitRoom {
+  int64 playerId = 1;
+}
+
+message LotteryComebackRoom {
+  int64 playerId = 1;
+  int32 roomId = 2;
+}
+
+message LotteryList {
+  int32 type = 1;                     //彩种
+  int32 page = 2;                     //第几页
+  int32 size = 3;                     //分页大小
+}
+
+message PlayerLotteryList {
+  int64 playerId = 1;                 //用户ID
+  int32 type = 2;                     //彩种
+  int32 page = 3;                     //第几页
+  int32 size = 4;                     //分页大小
+}
+
+message LotteryBattleRoleInfo {
+  int64 playerId = 1;
+  double playerZJ = 2;                //用户金币
+}
+
+message LotteryInfo {
+  int32 id = 1;                       //彩票期数ID
+  int32 type = 2;                     //彩种
+  string period = 3;                   //彩票期数
+  string price = 4;                   //price
+  string number = 5;                  //开奖号码
+  int32 status = 6;                   //开奖状态
+  int32 createTime = 7;               //开始时间
+  int32 openTime = 8;                 //开奖时间
+}
+
+message PlayerLotteryInfo {
+  int64 id = 1;
+  int64 playerId = 2;
+  int32 type = 3;
+  int32 lotteryId = 4;
+  int32 select = 5;
+  string number = 6;
+  double pay = 7;
+  int32 status = 8;
+  double award = 9;
+  int32 createTime = 10;
+  int32 openTime = 11;
+  string period = 12;
+  double fee = 13;
+  string result = 14;
+}
+
+message LotteryTypeInfo {
+  int32 type = 1;
+  string period = 2;
+  int32 createTime = 3;
+  LotteryInfo lotteryInfo = 4;
+  PlayerLotteryInfo playerLotteryInfo = 5;
+  int32 lotteryId = 6;
+  string drawNum = 7;
+  bool draw = 8;
+}
+
+message LotteryRoomInfo {
+  int32 roomId = 1;
+  repeated LotteryTypeInfo lotteryTypeInfos = 2;
+  LotteryBattleRoleInfo lotteryBattleRoleInfo = 3;
+}
+
+message LotteryBuySuc {
+  bool success = 1;                   //是否购买成功
+  string message = 2;                 //信息
+  PlayerLotteryInfo playerLotteryInfo = 3;
+}
+
+message LotteryQuitRoomSuc {
+  int64 playerId = 1;
+}
+
+message LotteryDrawNumInfo {
+  int32 lotteryId = 1;
+  int32 type = 2;
+  string period = 3;
+  int32 drawNum = 4;
+}
+
+message LotteryDrawNum {
+  repeated LotteryDrawNumInfo drawNumInfos = 1;
+  repeated LotteryTypeInfo lotteryTypeInfos = 2;
+}
+
+message LotteryDrawNotificationSuc {
+  int64 playerId = 1;
+  bool win = 2;                       //是否中奖
+  repeated LotteryTypeListInfo lotteryTypeListInfos = 3;
+}
+
+message LotteryListSuc {
+  repeated LotteryInfo lotteryList = 1;
+  int32 count = 2;
+}
+
+message PlayerLotteryListSuc {
+  repeated PlayerLotteryInfo playerLotteryInfoList = 1;
+  int32 count = 2;
+}
+
+message LotteryNext {
+  bool next = 1;
+}
+
+message LotteryNextSuc {
+  repeated LotteryTypeInfo lotteryTypeInfos = 1;
+}
+
+message LotteryDrawInfo {
+  int32 draw = 1;
+}
+
+message LotterySysCloseServer {
+  bool close = 1;
+}
+
+message LotteryTypeListInfo {
+  int32 type = 1;
+  repeated PlayerLotteryInfo playerLotteryInfo = 2;
+}
+
+message LotteryNow {
+  int64 playerId = 1;
+}
+
+message LotteryNowSuc {
+  repeated LotteryTypeInfo lotteryTypeInfos = 1;
+}
+
+
+message ParityOrder {
+  int64 playerId = 1;
+}
+message ParityOrderDetail {
+  int64 playerId = 1;
+}
+message ParityOrderLv {
+  int64 playerId = 1;
+  // lv1: 1; lv2: 2
+  int32 lv = 2;
+  int32 page = 3;
+  int32 size = 4;
+}
+message ParityReceive {
+  int64 playerId = 1;
+  int32 taskId = 2;
+}
+message ParityRecommendTask {
+  int64 playerId = 1;
+}
+message ParityOrderDetailInfo {
+  int64 playerId = 1;
+  string nickname = 2;
+  double contribute = 3;
+  int32 date = 4;
+}
+message ParityOrderDetailSuc {
+  repeated ParityOrderDetailInfo parityOrderDetailInfos = 1;
+  int64 playerId = 2;
+}
+message ParityOrderLvSuc {
+  repeated ParityOrderDetailInfo infos = 1;
+  int64 playerId = 2;
+  int32 total = 3;
+}
+message ParityOrderSuc {
+  int64 playerId = 1;
+  double playerZJ = 2;
+  // 有效用户数
+  int32 effectiveNum = 3;
+  // LV1有效用户数
+  int32 effectiveNumLv1 = 4;
+  // LV1获得的金币
+  double bonusLv1 = 5;
+  // LV2有效用户数
+  int32 effectiveNumLv2 = 6;
+  // LV2获得的金币
+  double bonusLv2 = 7;
+  // 推广码
+  string referralCode = 8;
+  // 推广链接
+  string referralLink = 9;
+}
+message ParityRecommendTaskSuc {
+  int32 effectiveNum = 1;
+  repeated TaskConfigData taskConfigDataList = 2;
+  // 已领取奖励的任务ID
+  string rewardTaskIds = 3;
+}
+message ParityReceiveSuc {
+  bool success = 1;
+  string message = 2;
+  double amount = 3;
+}

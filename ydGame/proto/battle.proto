@@ -1,0 +1,263 @@
+syntax="proto3";
+package com.ydqp.common.receiveProtoMsg;
+option java_outer_classname = "battle";
+message Poker {  
+ string tag=1;
+ int32 num=2;
+ bool isLaizigou=3;
+}
+message BattleEnterRoom {  
+ int64 playerId=1;
+ double roomPoint=2;
+ bool isZJ=3;
+}
+message BattlePlayerBaiPaiFinish {  
+ map<int32, string> handPokers=1;
+ int32 roomId=2;
+}
+message BattlePlayerChuPai {  
+ int64 playerId=1;
+ int32 roomId=2;
+ Poker poker=3;
+}
+message BattlePlayerDrop {  
+ int64 playerId=1;
+ int32 roomId=2;
+// 是否自动投降，true是，false 否
+ bool isAutoDrop=3;
+}
+message BattlePlayerMoPai {  
+ int64 playerId=1;
+ int32 where=2;
+ int32 roomId=3;
+}
+message BattlePlayerRummy {  
+ int64 playerId=1;
+ int32 roomId=2;
+ map<int32, string> playerBattlePokers=3;
+}
+message BattleQuitRoom {  
+ int64 playerId=1;
+ int32 roomId=2;
+}
+message RBattleAutoStandUp {  
+ int64 playerId=1;
+ int32 roomId=2;
+}
+message RBattleStandUp {  
+ int32 posNum=1;
+ int32 roomId=3;
+}
+message BattleAutoStandUpSuccess {  
+// 是否设置自动站起成功，true 成功， false 失败
+ bool isAutoStandUpSuccess=1;
+}
+message BattleCanStart {  
+// 房间id
+ int32 roomId=1;
+// 当前房间的等待时间
+ int32 curRoomWaitTime=2;
+// 当前房间状态 0 - 7
+ int32 roomStatus=3;
+}
+message BattleCurBattlePlayer {  
+// 用户id
+ int64 playerId=1;
+// 用户的座位号
+ int32 pos=2;
+ int32 roomId=3;
+}
+message BattleHandPoker {  
+ int64 playerId=1;
+// 庄家的座位号
+ int32 dingPos=2;
+// laizi牌
+ Poker poker=3;
+// 开出的第一张牌
+ Poker openPoker=4;
+// 用户的手牌 13张
+repeated Poker handlerPokers=5;
+}
+message BattlePlayerChuPaiOK {  
+ int64 playerId=1;
+ int32 roomId=2;
+// 当前用户打出的牌
+ Poker poker=3;
+}
+message BattlePlayerDropSuccess {  
+// 投降成功的用户id
+ int64 playerId=1;
+ int32 posNum=2;
+ double playerWinMoney=3;
+}
+message BattlePlayerWin {  
+// 用户id
+ int64 playerId=1;
+// 用户的输赢情况
+ double playerWin=2;
+ //用户的积分输赢情况
+ int32 playerWinPoint=3;
+ map<int32, string> playerBattlePokers=4;
+}
+message BattleQuitRoomSuccess {  
+// 用户id
+ int64 playerId=1;
+ int32 posNum=2;
+ double playerTotalZj=3;
+ double playerTotalCoin=4;
+}
+message BattleRoleMoPai {  
+ int64 playerId=1;
+ int32 posNum=2;
+ int32 where=3;
+}
+message BattleRoomInfo {  
+ map<int32, BattleRoleInfo> battleRoleInfos=1;
+ int32 roomId=2;
+ int32 roomStatus=3;
+ double roomPoint=4;
+ bool isZJ=5;
+ int32 curWaitTime=6;
+ Poker openPoker=7;
+ Poker openLaiZiPoker=8;
+ repeated Poker disPokers=9;
+ int64 curPlayerId=10;
+ int32 curPosNum=11;
+ int64 rummyPlayerId=12;
+ int32 rummyPosNum=13;
+ double dropPool=14;
+}
+message BattleRoleInfo {  
+ int64 playerId=1;
+ string playerName=2;
+ string playerUrl=3;
+ double playerCoin=4;
+ double playerZJ=5;
+// 用户座位号
+ int32 posNum=6;
+// 用户是否是战斗用户
+ bool isbattleStatus=7;
+ bool isDing=8;
+ int32 curWaitTime=9;
+ bool isDrop=10;
+ int32 playStatus=11;
+ bool baiPaiFinish=12;
+ repeated Poker handPokers=13;
+ map<int32, string> playerBattlePokers=14;
+ int64 point=15;
+ double playerWinMoney=16;
+ int32 grade=17;
+ double experience=18;
+ bool haveAlreadyChuPai=19;
+ string fbUserId=20;
+}
+message BattleRummySuccess {  
+ int32 roomId=1;
+ int64 playerId=2;
+ int32 posNum=3;
+}
+message BattleStandUp {  
+ int32 posNum=1;
+ int64 playerId=2;
+ int32 roomId=3;
+}
+message BattleZhanji {  
+repeated BattleZhanjiDetail battleZhanjiDetailList=1;
+int32 curRoomWaitTime=2;
+int64 rummyPlayerId=3;
+int32 roomId=4;
+}
+message BattleZhanjiDetail {  
+ int64 playerId=1;
+ string playerName=2;
+ string url=3;
+ map<int32, string> playerBattlePokers=4;
+ int64 point=5;
+ double playerTotalPoint=6;
+ double playerTotalZj=7;
+ double playerWinMoney=8;
+}
+message BattlePlayIsEnd {
+ int32 roomId=1;
+}
+message MoPaiPoker {  
+ string tag=1;
+ int32 num=2;
+ bool isLaizigou=3;
+}
+message BattleComeBackRoom {  
+ int64 playerId=1;
+ int32 roomId=2;
+}
+message BattleSitDown {  
+ int64 playerId=1;
+ int32 posNum=2;
+ int32 roomId=3;
+}
+message BattleSetAutoDropSuccess {
+	bool isAutoDropSuccess=1;
+}
+
+message BattleCancelAutoDrop {
+ int64 playerId=1;
+ int32 roomId=2;
+}
+message BattleCancelAutoDropSuccess {
+	bool cancelAutoDropSuccess=1;
+}
+
+message BattlePlayPass {
+	int32 roomId=1;
+}
+
+message BattleGoBackLobby {
+	int64 playerId=1;
+    int32 roomId=2;
+}
+
+message BattleChangeRoom {
+	int64 playerId=1;
+    int32 roomId=2;
+}
+
+message BattleCloseZhanji {
+	int64 playerId=1;
+    int32 roomId=2;
+}
+
+message BattleCloseTimer {
+	int32 roomId=1;
+}
+
+message BattleCancelAutoStandUp {
+	int64 playerId=1;
+    int32 roomId=2;
+}
+
+message BattleCancelAutoStandUpSuccess {
+	bool cancelAutoStandUpSuccess=1;
+}
+
+message BattleDrawGame {
+	int32 roomId=1;
+}
+
+message BattleCloseServer {
+	int32 roomId=1;
+}
+
+message BattleSortPoker {
+	int64 playerId=1;
+ 	int32 roomId=2;
+}
+message BattleSortPokerResult{
+	map<int32, string> handPokers=1;
+}
+
+message BattleRoleAddMoney {
+    int64 playerId=1;
+    int32 pos=2;
+    double playerZJ=3;
+    double playerCoin=4;
+    int32 roomId=5;
+}
