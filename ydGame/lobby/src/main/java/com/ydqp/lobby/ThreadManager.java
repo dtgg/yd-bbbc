@@ -34,22 +34,6 @@ public class ThreadManager {
         FixedThreadPool fixedThreadPool = new FixedThreadPool();
         executor = fixedThreadPool.getExecutor(threadPoolConfig);
 
-        ThreadPoolConfig threadPoolConfig2 = new ThreadPoolConfig();
-        threadPoolConfig2.setMaxThreads(1);
-        threadPoolConfig2.setQueueSize(2000);
-        threadPoolConfig2.setThreadName("rankTask");
-
-        FixedThreadPool fixedThreadPool2 = new FixedThreadPool();
-        rankExecutor = fixedThreadPool2.getExecutor(threadPoolConfig2);
-
-        ThreadPoolConfig threadPoolConfig3 = new ThreadPoolConfig();
-        threadPoolConfig3.setMaxThreads(1);
-        threadPoolConfig3.setQueueSize(2000);
-        threadPoolConfig3.setThreadName("gradeTask");
-
-        FixedThreadPool fixedThreadPool3 = new FixedThreadPool();
-        gradeExecutor = fixedThreadPool3.getExecutor(threadPoolConfig3);
-
         ThreadPoolConfig threadPoolConfig4 = new ThreadPoolConfig();
         threadPoolConfig4.setMaxThreads(2);
         threadPoolConfig4.setQueueSize(2000);
