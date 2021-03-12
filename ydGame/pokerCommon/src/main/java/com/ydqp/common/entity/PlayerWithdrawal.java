@@ -19,19 +19,15 @@ public class PlayerWithdrawal implements Serializable {
 	public static final String IFSC_NAME = "ifsc";
 	public static final String MOBILE_NAME = "mobile";
 	public static final String AMOUNT_NAME = "amount";
-	public static final String BENEID_NAME = "beneId";
 	public static final String TRANSFERID_NAME = "transferId";
 	public static final String REFERENCEID_NAME = "referenceId";
-	public static final String UTR_NAME = "utr";
-	public static final String ACKNOWLEDGED_NAME = "acknowledged";
 	public static final String STATUS_NAME = "status";
-	public static final String ADDEDON_NAME = "addedOn";
-	public static final String PROCESSEDON_NAME = "processedOn";
 	public static final String ERRORMSG_NAME = "errorMsg";
 	public static final String CREATETIME_NAME = "createTime";
-	public static final String TRANSFERMODE_NAME = "transferMode";
 	public static final String APPID_NAME = "appId";
 	public static final String REGISTERTIME_NAME = "registerTime";
+	public static final String PAYCHANNEL_NAME = "payChannel";
+	public static final String KFID_NAME = "kfId";
 
 
     	private long id;
@@ -90,14 +86,6 @@ public class PlayerWithdrawal implements Serializable {
 	 this.amount = amount;
 	 entityMap.put(AMOUNT_NAME, amount);
 	}
-	private String beneId;
-	public String getBeneId() {
-	return beneId;
-	}
- 	 public void setBeneId(String beneId){
-	 this.beneId = beneId;
-	 entityMap.put(BENEID_NAME, beneId);
-	}
 	private String transferId;
 	public String getTransferId() {
 	return transferId;
@@ -114,22 +102,6 @@ public class PlayerWithdrawal implements Serializable {
 	 this.referenceId = referenceId;
 	 entityMap.put(REFERENCEID_NAME, referenceId);
 	}
-	private String utr;
-	public String getUtr() {
-	return utr;
-	}
- 	 public void setUtr(String utr){
-	 this.utr = utr;
-	 entityMap.put(UTR_NAME, utr);
-	}
-	private String acknowledged;
-	public String getAcknowledged() {
-	return acknowledged;
-	}
- 	 public void setAcknowledged(String acknowledged){
-	 this.acknowledged = acknowledged;
-	 entityMap.put(ACKNOWLEDGED_NAME, acknowledged);
-	}
 	private int status;
 	public int getStatus() {
 	return status;
@@ -137,22 +109,6 @@ public class PlayerWithdrawal implements Serializable {
  	 public void setStatus(int status){
 	 this.status = status;
 	 entityMap.put(STATUS_NAME, status);
-	}
-	private int addedOn;
-	public int getAddedOn() {
-	return addedOn;
-	}
- 	 public void setAddedOn(int addedOn){
-	 this.addedOn = addedOn;
-	 entityMap.put(ADDEDON_NAME, addedOn);
-	}
-	private int processedOn;
-	public int getProcessedOn() {
-	return processedOn;
-	}
- 	 public void setProcessedOn(int processedOn){
-	 this.processedOn = processedOn;
-	 entityMap.put(PROCESSEDON_NAME, processedOn);
 	}
 	private String errorMsg;
 	public String getErrorMsg() {
@@ -170,14 +126,6 @@ public class PlayerWithdrawal implements Serializable {
 	 this.createTime = createTime;
 	 entityMap.put(CREATETIME_NAME, createTime);
 	}
-	private String transferMode;
-	public String getTransferMode() {
-		return transferMode;
-	}
-	public void setTransferMode(String transferMode) {
-		this.transferMode = transferMode;
-		entityMap.put(TRANSFERMODE_NAME, transferMode);
-	}
 	private int appId;
 	public int getAppId() {
 		return appId;
@@ -193,6 +141,22 @@ public class PlayerWithdrawal implements Serializable {
 	public void setRegisterTime(int registerTime) {
 		this.registerTime = registerTime;
 		entityMap.put(REGISTERTIME_NAME, registerTime);
+	}
+	private String payChannel;
+	public String getPayChannel() {
+		return payChannel;
+	}
+	public void setPayChannel(String payChannel) {
+		this.payChannel = payChannel;
+		entityMap.put(PAYCHANNEL_NAME, payChannel);
+	}
+	private long kfId;
+	public long getKfId() {
+		return kfId;
+	}
+	public void setKfId(long kfId) {
+		this.kfId = kfId;
+		entityMap.put(KFID_NAME, kfId);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

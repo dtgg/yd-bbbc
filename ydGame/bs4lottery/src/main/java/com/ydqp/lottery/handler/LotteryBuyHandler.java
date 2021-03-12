@@ -52,6 +52,9 @@ public class LotteryBuyHandler implements IServerHandler {
         PlayerData playerData = PlayerCache.getInstance().getPlayer(lotteryBuy.getConnId());
         if (playerData == null) {
             logger.error("player is not true");
+            lotteryBuySuc.setSuccess(false);
+            lotteryBuySuc.setMessage("The player is not true");
+            iSession.sendMessageByID(lotteryBuySuc, lotteryBuy.getConnId());
             return;
         }
 
@@ -91,6 +94,9 @@ public class LotteryBuyHandler implements IServerHandler {
             return;
         }
         if (lotteryBattleRole.getBuying() != null && lotteryBattleRole.getBuying()) {
+            lotteryBuySuc.setSuccess(false);
+            lotteryBuySuc.setMessage("Frequent operation, please try later");
+            iSession.sendMessageByID(lotteryBuySuc, lotteryBuy.getConnId());
             return;
         }
         lotteryBattleRole.setBuying(true);
@@ -103,6 +109,8 @@ public class LotteryBuyHandler implements IServerHandler {
             playerLottery.setSelected(lotteryBuy.getSelect());
             playerLottery.setNumber(lotteryBuy.getNumber());
             playerLottery.setPay(new BigDecimal(lotteryBuy.getPay()));
+            playerLottery.setAppId(player.getAppId());
+            playerLottery.setKfId(player.getKfId());
 
             playerLottery.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
 

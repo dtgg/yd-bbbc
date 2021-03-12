@@ -18,14 +18,14 @@ public class PlayerAccount implements Serializable {
 	public static final String ACCNO_NAME = "accNo";
 	public static final String IFSC_NAME = "ifsc";
 	public static final String MOBILE_NAME = "mobile";
-	public static final String WITHDRAWING_NAME = "withdrawing";
-	public static final String PAYMOBILE_NAME = "payMobile";
 	public static final String EMAIL_NAME = "email";
-	public static final String BENEID_NAME = "beneId";
-	public static final String FAID_NAME = "faId";
-	public static final String PAYCHANNELID_NAME = "payChannelId";
-	public static final String BANKCODE_NAME = "bankCode";
-	public static final String DEPOSITNAME_NAME = "depositName";
+	public static final String ENABLED_NAME = "enabled";
+	public static final String ACCOUNTID_NAME = "accountId";
+	public static final String PASSWORD_NAME = "password";
+	public static final String BANKNAME_NAME = "bankName";
+	public static final String ISUPI_NAME = "isUpi";
+	public static final String UPIID_NAME = "upiId";
+	public static final String UPINAME_NAME = "upiName";
 
 
     	private long id;
@@ -76,69 +76,69 @@ public class PlayerAccount implements Serializable {
 	 this.mobile = mobile;
 	 entityMap.put(MOBILE_NAME, mobile);
 	}
-	private double withdrawing;
-	public double getWithdrawing() {
-		return withdrawing;
-	}
-	public void setWithdrawing(double withdrawing) {
-		this.withdrawing = withdrawing;
-		entityMap.put(WITHDRAWING_NAME, withdrawing);
-	}
-	private String payMobile;
-	public String getPayMobile() {
-		return payMobile;
-	}
-	public void setPayMobile(String payMobile) {
-		this.payMobile = payMobile;
-		entityMap.put(PAYMOBILE_NAME, withdrawing);
-	}
 	private String email;
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
-		entityMap.put(EMAIL_NAME, withdrawing);
+		entityMap.put(EMAIL_NAME, email);
 	}
-	private String beneId;
-	public String getBeneId() {
-		return beneId;
+	private int enabled;
+	public int getEnabled() {
+		return enabled;
 	}
-	public void setBeneId(String beneId) {
-		this.beneId = beneId;
-		entityMap.put(BENEID_NAME, beneId);
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
+		entityMap.put(ENABLED_NAME, enabled);
 	}
-	private String faId;
-	public String getFaId() {
-		return faId;
+	private String accountId;
+	public String getAccountId() {
+		return accountId;
 	}
-	public void setFaId(String faId) {
-		this.faId = faId;
-		entityMap.put(FAID_NAME, faId);
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+		entityMap.put(ACCOUNTID_NAME, accountId);
 	}
-	private Integer payChannelId;
-	public Integer getPayChannelId() {
-		return payChannelId;
+	private String password;
+	public String getPassword() {
+		return password;
 	}
-	public void setPayChannelId(Integer payChannelId) {
-		this.payChannelId = payChannelId;
-		entityMap.put(PAYCHANNELID_NAME, payChannelId);
+	public void setPassword(String password) {
+		this.password = password;
+		entityMap.put(PASSWORD_NAME, password);
 	}
-	private String bankCode;
-	public String getBankCode() {
-		return bankCode;
+	private String bankName;
+	public String getBankName() {
+		return bankName;
 	}
-	public void setBankCode(String bankCode) {
-		this.bankCode = bankCode;
-		entityMap.put(BANKCODE_NAME, bankCode);
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+		entityMap.put(BANKNAME_NAME, bankName);
 	}
-	private String depositName;
-	public String getDepositName() {
-		return depositName;
+	private int isUpi;
+	public int getIsUpi() {
+		return isUpi;
 	}
-	public void setDepositName(String depositName) {
-		this.depositName = depositName;
-		entityMap.put(DEPOSITNAME_NAME, depositName);
+	public void setIsUpi(int isUpi) {
+		this.isUpi = isUpi;
+		entityMap.put(ISUPI_NAME, isUpi);
+	}
+	private String upiId;
+	public String getUpiId() {
+		return upiId;
+	}
+	public void setUpiId(String upiId) {
+		this.upiId = upiId;
+		entityMap.put(UPIID_NAME, upiId);
+	}
+	private String upiName;
+	public String getUpiName() {
+		return upiName;
+	}
+	public void setUpiName(String upiName) {
+		this.upiName = upiName;
+		entityMap.put(UPINAME_NAME, upiName);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

@@ -10,6 +10,7 @@ import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.dao.lottery.PlayerLotteryDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Lottery;
+import com.ydqp.common.entity.LotteryConfig;
 import com.ydqp.common.entity.PlayerLottery;
 import com.ydqp.common.lottery.role.LotteryBattleRole;
 import com.ydqp.common.sendProtoMsg.lottery.*;
@@ -20,9 +21,11 @@ import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -175,5 +178,56 @@ public abstract class AbstractLottery implements ILottery {
     public void sendMessageToBattle(AbstartCreateMessage abstartCreateMessage, LotteryBattleRole lotteryBattleRole) {
         ISession iSession = lotteryBattleRole.getISession();
         iSession.sendMessageByID(abstartCreateMessage, lotteryBattleRole.getConnId());
+    }
+
+    @Override
+    public PlayerLottery lotteryBuy(Lottery lottery, PlayerLottery playerLottery) {
+        LotteryConfig config = ManageLottery.getInstance().getConfig(lottery.getType());
+
+        BigDecimal pay = playerLottery.getPay();
+        //下注值少于100卢比收取10%手续费;下注值大等于100卢比收取2%手续费
+        BigDecimal fee = pay.multiply(pay.compareTo(new BigDecimal("100")) < 0 ? config.getFeeRateMax() : config.getFeeRateMin());
+        playerLottery.setFee(fee);
+        playerLottery.setCreateTime(new Long(System.currentTimeMillis() / 1000).intValue());
+
+        long primaryKey = PlayerLotteryDao.getInstance().insert(playerLottery.getParameterMap());
+        playerLottery.setId(primaryKey);
+        return playerLottery;
+    }
+
+    //根据value排序
+    public static List<Integer> sortMapByValues(Map<Integer, BigDecimal> map) {
+        return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+    public Integer getDrawNum(List<Integer> numList, LotteryConfig config, Map<Integer, BigDecimal> drawNumMap, int period) {
+        //下注总金额
+        BigDecimal sum = BigDecimal.ZERO;
+        for (Map.Entry<Integer, BigDecimal> entry : drawNumMap.entrySet()) {
+            sum = sum.add(entry.getValue());
+        }
+        if (sum.compareTo(BigDecimal.ZERO) == 0) {
+            return randomDrawNum(numList);
+        }
+
+        if (config.getEnabled() == 1 || (sum.intValue() > config.getBalance()) || period % config.getFrequency() != 0) {
+            String[] range = config.getDrawRange().split("-");
+            numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+        }
+
+        return randomDrawNum(numList);
+    }
+
+    public Integer randomDrawNum(List<Integer> numList) {
+        //没有下注数字
+        int drawNum;
+        Random random = new Random();
+        int nextInt = random.nextInt(numList.size());
+        drawNum = numList.get(nextInt);
+        return drawNum;
     }
 }

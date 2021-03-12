@@ -1,6 +1,7 @@
 package com.ydqp.lobby.utils;
 
 import com.ydqp.common.entity.PayChannelConfig;
+import com.ydqp.common.entity.PayWithdrawalConfig;
 
 import java.util.List;
 import java.util.Random;
@@ -17,11 +18,17 @@ public class PayUtil {
         return instance;
     }
 
-    public PayChannelConfig getConfig(List<PayChannelConfig> configs) {
+    public PayChannelConfig getConfig(List<PayChannelConfig> configs, Long playerId) {
         if (configs.size() == 1) return configs.get(0);
 
-        Random random = new Random();
-        int i = random.nextInt(configs.size());
+        int i = configs.size() % playerId.intValue();
+        return configs.get(i);
+    }
+
+    public PayWithdrawalConfig getWithdrawalConfig(List<PayWithdrawalConfig> configs, Long playerId) {
+        if (configs.size() == 1) return configs.get(0);
+
+        int i = configs.size() % playerId.intValue();
         return configs.get(i);
     }
 }

@@ -101,34 +101,34 @@ public class PlayerPromoteTask implements Runnable {
         }
 
         //给上级玩家加钱
-        if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
-            PlayerService.getInstance().updatePlayerZjPoint(playerPromoteDetail.getSuperiorAmount().doubleValue(), playerPromote.getSuperiorId());
-
-            PlayerData data = PlayerCache.getInstance().getPlayerByPlayerID(playerPromote.getSuperiorId());
-            if (data != null) {
-                PlayerData playerData = PlayerCache.getInstance().getPlayer(data.getSessionId());
-                if (playerData != null) {
-                    playerData.setZjPoint(playerData.getZjPoint() + playerPromoteDetail.getSuperiorAmount().doubleValue());
-                    PlayerCache.getInstance().addPlayer(data.getSessionId(), playerData);
-
-                    sendToSuperiorAndGrand(playerData);
-                }
-            }
-        }
-        if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0 && superior.getIsEffective() == 1 && superiorTotal > 0) {
-            PlayerService.getInstance().updatePlayerZjPoint(playerPromoteDetail.getGrandAmount().doubleValue(), playerPromote.getGrandId());
-
-            PlayerData data = PlayerCache.getInstance().getPlayerByPlayerID(playerPromote.getGrandId());
-            if (data != null) {
-                PlayerData playerData = PlayerCache.getInstance().getPlayer(data.getSessionId());
-                if (playerData != null) {
-                    playerData.setZjPoint(playerData.getZjPoint() + playerPromoteDetail.getGrandAmount().doubleValue());
-                    PlayerCache.getInstance().addPlayer(data.getSessionId(), playerData);
-
-                    sendToSuperiorAndGrand(playerData);
-                }
-            }
-        }
+//        if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
+//            PlayerService.getInstance().updatePlayerZjPoint(playerPromoteDetail.getSuperiorAmount().doubleValue(), playerPromote.getSuperiorId());
+//
+//            PlayerData data = PlayerCache.getInstance().getPlayerByPlayerID(playerPromote.getSuperiorId());
+//            if (data != null) {
+//                PlayerData playerData = PlayerCache.getInstance().getPlayer(data.getSessionId());
+//                if (playerData != null) {
+//                    playerData.setZjPoint(playerData.getZjPoint() + playerPromoteDetail.getSuperiorAmount().doubleValue());
+//                    PlayerCache.getInstance().addPlayer(data.getSessionId(), playerData);
+//
+//                    sendToSuperiorAndGrand(playerData);
+//                }
+//            }
+//        }
+//        if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0 && superior.getIsEffective() == 1 && superiorTotal > 0) {
+//            PlayerService.getInstance().updatePlayerZjPoint(playerPromoteDetail.getGrandAmount().doubleValue(), playerPromote.getGrandId());
+//
+//            PlayerData data = PlayerCache.getInstance().getPlayerByPlayerID(playerPromote.getGrandId());
+//            if (data != null) {
+//                PlayerData playerData = PlayerCache.getInstance().getPlayer(data.getSessionId());
+//                if (playerData != null) {
+//                    playerData.setZjPoint(playerData.getZjPoint() + playerPromoteDetail.getGrandAmount().doubleValue());
+//                    PlayerCache.getInstance().addPlayer(data.getSessionId(), playerData);
+//
+//                    sendToSuperiorAndGrand(playerData);
+//                }
+//            }
+//        }
         long endTime = System.currentTimeMillis();
         if (endTime - startTime > 1000) {
             logger.warn("下注-推广慢日志，执行时间：{}", endTime - startTime);

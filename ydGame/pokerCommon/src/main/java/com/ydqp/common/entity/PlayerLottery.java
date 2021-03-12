@@ -27,6 +27,8 @@ public class PlayerLottery implements Serializable {
 	public static final String CREATETIME_NAME = "createTime";
 	public static final String OPENTIME_NAME = "openTime";
 	public static final String RESULT_NAME = "result";
+	public static final String APPID_NAME = "appId";
+	public static final String KFID_NAME = "kfId";
 
 
 
@@ -141,6 +143,22 @@ public class PlayerLottery implements Serializable {
 	public void setResult(String result) {
 		this.result = result;
 		entityMap.put(RESULT_NAME, result);
+	}
+	private int appId;
+	public int getAppId() {
+		return appId;
+	}
+	public void setAppId(int appId) {
+		this.appId = appId;
+		entityMap.put(APPID_NAME, appId);
+	}
+	private long kfId;
+	public long getKfId() {
+		return kfId;
+	}
+	public void setKfId(long kfId) {
+		this.kfId = kfId;
+		entityMap.put(KFID_NAME, kfId);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

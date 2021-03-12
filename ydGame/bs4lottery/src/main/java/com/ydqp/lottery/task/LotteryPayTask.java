@@ -122,11 +122,12 @@ public class LotteryPayTask implements Runnable {
                 if (playerLottery.getStatus() == 1) {
                     BigDecimal award = playerLottery.getAward();
                     //player
-                    if (updatePlayerMap.get(playerId) == null) {
-                        updatePlayerMap.put(playerId, award);
-                    } else {
-                        updatePlayerMap.put(playerId, updatePlayerMap.get(playerId).add(award));
-                    }
+//                    if (updatePlayerMap.get(playerId) == null) {
+//                        updatePlayerMap.put(playerId, award);
+//                    } else {
+//                        updatePlayerMap.put(playerId, updatePlayerMap.get(playerId).add(award));
+//                    }
+                    updatePlayerMap.merge(playerId, award, BigDecimal::add);
                     logger.info("玩家{}第{}期下注中奖,下注ID:{},获得奖励:{},", playerId, playerLottery.getPeriod(), playerLottery.getId(), award);
                     //playerData
                     PlayerData playerData = playerDataMap.get(playerId);

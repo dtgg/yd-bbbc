@@ -26,6 +26,8 @@ public class PlayerPromote implements Serializable {
 	public static final String SUBNUM_NAME = "subNum";
 	public static final String SONNUM_NAME = "sonNum";
 	public static final String CREATETIME_NAME = "createTime";
+	public static final String EFFECTIVENUM_NAME = "effectiveNum";
+	public static final String APPID_NAME = "appId";
 
 
     	private int id;
@@ -133,10 +135,24 @@ public class PlayerPromote implements Serializable {
 	 this.createTime = createTime;
 	 entityMap.put(CREATETIME_NAME, createTime);
 	}
+	private int effectiveNum;
+	public int getEffectiveNum() {
+		return effectiveNum;
+	}
+	public void setEffectiveNum(int effectiveNum) {
+		this.effectiveNum = effectiveNum;
+		entityMap.put(EFFECTIVENUM_NAME, effectiveNum);
+	}
+	private int appId;
+	public int getAppId() {
+		return appId;
+	}
+	public void setAppId(int appId) {
+		this.appId = appId;
+		entityMap.put(APPID_NAME, appId);
+	}
 
-
-
-    public Object getValueByFieldName(String fieldName) {
+	public Object getValueByFieldName(String fieldName) {
         return this.entityMap.get(fieldName);
     }
 

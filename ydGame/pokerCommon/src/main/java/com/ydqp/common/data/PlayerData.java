@@ -56,6 +56,10 @@ public class PlayerData {
     @Getter
     private int registerTime;
 
+    @Setter
+    @Getter
+    private long kfId;
+
     public PlayerData(){}
 
     public PlayerData (Player player) {
@@ -71,6 +75,7 @@ public class PlayerData {
         this.appId = player.getAppId();
         this.fbUserId = player.getFbUserId();
         this.registerTime = player.getCreateTime();
+        this.kfId = player.getKfId();
     }
 
 }

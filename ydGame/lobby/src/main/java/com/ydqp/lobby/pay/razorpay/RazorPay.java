@@ -1,12 +1,14 @@
 package com.ydqp.lobby.pay.razorpay;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.util.StackTraceUtil;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.ydqp.common.entity.*;
+import com.ydqp.common.sendProtoMsg.mall.PlayerOrderSuccess;
+import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuc;
 import com.ydqp.lobby.pay.OrderPay;
 import com.ydqp.lobby.pay.razorpay.api.RazorPayApi;
 import com.ydqp.lobby.service.mall.PlayerAccountService;
@@ -18,8 +20,11 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,79 +41,89 @@ public class RazorPay extends OrderPay {
     }};
 
     @Override
-    public String payment(String params) {
-        Order order;
+    public PlayerOrderSuccess payment(PlayerOrder order, PayChannelConfig config) {
+        PlayerOrderSuccess orderSuccess = new PlayerOrderSuccess();
         try {
-            JSONObject data = JSONObject.parseObject(params);
-
-            org.json.JSONObject orderRequest = new org.json.JSONObject();
-            orderRequest.put("amount", data.getDouble("amount")  * 100);
+            JSONObject orderRequest = new JSONObject();
+            orderRequest.put("amount", order.getAmount()  * 100);
             orderRequest.put("currency", "INR");
             orderRequest.put("payment_capture", true);
             orderRequest.put("receipt", "order_rcptid");
 
-            RazorpayClient razorpayClient = new RazorpayClient(data.getString("clientId"), data.getString("secretKey"));
+            RazorpayClient razorpayClient = new RazorpayClient(config.getAppId(), config.getSecretKey());
             logger.info("请求razorpay创建订单：{}", orderRequest.toString());
-            order = razorpayClient.Orders.create(orderRequest);
+            Order razorpayOrder = razorpayClient.Orders.create(orderRequest);
             logger.info("razorpay订单创建结果：{}", order.toString());
+            JSONObject razorPayResult = new JSONObject(razorpayOrder);
+            if ("created".equals(razorPayResult.getString("status"))) {
+//                        String paymentUrl = payChannelConfig.getPaymentUrl() + "appId=" + payChannelConfig.getAppId() + "&orderId=" + razorPayResult.getString("id");
+                JSONObject razorResp = new JSONObject() {{
+                    put("appId", config.getAppId());
+                    put("orderId", razorPayResult.getString("id"));
+                    put("orderCurrency", "INR");
+                    put("orderAmount", order.getAmount() * 100);
+                    put("notifyUrl", config.getPaymentNotifyUrl());
+                }};
+                orderSuccess.setSuccess(true);
+                orderSuccess.setPayChannel("razorpay");
+                orderSuccess.setData(razorResp.toString());
+                order.setTxnOrderId(razorPayResult.getString("id"));
+            } else {
+                orderSuccess.setSuccess(false);
+                orderSuccess.setMessage(razorPayResult.getString("message"));
+            }
         } catch (RazorpayException e) {
             logger.error("razorpay payment异常：{}", StackTraceUtil.getStackTrace(e));
 
-            JSONObject error = new JSONObject();
-            error.put("status", "error");
-            error.put("message", e.getMessage());
-            return error.toString();
+            orderSuccess.setSuccess(false);
+            orderSuccess.setMessage("Recharge failed");
+            return orderSuccess;
         }
-        return order.toString();
+        return orderSuccess;
     }
 
     @Override
-    public String payout(String params) {
-        if (params == null) return null;
-        JSONObject data = JSONObject.parseObject(params);
-
-        JSONObject resp = new JSONObject();
+    public PlayerWithdrawalSuc payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
+        PlayerWithdrawalSuc withdrawalSuc = new PlayerWithdrawalSuc();
 
         //判断下faId存不存在
-        String faId = data.getString("faId");
+        String faId = account.getAccountId();
         if (StringUtils.isBlank(faId)) {
             JSONObject faParamJson = new JSONObject();
-            faParamJson.put("clientId", data.getString("clientId"));
-            faParamJson.put("clientSecret", data.getString("clientSecret"));
-            faParamJson.put("playerId", data.getString("playerId"));
-            faParamJson.put("name", data.getString("name"));
-            faParamJson.put("accNo", data.getString("accNo"));
-            faParamJson.put("ifsc", data.getString("ifsc"));
-            String fundStr = getFaId(faParamJson.toJSONString());
-            JSONObject faJson = JSONObject.parseObject(fundStr);
+            faParamJson.put("clientId", config.getClientId());
+            faParamJson.put("clientSecret", config.getClientSecret());
+            faParamJson.put("playerId", withdrawal.getPlayerId());
+            faParamJson.put("name", account.getName());
+            faParamJson.put("accNo", account.getAccNo());
+            faParamJson.put("ifsc", account.getIfsc());
+            String fundStr = getFaId(config, account);
+            JSONObject faJson = new JSONObject(fundStr);
             if (!faJson.getBoolean("success")) {
-                JSONObject error = new JSONObject();
-                error.put("message", faJson.getString("message"));
-
-                resp.put("success", false);
-                resp.put("data", error);
-                return resp.toString();
+                withdrawalSuc.setSuccess(false);
+                withdrawalSuc.setMessage(faJson.getString("message"));
+                return withdrawalSuc;
             }
             faId = faJson.getString("faId");
-
-            PlayerAccountService.getInstance().updateFaId(faId, data.getLongValue("playerId"));
+            PlayerAccountService.getInstance().updateFaId(faId, withdrawal.getPlayerId());
         }
 
+        BigDecimal am = new BigDecimal(String.valueOf(withdrawal.getAmount()));
+        BigDecimal amount = am.multiply(BigDecimal.ONE.subtract(config.getWithdrawFee())).setScale(2, RoundingMode.DOWN);
         //payout
         String finalFaId = faId;
         JSONObject json = new JSONObject() {{
-            put("account_number", data.getString("businessAccount"));
+            put("account_number", config.getBusinessAccount());
             put("fund_account_id", finalFaId);
-            put("amount", data.getDouble("amount") * 100);
+            put("amount", amount.floatValue() * 100);
             put("currency", "INR");
             put("mode", "IMPS");
             put("purpose", "payout");
         }};
         logger.info("razorpay payout请求参数：{}", json.toString());
-        String payoutStr = RazorPayApi.getInstance().payout(getAuthMap(data), json.toString());
+        String payoutStr = RazorPayApi.getInstance().payout(getAuthMap(config), json.toString());
         logger.info("razorpay payout返回数据：{}", payoutStr);
 
-        JSONObject payoutJson = JSONObject.parseObject(payoutStr);
+        JSONObject payoutJson = new JSONObject(payoutStr);
 
         boolean success = true;
         String errorMsg = "";
@@ -117,49 +132,40 @@ public class RazorPay extends OrderPay {
             success = false;
             errorMsg = error.getString("description");
         } else {
-            data.put("transferId", payoutJson.getString("id"));
+            withdrawal.setReferenceId(payoutJson.getString("id"));
             if (!PAY_STATUS.contains(payoutJson.getString("status"))) {
                 success = false;
                 errorMsg = payoutJson.getString("failure_reason");
             }
         }
         if (!success) {
-            JSONObject error = new JSONObject();
-            error.put("message", errorMsg);
-
-            resp.put("success", false);
-            resp.put("data", error);
-            return resp.toString();
+            withdrawalSuc.setSuccess(false);
+            withdrawalSuc.setMessage(errorMsg);
+            return withdrawalSuc;
         }
 
-        data.remove("clientId");
-        data.remove("clientSecret");
-        data.remove("businessAccount");
-        data.remove("faId");
-        resp.put("success", true);
-        resp.put("data", data);
-        return resp.toString();
+        withdrawalSuc.setSuccess(true);
+        return withdrawalSuc;
     }
 
-    private Map<String, String> getAuthMap(JSONObject data) {
+    private Map<String, String> getAuthMap(PayWithdrawalConfig config) {
         Map<String, String> authMap = new HashMap<>();
-        authMap.put("keyId", data.getString("clientId"));
-        authMap.put("keySecret", data.getString("clientSecret"));
+        authMap.put("keyId", config.getClientId());
+        authMap.put("keySecret", config.getClientSecret());
         return authMap;
     }
 
-    public String getFaId(String str) {
-        JSONObject data = JSONObject.parseObject(str);
+    public String getFaId(PayWithdrawalConfig config, PlayerAccount account) {
 
         JSONObject json = new JSONObject();
-        String contactName = data.getString("name").replaceAll(" ", "") + data.getLong("playerId");
+        String contactName = account.getName().replaceAll(" ", "") + account.getPlayerId();
         if (contactName.length() > 50) contactName = contactName.substring(0, 50);
 
         json.put("name", contactName);
-        logger.info("razorpay create contact, name: {}", data.getString("name"));
-        String contactStr = RazorPayApi.getInstance().createContact(getAuthMap(data), json.toString());
+        logger.info("razorpay create contact, name: {}", contactName);
+        String contactStr = RazorPayApi.getInstance().createContact(getAuthMap(config), json.toString());
         logger.info("razorpay create contact, resp: {}", contactStr);
-        JSONObject contactJson = JSONObject.parseObject(contactStr);
+        JSONObject contactJson = new JSONObject(contactStr);
         if (contactJson.get("error") != null) {
             JSONObject error = contactJson.getJSONObject("error");
             return new JSONObject() {{
@@ -173,14 +179,14 @@ public class RazorPay extends OrderPay {
         fundParam.put("contact_id", contactId);
         fundParam.put("account_type", "bank_account");
         fundParam.put("bank_account", new JSONObject() {{
-            put("name", data.getString("name"));
-            put("ifsc", data.getString("ifsc"));
-            put("account_number", data.getString("accNo"));
+            put("name", account.getName());
+            put("ifsc", account.getIfsc());
+            put("account_number", account.getAccNo());
         }});
         logger.info("razorpay create fund, param: {}", fundParam.toString());
-        String fundStr = RazorPayApi.getInstance().createFund(getAuthMap(data), fundParam.toJSONString());
+        String fundStr = RazorPayApi.getInstance().createFund(getAuthMap(config), fundParam.toString());
         logger.info("razorpay create fund, resp: {}", fundStr);
-        JSONObject fundJson = JSONObject.parseObject(fundStr);
+        JSONObject fundJson = new JSONObject(fundStr);
         if (fundJson.get("error") != null) {
             JSONObject error = fundJson.getJSONObject("error");
             return new JSONObject() {{

@@ -29,6 +29,9 @@ public class Player implements Serializable {
 	public static final String APPID_NAME = "appId";
 	public static final String BANLOGIN_NAME = "banLogin";
 	public static final String REFERRALCODE_NAME = "referralCode";
+	public static final String ORDERAMOUNT_NAME = "orderAmount";
+	public static final String WITHDRAWAMOUNT_NAME = "withdrawAmount";
+	public static final String KFID_NAME = "kfId";
 
 
     	private long id;
@@ -166,6 +169,30 @@ public class Player implements Serializable {
 	public void setReferralCode(String referralCode) {
 		this.referralCode = referralCode;
 		entityMap.put(REFERRALCODE_NAME, referralCode);
+	}
+	private double orderAmount;
+	public double getOrderAmount() {
+		return orderAmount;
+	}
+	public void setOrderAmount(double orderAmount) {
+		this.orderAmount = orderAmount;
+		entityMap.put(ORDERAMOUNT_NAME, orderAmount);
+	}
+	private double withdrawAmount;
+	public double getWithdrawAmount() {
+		return withdrawAmount;
+	}
+	public void setWithdrawAmount(double withdrawAmount) {
+		this.withdrawAmount = withdrawAmount;
+		entityMap.put(WITHDRAWAMOUNT_NAME, withdrawAmount);
+	}
+	private long kfId;
+	public long getKfId() {
+		return kfId;
+	}
+	public void setKfId(long kfId) {
+		this.kfId = kfId;
+		entityMap.put(KFID_NAME, kfId);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

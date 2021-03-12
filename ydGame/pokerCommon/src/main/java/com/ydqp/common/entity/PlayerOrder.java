@@ -15,23 +15,17 @@ public class PlayerOrder implements Serializable {
 	   	public static final String ID_NAME = "id";
 	public static final String ORDERID_NAME = "orderId";
 	public static final String PLAYERID_NAME = "playerId";
-	public static final String NAME_NAME = "name";
-	public static final String MOBILE_NAME = "mobile";
-	public static final String PAYERVA_NAME = "payerVA";
 	public static final String PRODUCTID_NAME = "productId";
 	public static final String AMOUNT_NAME = "amount";
-	public static final String ORDERTIME_NAME = "orderTime";
-	public static final String PAYTIME_NAME = "payTime";
-	public static final String PAYSTATUS_NAME = "payStatus";
+	public static final String STATUS_NAME = "status";
 	public static final String TXNORDERID_NAME = "txnOrderId";
-	public static final String TXNSTATUS_NAME = "txnStatus";
-	public static final String TXNCOMPLETIONDATE_NAME = "txnCompletionDate";
+	public static final String CREATETIME_NAME = "createTime";
+	public static final String COMPLETETIME_NAME = "completeTime";
 	public static final String PAYCHANNEL_NAME = "payChannel";
-	public static final String ERRORMSG_NAME = "errorMsg";
-	public static final String PLATFORMPAYCHANNEL_NAME = "platformPayChannel";
-	public static final String CFTOKEN_NAME = "cftoken";
+	public static final String MSG_NAME = "msg";
 	public static final String APPID_NAME = "appId";
 	public static final String REGISTERTIME_NAME = "registerTime";
+	public static final String KFID_NAME = "kfId";
 
 
     	private long id;
@@ -58,30 +52,6 @@ public class PlayerOrder implements Serializable {
 	 this.playerId = playerId;
 	 entityMap.put(PLAYERID_NAME, playerId);
 	}
-	private String name;
-	public String getName() {
-	return name;
-	}
- 	 public void setName(String name){
-	 this.name = name;
-	 entityMap.put(NAME_NAME, name);
-	}
-	private String mobile;
-	public String getMobile() {
-	return mobile;
-	}
- 	 public void setMobile(String mobile){
-	 this.mobile = mobile;
-	 entityMap.put(MOBILE_NAME, mobile);
-	}
-	private String payerVA;
-	public String getPayerVA() {
-	return payerVA;
-	}
- 	 public void setPayerVA(String payerVA){
-	 this.payerVA = payerVA;
-	 entityMap.put(PAYERVA_NAME, payerVA);
-	}
 	private int productId;
 	public int getProductId() {
 	return productId;
@@ -98,29 +68,21 @@ public class PlayerOrder implements Serializable {
 	 this.amount = amount;
 	 entityMap.put(AMOUNT_NAME, amount);
 	}
-	private int orderTime;
-	public int getOrderTime() {
-	return orderTime;
+	private int createTime;
+	public int getCreateTime() {
+	return createTime;
 	}
- 	 public void setOrderTime(int orderTime){
-	 this.orderTime = orderTime;
-	 entityMap.put(ORDERTIME_NAME, orderTime);
+ 	 public void setCreateTime(int createTime){
+	 this.createTime = createTime;
+	 entityMap.put(CREATETIME_NAME, createTime);
 	}
-	private int payTime;
-	public int getPayTime() {
-	return payTime;
+	private int status;
+	public int getStatus() {
+	return status;
 	}
- 	 public void setPayTime(int payTime){
-	 this.payTime = payTime;
-	 entityMap.put(PAYTIME_NAME, payTime);
-	}
-	private int payStatus;
-	public int getPayStatus() {
-	return payStatus;
-	}
- 	 public void setPayStatus(int payStatus){
-	 this.payStatus = payStatus;
-	 entityMap.put(PAYSTATUS_NAME, payStatus);
+ 	 public void setStatus(int status){
+	 this.status = status;
+	 entityMap.put(STATUS_NAME, status);
 	}
 	private String txnOrderId;
 	public String getTxnOrderId() {
@@ -130,21 +92,13 @@ public class PlayerOrder implements Serializable {
 	 this.txnOrderId = txnOrderId;
 	 entityMap.put(TXNORDERID_NAME, txnOrderId);
 	}
-	private String txnStatus;
-	public String getTxnStatus() {
-	return txnStatus;
+	private int updateTime;
+	public int getUpdateTime() {
+	return updateTime;
 	}
- 	 public void setTxnStatus(String txnStatus){
-	 this.txnStatus = txnStatus;
-	 entityMap.put(TXNSTATUS_NAME, txnStatus);
-	}
-	private int txnCompletionDate;
-	public int getTxnCompletionDate() {
-	return txnCompletionDate;
-	}
- 	 public void setTxnCompletionDate(int txnCompletionDate){
-	 this.txnCompletionDate = txnCompletionDate;
-	 entityMap.put(TXNCOMPLETIONDATE_NAME, txnCompletionDate);
+ 	 public void setUpdateTime(int updateTime){
+	 this.updateTime = updateTime;
+	 entityMap.put(COMPLETETIME_NAME, updateTime);
 	}
 	private String payChannel;
 	public String getPayChannel() {
@@ -154,29 +108,13 @@ public class PlayerOrder implements Serializable {
 	 this.payChannel = payChannel;
 	 entityMap.put(PAYCHANNEL_NAME, payChannel);
 	}
-	private String errorMsg;
-	public String getErrorMsg() {
-	return errorMsg;
+	private String msg;
+	public String getMsg() {
+	return msg;
 	}
- 	 public void setErrorMsg(String errorMsg){
-	 this.errorMsg = errorMsg;
-	 entityMap.put(ERRORMSG_NAME, errorMsg);
-	}
-	private int platformPayChannel;
-	public int getPlatformPayChannel() {
-	return platformPayChannel;
-	}
- 	 public void setPlatformPayChannel(int platformPayChannel){
-	 this.platformPayChannel = platformPayChannel;
-	 entityMap.put(PLATFORMPAYCHANNEL_NAME, platformPayChannel);
-	}
-	private String cftoken;
-	public String getCftoken() {
-	return cftoken;
-	}
- 	 public void setCftoken(String cftoken){
-	 this.cftoken = cftoken;
-	 entityMap.put(CFTOKEN_NAME, cftoken);
+ 	 public void setMsg(String msg){
+	 this.msg = msg;
+	 entityMap.put(MSG_NAME, msg);
 	}
 	private int appId;
 	public int getAppId() {
@@ -193,6 +131,14 @@ public class PlayerOrder implements Serializable {
 	public void setRegisterTime(int registerTime) {
 		this.registerTime = registerTime;
 		entityMap.put(REGISTERTIME_NAME, registerTime);
+	}
+	private long kfId;
+	public long getKfId() {
+		return kfId;
+	}
+	public void setKfId(long kfId) {
+		this.kfId = kfId;
+		entityMap.put(KFID_NAME, kfId);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

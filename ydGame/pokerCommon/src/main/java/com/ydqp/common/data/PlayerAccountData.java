@@ -63,8 +63,6 @@ public class PlayerAccountData {
         this.ifsc = playerAccount.getIfsc();
         this.mobile = playerAccount.getMobile();
         this.withdrawalCount = withdrawalCount;
-        this.payMobile = playerAccount.getPayMobile();
         this.email = playerAccount.getEmail();
-        this.bankCode = playerAccount.getBankCode();
     }
 }

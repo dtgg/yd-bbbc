@@ -30,43 +30,16 @@ public class ManageLottery {
 
     private static Map<Integer, Map<Integer, ILottery>> roomLotteryMap;
 
-//    private static Map<Integer, LotteryConfig> configMap;
-
     private static final Map<Long, LotteryBattleRole> lotteryBattleRoleMap = new ConcurrentHashMap<>();
 
     public static void registerLottery() {
         List<LotteryConfig> all = LotteryConfigDao.getInstance().findAll();
 
         lotteryMap = new HashMap<>();
-//        configMap = new HashMap<>();
         for (LotteryConfig lotteryConfig : all) {
-            switch (lotteryConfig.getLotteryType()) {
-                case 1:
-                    ALottery aLottery = new ALottery();
-                    aLottery.setRoomId(5000001);
-                    lotteryMap.put(1, aLottery);
-//                    configMap.put(1, lotteryConfig);
-                    break;
-                case 2:
-                    ALottery bLottery = new ALottery();
-                    bLottery.setRoomId(5000001);
-                    lotteryMap.put(2, bLottery);
-//                    configMap.put(2, lotteryConfig);
-                    break;
-                case 3:
-                    ALottery cLottery = new ALottery();
-                    cLottery.setRoomId(5000001);
-                    lotteryMap.put(3, cLottery);
-//                    configMap.put(3, lotteryConfig);
-                    break;
-                case 4:
-                    ALottery dLottery = new ALottery();
-                    dLottery.setRoomId(5000001);
-                    lotteryMap.put(4, dLottery);
-//                    configMap.put(4, lotteryConfig);
-                    break;
-                default:
-            }
+            RBLottery lottery = new RBLottery();
+            lottery.setRoomId(5000001);
+            lotteryMap.put(lotteryConfig.getLotteryType(), lottery);
         }
         roomLotteryMap = new HashMap<>();
         roomLotteryMap.put(5000001, lotteryMap);

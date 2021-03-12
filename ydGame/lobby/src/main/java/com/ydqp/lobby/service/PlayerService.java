@@ -519,6 +519,7 @@ public class PlayerService {
         MobileRegisterSuc suc = new MobileRegisterSuc();
         //推广码是否有效
         Long superiorId = null;
+        long kfId = 0L;
         if (StringUtils.isNotBlank(mobileRegister.getReferralCode())) {
             String s = ShortCodeKit.convertBase62ToDecimal(mobileRegister.getReferralCode());
             Long permutedId = ShortCodeKit.permutedId(Long.parseLong(s));
@@ -531,6 +532,7 @@ public class PlayerService {
                 return;
             }
             superiorId = referralPlayer.getId();
+            kfId = referralPlayer.getKfId();
         }
 
         String nickname = GuestRegisterConstant.MOBILE_NICKNAME_PREFIX + randomStr(GuestRegisterConstant.NICKNAME_LONGTH);
@@ -546,6 +548,7 @@ public class PlayerService {
         player.setCoinPoint(GuestRegisterConstant.COIN_POINT);
         player.setCreateTime(createTime);
         player.setAppId(mobileRegister.getAppId() == 0 ? 1100001 : mobileRegister.getAppId());
+        player.setKfId(kfId);
 
         long playerId = PlayerLoginDao.getInstance().insertPlayer(player.getParameterMap());
         //referral code
@@ -562,6 +565,7 @@ public class PlayerService {
         playerPromote.setPlayerId(playerId);
         playerPromote.setNickname(nickname);
         playerPromote.setCreateTime(createTime);
+        playerPromote.setAppId(player.getAppId());
         if (superiorId != null) {
             playerPromote.setSuperiorId(superiorId);
 

@@ -17,7 +17,9 @@ public interface ILottery {
 
     String lotteryDraw(Lottery lottery, List<PlayerLottery> playerLotteries);
 
-    void lotteryPay(Lottery lottery, List<PlayerLottery> playerLotteries);
+    Map<Integer, BigDecimal> settleAwardPrice(List<PlayerLottery> playerLotteries);
+
+    PlayerLottery playerLotteryCheck(Lottery lottery, PlayerLottery playerLottery, Integer calculateTime);
 
     void enterLottery(PlayerData playerData, ISession session);
 
@@ -30,6 +32,4 @@ public interface ILottery {
 //    void removeLotteryBattleRole(long playerId);
 
     void sendMessageToBattle(AbstartCreateMessage abstartCreateMessage, LotteryBattleRole lotteryBattleRole);
-
-    Map<Integer, BigDecimal> settleAwardPrice(List<PlayerLottery> playerLotteries);
 }

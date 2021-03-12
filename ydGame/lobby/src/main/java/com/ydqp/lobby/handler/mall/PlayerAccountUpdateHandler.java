@@ -16,7 +16,6 @@ import com.ydqp.common.receiveProtoMsg.mall.PlayerAccountUpdate;
 import com.ydqp.common.sendProtoMsg.mall.PlayerAccountUpdateSuccess;
 import com.ydqp.lobby.cache.PlayerCache;
 import com.ydqp.lobby.pay.cashfree.api.CashFreeApi;
-import com.ydqp.lobby.pay.razorpay.RazorPay;
 import com.ydqp.lobby.service.mall.PayChannelConfigService;
 import com.ydqp.lobby.service.mall.PlayerAccountService;
 import com.ydqp.lobby.service.mall.PlayerWithdrawalService;
@@ -102,7 +101,7 @@ public class PlayerAccountUpdateHandler implements IServerHandler {
             iSession.sendMessageByID(playerAccountUpdateSuccess, playerAccountUpdate.getConnId());
             return;
         }
-        PayChannelConfig payChannelConfig = PayUtil.getInstance().getConfig(payChannelConfigs);
+        PayChannelConfig payChannelConfig = PayUtil.getInstance().getConfig(payChannelConfigs, playerId);
 
         PlayerAccount playerAccount = new PlayerAccount();
         playerAccount.setPlayerId(playerId);
@@ -110,7 +109,6 @@ public class PlayerAccountUpdateHandler implements IServerHandler {
         playerAccount.setAccNo(accNo);
         playerAccount.setIfsc(ifsc);
         playerAccount.setMobile(mobile);
-        playerAccount.setBankCode(bankCode);
 
         boolean deal = true;
         JSONObject jsonObject = new JSONObject();
@@ -244,7 +242,8 @@ public class PlayerAccountUpdateHandler implements IServerHandler {
         data.put("name", name);
         data.put("accNo", accNo);
         data.put("ifsc", ifsc);
-        String str = new RazorPay().getFaId(data.toJSONString());
+//        String str = new RazorPay().getFaId(data.toJSONString());
+        String str = "";
 
         JSONObject result = JSON.parseObject(str);
         if (!result.getBoolean("success")) return result;

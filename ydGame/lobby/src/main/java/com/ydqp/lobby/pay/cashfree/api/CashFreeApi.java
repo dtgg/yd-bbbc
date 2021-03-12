@@ -24,7 +24,8 @@ public class CashFreeApi {
 
     public String createOrder(Map<String, String> headParams, JSONObject params) {
         String host = PayUrlUtil.getInstance().getUrl("cashFreePaymentUrl");
-        return HttpUtils.getInstance().sendPost(host + ORDER_CREATE, headParams, params);
+//        return HttpUtils.getInstance().sendPost(host + ORDER_CREATE, headParams, params);
+        return "";
     }
 
     /******************************************************************************************************************/
@@ -89,7 +90,7 @@ public class CashFreeApi {
         return HttpUtils.getInstance().sendPost(payoutHost() + AUTHORIZE, new HashMap<String, String>() {{
             put("X-Client-Id", clientId);
             put("X-Client-Secret", clientSecret);
-        }}, null);
+        }}, null, false);
     }
 
     /**
@@ -100,7 +101,7 @@ public class CashFreeApi {
      * @return
      */
     public String verifyToken(String token) {
-        return HttpUtils.getInstance().sendPost(payoutHost() + VERIFY_TOKEN, headParams(token), null);
+        return HttpUtils.getInstance().sendPost(payoutHost() + VERIFY_TOKEN, headParams(token), null, false);
     }
 
     /**
@@ -114,11 +115,11 @@ public class CashFreeApi {
      * @return
      */
     public String addBeneficiary(String token, JSONObject params) {
-        return HttpUtils.getInstance().sendPost(payoutHost() + ADD_BENEFICIARY, headParams(token), params);
+        return HttpUtils.getInstance().sendPost(payoutHost() + ADD_BENEFICIARY, headParams(token), params, false);
     }
 
     public String removeBeneficiary(String token, JSONObject params) {
-        return HttpUtils.getInstance().sendPost(payoutHost() + REMOVE_BENEFICIARY, headParams(token), params);
+        return HttpUtils.getInstance().sendPost(payoutHost() + REMOVE_BENEFICIARY, headParams(token), params, false);
     }
 
     /**
@@ -130,7 +131,7 @@ public class CashFreeApi {
      * @return
      */
     public String getBalance(String token) {
-        return HttpUtils.getInstance().sendPost(payoutHost() + GET_BALANCE, headParams(token), null);
+        return HttpUtils.getInstance().sendPost(payoutHost() + GET_BALANCE, headParams(token), null, false);
     }
 
     /**
@@ -144,18 +145,18 @@ public class CashFreeApi {
      * @return
      */
     public String requestTransfer(String token, JSONObject params) {
-        return HttpUtils.getInstance().sendPost(payoutHost() + REQUEST_TRANSFER_SYNC, headParams(token), params);
+        return HttpUtils.getInstance().sendPost(payoutHost() + REQUEST_TRANSFER_SYNC, headParams(token), params, false);
     }
 
     public String getTransferStatus(String token, JSONObject params) {
-        return HttpUtils.getInstance().sendGet(payoutHost() + GET_TRANSFER_STATUS, headParams(token), params);
+        return HttpUtils.getInstance().sendGet(payoutHost() + GET_TRANSFER_STATUS, headParams(token), params, false);
     }
 
     public String getBeneId(String token, JSONObject params) {
-        return HttpUtils.getInstance().sendGet(payoutHost() + GET_BENE_ID, headParams(token), params);
+        return HttpUtils.getInstance().sendGet(payoutHost() + GET_BENE_ID, headParams(token), params, false);
     }
 
     public String getBeneficiary(String token, String beneId) {
-        return HttpUtils.getInstance().sendGet(payoutHost() + GET_BENEFICIARY + "/" + beneId, headParams(token), new JSONObject());
+        return HttpUtils.getInstance().sendGet(payoutHost() + GET_BENEFICIARY + "/" + beneId, headParams(token), new JSONObject(), false);
     }
 }

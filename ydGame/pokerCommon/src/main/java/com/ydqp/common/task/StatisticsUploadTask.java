@@ -34,7 +34,7 @@ public class StatisticsUploadTask implements Runnable {
             logger.info("上报数据：{}", data.toJSONString());
             Map<String, String> headParams = new HashMap<>();
             headParams.put("content-type", "application/json");
-            String s = HttpUtils.getInstance().sendPost(url, headParams, data);
+            String s = HttpUtils.getInstance().sendPost(url, headParams, data, false);
             logger.info("数据上报结果：{}", s);
         } catch (Exception e) {
             e.printStackTrace();

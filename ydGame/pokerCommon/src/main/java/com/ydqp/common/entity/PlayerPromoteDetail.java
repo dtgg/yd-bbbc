@@ -20,6 +20,7 @@ public class PlayerPromoteDetail implements Serializable {
 	public static final String SUPERIORAMOUNT_NAME = "superiorAmount";
 	public static final String GRANDAMOUNT_NAME = "grandAmount";
 	public static final String CREATETIME_NAME = "createTime";
+	public static final String APPID_NAME = "appId";
 
 
     	private long id;
@@ -78,10 +79,16 @@ public class PlayerPromoteDetail implements Serializable {
 	 this.createTime = createTime;
 	 entityMap.put(CREATETIME_NAME, createTime);
 	}
+	private int appId;
+	public int getAppId() {
+		return appId;
+	}
+	public void setAppId(int appId) {
+		this.appId = appId;
+		entityMap.put(APPID_NAME, appId);
+	}
 
-
-
-    public Object getValueByFieldName(String fieldName) {
+	public Object getValueByFieldName(String fieldName) {
         return this.entityMap.get(fieldName);
     }
 

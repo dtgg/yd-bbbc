@@ -78,12 +78,10 @@ public class LotteryDrawTask implements Runnable {
                 //更新lottery数据，已计算
                 lottery.setNumber(num);
                 lottery.setStatus(1);
-                lottery.setOpenTime(time + 30);
+                lottery.setOpenTime(time + 20);
                 lottery.setPrice(LotteryUtil.getPrice() + lottery.getPeriod());
 
                 int drawNum = Integer.parseInt(num);
-                //开奖颜色
-                List<Integer> colorList = drawColorByNum(drawNum);
 
                 BigDecimal totalPay = BigDecimal.ZERO;
                 BigDecimal totalFee = BigDecimal.ZERO;
@@ -91,39 +89,7 @@ public class LotteryDrawTask implements Runnable {
                     totalPay = totalPay.add(playerLottery.getPay());
                     totalFee = totalFee.add(playerLottery.getFee());
 
-                    //未中奖
-                    if ((playerLottery.getSelected() != null && !colorList.contains(playerLottery.getSelected())) ||
-                            (StringUtils.isNotBlank(playerLottery.getNumber()) && !playerLottery.getNumber().equals("" + drawNum))) {
-                        playerLottery.setStatus(2);
-                        playerLottery.setOpenTime(time + 30);
-                        playerLottery.setAward(BigDecimal.ZERO.subtract(playerLottery.getPay()));
-                        playerLottery.setResult(num);
-                        updatePlayerLotteryList.add(playerLottery);
-                        continue;
-                    }
-
-                    BigDecimal effectiveBet = playerLottery.getPay().subtract(playerLottery.getFee());
-                    BigDecimal award;
-                    //下注颜色中奖
-                    if (playerLottery.getSelected() != null && colorList.contains(playerLottery.getSelected())) {
-                        //紫色
-                        if (playerLottery.getSelected().equals(LotteryColorConstant.VIOLET)) {
-                            award = effectiveBet.multiply(new BigDecimal("4.5"));
-                        } else {
-                            //红绿
-                            BigDecimal awardRate = new BigDecimal((drawNum == 0 || drawNum == 5) ? "1.5" : "2");
-                            award = effectiveBet.multiply(awardRate);
-                        }
-                    } else if (StringUtils.isNotBlank(playerLottery.getNumber()) && playerLottery.getNumber().equals("" + drawNum)) {
-                        //下注数字中奖
-                        award = effectiveBet.multiply(new BigDecimal("9"));
-                    } else {
-                        continue;
-                    }
-                    playerLottery.setStatus(1);
-                    playerLottery.setOpenTime(time + 30);
-                    playerLottery.setAward(award);
-                    playerLottery.setResult(num);
+                    iLottery.playerLotteryCheck(lottery, playerLottery, time);
 
                     updatePlayerLotteryList.add(playerLottery);
                 }
@@ -195,22 +161,8 @@ public class LotteryDrawTask implements Runnable {
         LotteryCache.getInstance().addDrawInfo(lotteryDrawNum);
 
         long endTime = System.currentTimeMillis();
-        if (endTime -  startTime> 2000) {
+        if (endTime - startTime > 2000) {
             logger.warn("开奖慢日志，执行时间：{}", endTime - startTime);
         }
-    }
-
-    //根据开奖数字，判断开奖颜色
-    private List<Integer> drawColorByNum(int num) {
-        List<Integer> colorList = new ArrayList<>();
-        if (num == 0 || num == 5) {
-            colorList.add(LotteryColorConstant.VIOLET);
-            colorList.add(num == 0 ? LotteryColorConstant.RED : LotteryColorConstant.GREEN);
-        } else if (num % 2 == 0) {
-            colorList.add(LotteryColorConstant.RED);
-        } else {
-            colorList.add(LotteryColorConstant.GREEN);
-        }
-        return colorList;
     }
 }

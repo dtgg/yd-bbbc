@@ -27,14 +27,14 @@ public class RazorPayApi {
     }
 
     public String createContact(Map<String, String> authMap, String paramStr) {
-        return HttpUtils.getInstance().sendPostWithAuth(getHost() + CREATE_CONTACT, authMap, JSONObject.parseObject(paramStr));
+        return HttpUtils.getInstance().sendPostWithAuth(getHost() + CREATE_CONTACT, null, authMap, JSONObject.parseObject(paramStr), false);
     }
 
     public String createFund(Map<String, String> authMap, String paramStr) {
-        return HttpUtils.getInstance().sendPostWithAuth(getHost() + CREATE_FUND, authMap, JSONObject.parseObject(paramStr));
+        return HttpUtils.getInstance().sendPostWithAuth(getHost() + CREATE_FUND, null, authMap, JSONObject.parseObject(paramStr), false);
     }
 
     public String payout(Map<String, String> authMap, String paramStr) {
-        return HttpUtils.getInstance().sendPostWithAuth(getHost() + PAYOUTS, authMap, JSONObject.parseObject(paramStr));
+        return HttpUtils.getInstance().sendPostWithAuth(getHost() + PAYOUTS, null, authMap, JSONObject.parseObject(paramStr), false);
     }
 }

@@ -41,6 +41,7 @@
 
                 <statupload.url>http://192.168.10.28:80/statistics/collect</statupload.url>
 
+                <isdebug>true</isdebug>
                 <cashfreepayment.url>https://test.cashfree.com</cashfreepayment.url>
                 <cashfreepayout.url>https://payout-gamma.cashfree.com</cashfreepayout.url>
                 <razorpay.url>https://api.razorpay.com/v1</razorpay.url>
@@ -152,6 +153,7 @@
 
                 <statupload.url>http://luckyunion-admin.alcs8.com/statistics/collect</statupload.url>
 
+                <isdebug>false</isdebug>
                 <cashfreepayment.url>https://api.cashfree.com</cashfreepayment.url>
                 <cashfreepayout.url>https://payout-api.cashfree.com</cashfreepayout.url>
                 <razorpay.url>https://api.razorpay.com/v1</razorpay.url>

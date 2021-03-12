@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author cfq
  */
-public class PayChannelConfig implements Serializable {
+public class PayWithdrawalConfig implements Serializable {
   
        public static final long serialVersionUID = 1594964840520l;
        private Map<String,Object> entityMap = new HashMap<String,Object>(16,1);
