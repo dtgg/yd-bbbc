@@ -22,7 +22,7 @@ public class LotteryMaintainTask implements Runnable {
         SysCloseServer sysCloseServer = SysCloseServerDao.getInstance().getSysCloseServer(50, 1);
         if (sysCloseServer != null && sysCloseServer.getStatus() == 1) {
             //下一期的开始时间
-            List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery();
+            List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery(ManageLottery.getInstance().getLotterySize());
             int nextTime = 0;
             if (CollectionUtils.isNotEmpty(lotteries)) {
                 nextTime = lotteries.get(0).getCreateTime();

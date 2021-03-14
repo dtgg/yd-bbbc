@@ -15,6 +15,7 @@ import com.ydqp.common.entity.PlayerLottery;
 import com.ydqp.common.entity.PlayerPromoteDetail;
 import com.ydqp.common.lottery.player.ILottery;
 import com.ydqp.common.lottery.player.ManageLottery;
+import com.ydqp.common.lottery.player.ManageLotteryRoom;
 import com.ydqp.common.lottery.role.LotteryBattleRole;
 import com.ydqp.common.receiveProtoMsg.lottery.LotteryBuy;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
@@ -81,7 +82,8 @@ public class LotteryBuyHandler implements IServerHandler {
 
         ILottery iLottery;
         if (player.getRoomId() == 0) {
-            iLottery = ManageLottery.getInstance().getLotteryByRoomIdAndType(5000001, lotteryBuy.getType());
+            Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryBuy.getType());
+            iLottery = ManageLottery.getInstance().getLotteryByRoomIdAndType(roomId, lotteryBuy.getType());
             iLottery.enterLottery(playerData, iSession);
         } else {
             iLottery = ManageLottery.getInstance().getLotteryByRoomIdAndType(player.getRoomId(), lotteryBuy.getType());

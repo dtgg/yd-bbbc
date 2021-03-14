@@ -10,6 +10,7 @@ import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Lottery;
+import com.ydqp.common.lottery.player.ManageLottery;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryNowSuc;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeInfo;
 import com.ydqp.common.utils.LotteryUtil;
@@ -30,7 +31,7 @@ public class LotteryNowHandler implements IServerHandler {
             return;
         }
 
-        List<Lottery> lotteries = LotteryDao.getInstance().findCurrentLottery();
+        List<Lottery> lotteries = LotteryDao.getInstance().findCurrentLottery(ManageLottery.getInstance().getLotterySize());
 
         List<LotteryTypeInfo> infos = lotteries.stream().map(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();

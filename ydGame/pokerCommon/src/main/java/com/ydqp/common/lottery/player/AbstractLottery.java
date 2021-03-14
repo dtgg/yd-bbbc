@@ -38,6 +38,8 @@ public abstract class AbstractLottery implements ILottery {
     @Getter
     public int roomId;
 
+    @Setter
+    @Getter
     public int type;
 
     @Getter
@@ -72,10 +74,12 @@ public abstract class AbstractLottery implements ILottery {
         LotteryBattleRoleInfo lotteryBattleRoleInfo = new LotteryBattleRoleInfo(lotteryBattleRole);
         lotteryRoomInfo.setLotteryBattleRoleInfo(lotteryBattleRoleInfo);
 
+        List<Integer> roomLotteryTypes = ManageLotteryRoom.getInstance().getType(this.roomId);
+
         //不同彩种当前期数
-        List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery();
+        List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery(, roomLotteryTypes.size());
         //不同彩种上一期
-        List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery();
+        List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery(lotterySize);
         Map<Integer, Lottery> lastLotteryMap = lotteries.stream().collect(Collectors.toMap(Lottery::getType, Function.identity()));
         //玩家不同彩种购买过的最后一期
         List<PlayerLottery> newestPlayerLottery = PlayerLotteryDao.getInstance().findNewestLottery(playerData.getPlayerId());
@@ -125,10 +129,11 @@ public abstract class AbstractLottery implements ILottery {
             lotteryRoomInfo.setLotteryBattleRoleInfo(lotteryBattleRoleInfo);
 
             int nowTime = new Long(System.currentTimeMillis() / 1000).intValue();
+            Integer lotterySize = ManageLottery.getInstance().getLotterySize();
             //不同彩种当前期数
-            List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery();
+            List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery(lotterySize);
             //不同彩种上一期
-            List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery();
+            List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery(lotterySize);
             Map<Integer, Lottery> lastLotteryMap = lotteries.stream().collect(Collectors.toMap(Lottery::getType, Function.identity()));
             //玩家不同彩种购买过的最后一期
             List<PlayerLottery> newestPlayerLottery = PlayerLotteryDao.getInstance().findNewestLottery(nowTime);

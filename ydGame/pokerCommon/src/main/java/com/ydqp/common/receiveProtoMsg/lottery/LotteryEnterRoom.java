@@ -23,6 +23,11 @@ public class LotteryEnterRoom extends AbstartParaseMessage {
     @Protobuf(fieldType = FieldType.INT32, order = 2)
     private int roomId;
 
+    @Setter
+    @Getter
+    @Protobuf(fieldType = FieldType.INT32, order = 3)
+    private int type;
+
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();

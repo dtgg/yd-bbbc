@@ -26,7 +26,7 @@ public class LotteryEnterRoomHandler implements IServerHandler {
             return;
         }
 
-        ILottery iLottery = ManageLottery.getInstance().getLotteryByRoomIdAndType(lotteryEnterRoom.getRoomId(), 1);
+        ILottery iLottery = ManageLottery.getInstance().getLotteryByRoomIdAndType(lotteryEnterRoom.getRoomId(), lotteryEnterRoom.getType());
         iLottery.enterLottery(playerData, iSession);
     }
 }

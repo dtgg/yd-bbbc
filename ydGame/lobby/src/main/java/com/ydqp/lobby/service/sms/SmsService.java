@@ -52,8 +52,8 @@ public class SmsService {
             return false;
         }
         // 发送短信验证码
-        String code = sendSmsByTianYiHong(mobile, areaCode);
-//        String code = "1234";
+//        String code = sendSmsByTianYiHong(mobile, areaCode);
+        String code = "1234";
         if (code != null) {
             // 保存验证码至redis
             PlayerCache.getInstance().addVerificationCode(areaCode + mobile, code);

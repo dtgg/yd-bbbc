@@ -140,7 +140,7 @@ public class LotteryDrawTask implements Runnable {
         }
 
         //下一期
-        List<Lottery> nextLotteries = LotteryDao.getInstance().findNextLottery();
+        List<Lottery> nextLotteries = LotteryDao.getInstance().findNextLottery(ManageLottery.getInstance().getLotterySize());
         List<LotteryTypeInfo> infos = nextLotteries.stream().map(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();
             info.setLotteryId(lottery.getId());

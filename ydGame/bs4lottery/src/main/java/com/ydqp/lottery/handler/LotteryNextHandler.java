@@ -10,6 +10,7 @@ import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Lottery;
+import com.ydqp.common.lottery.player.ManageLottery;
 import com.ydqp.common.receiveProtoMsg.lottery.LotteryNext;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryNextSuc;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeInfo;
@@ -34,7 +35,7 @@ public class LotteryNextHandler implements IServerHandler {
         }
         logger.info("{}请求获取下期数据, connId:{}", playerData.getPlayerId(), lotteryNext.getConnId());
 
-        List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery();
+        List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery(ManageLottery.getInstance().getLotterySize());
 
         List<LotteryTypeInfo> infos = lotteries.stream().map(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();

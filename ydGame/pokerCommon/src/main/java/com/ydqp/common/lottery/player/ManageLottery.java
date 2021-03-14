@@ -11,7 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ManageLottery {
 
-    private ManageLottery() {}
+    private ManageLottery() {
+    }
 
     private static ManageLottery instance;
 
@@ -36,13 +37,39 @@ public class ManageLottery {
         List<LotteryConfig> all = LotteryConfigDao.getInstance().findAll();
 
         lotteryMap = new HashMap<>();
-        for (LotteryConfig lotteryConfig : all) {
-            RBLottery lottery = new RBLottery();
-            lottery.setRoomId(5000001);
-            lotteryMap.put(lotteryConfig.getLotteryType(), lottery);
-        }
         roomLotteryMap = new HashMap<>();
-        roomLotteryMap.put(5000001, lotteryMap);
+
+        if (all != null) {
+            for (LotteryConfig lotteryConfig : all) {
+                Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryConfig.getLotteryType());
+                switch (roomId) {
+                    case 5000001:
+                        RBLottery lottery = new RBLottery();
+                        lottery.setRoomId(roomId);
+                        lottery.setType(lotteryConfig.getLotteryType());
+                        lotteryMap.put(lotteryConfig.getLotteryType(), lottery);
+                        break;
+                    case 5000002:
+                        BJRaceLottery lottery1 = new BJRaceLottery();
+                        lottery1.setRoomId(roomId);
+                        lottery1.setType(lotteryConfig.getLotteryType());
+                        lotteryMap.put(lotteryConfig.getLotteryType(), lottery1);
+                        break;
+                    default:
+                }
+            }
+        }
+
+        lotteryMap.forEach((k, v) -> {
+            Integer roomId = ManageLotteryRoom.getInstance().getRoomId(k);
+            if (roomLotteryMap.get(roomId) == null) {
+                Map<Integer, ILottery> map = new HashMap<>();
+                map.put(k, v);
+                roomLotteryMap.put(roomId, map);
+            } else {
+                roomLotteryMap.get(roomId).put(k, v);
+            }
+        });
     }
 
     public ILottery getLotteryByRoomIdAndType(int roomId, int type) {
