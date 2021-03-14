@@ -11,8 +11,11 @@ import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.lottery.player.ManageLottery;
+import com.ydqp.common.lottery.player.ManageLotteryRoom;
+import com.ydqp.common.receiveProtoMsg.lottery.LotteryNow;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryNowSuc;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeInfo;
+import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.common.utils.LotteryUtil;
 import com.ydqp.lottery.util.DateUtil;
 
@@ -25,13 +28,17 @@ public class LotteryNowHandler implements IServerHandler {
 
     @Override
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
+        LotteryNow lotteryNow = (LotteryNow)abstartParaseMessage;
         PlayerData playerData = PlayerCache.getInstance().getPlayer(abstartParaseMessage.getConnId());
         if (playerData == null) {
             logger.error("player is not true");
             return;
         }
 
-        List<Lottery> lotteries = LotteryDao.getInstance().findCurrentLottery(ManageLottery.getInstance().getLotterySize());
+        Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryNow.getType());
+        List<Integer> roomLotteryTypes = ManageLotteryRoom.getInstance().getType(roomId);
+        String types = CommonUtils.inString(roomLotteryTypes);
+        List<Lottery> lotteries = LotteryDao.getInstance().findCurrentLottery(types, roomLotteryTypes.size());
 
         List<LotteryTypeInfo> infos = lotteries.stream().map(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();

@@ -7,7 +7,7 @@ import redis.clients.jedis.Jedis;
 
 public class LotteryCache {
 
-    private static final String DRAW_INFO_KEY = "drawInfo";
+    public static final String DRAW_INFO_KEY = "drawInfo:";
 
     private LotteryCache() {}
 
@@ -20,10 +20,10 @@ public class LotteryCache {
         return instance;
     }
 
-    public void addDrawInfo(LotteryDrawNum lotteryDrawNum) {
+    public void addDrawInfo(String key, LotteryDrawNum lotteryDrawNum) {
         Jedis jedis = JedisUtil.getInstance().getJedis();
         try {
-            jedis.set(DRAW_INFO_KEY, JSONObject.toJSONString(lotteryDrawNum));
+            jedis.set(key, JSONObject.toJSONString(lotteryDrawNum));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -31,11 +31,11 @@ public class LotteryCache {
         }
     }
 
-    public LotteryDrawNum getDrawInfo() {
+    public LotteryDrawNum getDrawInfo(String key) {
         Jedis jedis = JedisUtil.getInstance().getJedis();
         LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
         try {
-            String data = jedis.get(DRAW_INFO_KEY);
+            String data = jedis.get(key);
             lotteryDrawNum = JSONObject.parseObject(data, LotteryDrawNum.class);
         } catch (Exception e) {
             e.printStackTrace();

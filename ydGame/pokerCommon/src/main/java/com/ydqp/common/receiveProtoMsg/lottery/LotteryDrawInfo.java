@@ -16,7 +16,7 @@ public class LotteryDrawInfo extends AbstartParaseMessage {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.INT32, order = 1)
-    private int draw;
+    private int type;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {

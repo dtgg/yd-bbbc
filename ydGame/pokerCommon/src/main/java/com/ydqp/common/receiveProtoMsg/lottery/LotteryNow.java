@@ -15,8 +15,8 @@ public class LotteryNow extends AbstartParaseMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT64, order = 1)
-    private long playerId;
+    @Protobuf(fieldType = FieldType.INT32, order = 1)
+    private int type;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {

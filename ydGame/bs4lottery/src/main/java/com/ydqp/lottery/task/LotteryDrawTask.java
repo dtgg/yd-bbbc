@@ -9,10 +9,12 @@ import com.ydqp.common.entity.PlayerLottery;
 import com.ydqp.common.lottery.LotteryColorConstant;
 import com.ydqp.common.lottery.player.ILottery;
 import com.ydqp.common.lottery.player.ManageLottery;
+import com.ydqp.common.lottery.player.ManageLotteryRoom;
 import com.ydqp.common.lottery.role.LotteryBattleRole;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryDrawNum;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryDrawNumInfo;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeInfo;
+import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.common.utils.LotteryUtil;
 import com.ydqp.lottery.Cache.LotteryCache;
 import com.ydqp.lottery.util.DateUtil;
@@ -21,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -140,25 +143,55 @@ public class LotteryDrawTask implements Runnable {
         }
 
         //下一期
-        List<Lottery> nextLotteries = LotteryDao.getInstance().findNextLottery(ManageLottery.getInstance().getLotterySize());
-        List<LotteryTypeInfo> infos = nextLotteries.stream().map(lottery -> {
+        List<Integer> rbRoomLotteryTypes = ManageLotteryRoom.getInstance().getType(5000001);
+        List<Integer> bjRoomLotteryTypes = ManageLotteryRoom.getInstance().getType(5000002);
+        rbRoomLotteryTypes.addAll(bjRoomLotteryTypes);
+        String rbTypes = CommonUtils.inString(rbRoomLotteryTypes);
+
+        Map<Integer, List<LotteryTypeInfo>> lotteryTypeInfoMap = new HashMap<>(16);
+        List<Lottery> nextLotteries = LotteryDao.getInstance().findNextLottery(rbTypes, rbRoomLotteryTypes.size());
+        nextLotteries.forEach(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();
             info.setLotteryId(lottery.getId());
             info.setType(lottery.getType());
             info.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
             info.setCreateTime(lottery.getCreateTime());
-            return info;
-        }).collect(Collectors.toList());
+            Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lottery.getType());
+            if (lotteryTypeInfoMap.get(roomId) == null) {
+                lotteryTypeInfoMap.put(roomId, new ArrayList<LotteryTypeInfo>() {{add(info);}});
+            } else {
+                lotteryTypeInfoMap.get(roomId).add(info);
+            }
+        });
+
+        Map<Integer, List<LotteryDrawNumInfo>> lotteryDrawInfoMap = new HashMap<>(16);
+        drawNumInfos.forEach(lotteryDrawNumInfo -> {
+            Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryDrawNumInfo.getType());
+            if (lotteryDrawInfoMap.get(roomId) == null) {
+                lotteryDrawInfoMap.put(roomId, new ArrayList<LotteryDrawNumInfo>() {{add(lotteryDrawNumInfo);}});
+            } else {
+                lotteryDrawInfoMap.get(roomId).add(lotteryDrawNumInfo);
+            }
+        });
 
         //发送开奖号码
-        LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
-        lotteryDrawNum.setDrawNumInfos(drawNumInfos);
-        lotteryDrawNum.setLotteryTypeInfos(infos);
         lotteryBattleRoleMap.forEach((key, value) -> {
+            LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
+            lotteryDrawNum.setDrawNumInfos(lotteryDrawInfoMap.get(value.getRoomId()));
+            lotteryDrawNum.setLotteryTypeInfos(lotteryTypeInfoMap.get(value.getRoomId()));
             value.getISession().sendMessageByID(lotteryDrawNum, value.getConnId());
         });
         //缓存开奖结果
-        LotteryCache.getInstance().addDrawInfo(lotteryDrawNum);
+        lotteryDrawInfoMap.forEach((roomId, lotteryDrawInfo) -> {
+            LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
+            lotteryDrawNum.setDrawNumInfos(lotteryDrawInfoMap.get(roomId));
+            lotteryTypeInfoMap.forEach((roomId2, lotteryTypeInfo) -> {
+                if (roomId.equals(roomId2)) {
+                    lotteryDrawNum.setLotteryTypeInfos(lotteryTypeInfoMap.get(roomId2));
+                    LotteryCache.getInstance().addDrawInfo(LotteryCache.DRAW_INFO_KEY + roomId, lotteryDrawNum);
+                }
+            });
+        });
 
         long endTime = System.currentTimeMillis();
         if (endTime - startTime > 2000) {

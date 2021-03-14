@@ -21,6 +21,9 @@ public class LotteryBattleRole {
     private double playerZJ;
     @Getter
     @Setter
+    private int roomId;
+    @Getter
+    @Setter
     private Boolean buying;
 
     public LotteryBattleRole() {

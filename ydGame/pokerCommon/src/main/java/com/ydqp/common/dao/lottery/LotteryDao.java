@@ -20,18 +20,18 @@ public class LotteryDao {
         return instance;
     }
 
-    public List<Lottery> findLastLottery(int limit) {
-        String sql = "select * from lottery where status = 2 order by createTime desc limit "+limit+";";
+    public List<Lottery> findLastLottery(String types, int limit) {
+        String sql = "select * from lottery where status = 2 and type in "+types+" order by createTime desc limit "+limit+";";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 
-    public List<Lottery> findCurrentLottery(int limit) {
-        String sql = "select * from lottery where status != 2 order by createTime asc limit "+limit+";";
+    public List<Lottery> findCurrentLottery(String types, int limit) {
+        String sql = "select * from lottery where status != 2 and type in "+types+" order by createTime asc limit "+limit+";";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 
-    public List<Lottery> findNextLottery(int limit) {
-        String sql = "select * from lottery where status = 0 order by createTime asc limit "+limit+";";
+    public List<Lottery> findNextLottery(String types, int limit) {
+        String sql = "select * from lottery where status = 0 and type in "+types+"order by createTime asc limit "+limit+";";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 

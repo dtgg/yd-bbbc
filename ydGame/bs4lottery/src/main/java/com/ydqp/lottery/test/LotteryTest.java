@@ -92,7 +92,7 @@ public class LotteryTest {
 
     private static void lotteryNextTest() {
         LotteryNext lotteryNext = new LotteryNext();
-        lotteryNext.setNext(true);
+//        lotteryNext.setNext(true);
         new LotteryNextHandler().process(iSession, lotteryNext);
     }
 

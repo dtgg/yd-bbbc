@@ -15,8 +15,8 @@ public class LotteryNext extends AbstartParaseMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.BOOL, order = 1)
-    private boolean next;
+    @Protobuf(fieldType = FieldType.INT32, order = 1)
+    private int type;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
