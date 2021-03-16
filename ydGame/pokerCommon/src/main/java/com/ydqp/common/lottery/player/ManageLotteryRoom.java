@@ -7,7 +7,7 @@ public class ManageLotteryRoom {
 
     private ManageLotteryRoom() {}
 
-    private static ManageLotteryRoom instance;
+    private static ManageLotteryRoom instance = new ManageLotteryRoom();
 
     public static ManageLotteryRoom getInstance() {
         return instance;
@@ -15,7 +15,7 @@ public class ManageLotteryRoom {
 
     public Integer getRoomId(int lotteryType) {
         if (lotteryType < 5) return 5000001;
-        else return 5000002;
+        else return 6000001;
     }
 
     public List<Integer> getType(int roomId) {
@@ -23,10 +23,13 @@ public class ManageLotteryRoom {
             return new ArrayList<Integer>() {{
                 add(1);add(2);add(3);add(4);
             }};
-        } else {
+        } else if (roomId == 6000001) {
             return new ArrayList<Integer>() {{
                 add(5);add(6);add(7);add(8);
             }};
         }
+        return new ArrayList<Integer>() {{
+            add(1);add(2);add(3);add(4);
+        }};
     }
 }

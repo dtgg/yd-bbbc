@@ -4,6 +4,7 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.dao.lottery.PlayerLotteryDao;
+import com.ydqp.common.data.LotteryDrawData;
 import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.entity.PlayerLottery;
 import com.ydqp.common.lottery.LotteryColorConstant;
@@ -20,6 +21,7 @@ import com.ydqp.lottery.Cache.LotteryCache;
 import com.ydqp.lottery.util.DateUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -51,6 +53,15 @@ public class LotteryDrawTask implements Runnable {
             playerLotteryList = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIds);
         }
 
+        Map<Integer, List<PlayerLottery>> playerLotteriesMap = new HashMap<>();
+        playerLotteryList.forEach(playerLottery -> {
+            if (playerLotteriesMap.get(playerLottery.getLotteryId()) == null) {
+                playerLotteriesMap.put(playerLottery.getLotteryId(), new ArrayList<PlayerLottery>(){{add(playerLottery);}});
+            } else {
+                playerLotteriesMap.get(playerLottery.getLotteryId()).add(playerLottery);
+            }
+        });
+
         int dbQueryTime = new Long(System.currentTimeMillis() / 1000).intValue();
         if (dbQueryTime - startTime > 1000) {
             logger.warn("lottery查询慢日志，执行时间：{}", dbQueryTime - startTime);
@@ -65,41 +76,38 @@ public class LotteryDrawTask implements Runnable {
             if (time - lottery.getCreateTime() >= 160) {
                 ILottery iLottery = ManageLottery.getInstance().getLotteryByType(lottery.getType());
 
+                List<PlayerLottery> playerLotteries = playerLotteriesMap.get(lottery.getId());
                 //计算开奖号码
-                List<PlayerLottery> playerLotteries = playerLotteryList.stream()
-                        .filter(playerLottery -> playerLottery.getLotteryId() == lottery.getId())
-                        .collect(Collectors.toList());
-
                 //各个号码开奖金额
-                Map<Integer, BigDecimal> drawNumMap = iLottery.settleAwardPrice(playerLotteries);
-                String num;
-                if (StringUtils.isBlank(lottery.getNumber())) {
-                    num = iLottery.lotteryDraw(lottery, playerLotteries);
-                } else {
-                    num = lottery.getNumber();
+//                Map<Integer, BigDecimal> drawNumMap = iLottery.settleAwardPrice(playerLotteries);
+                LotteryDrawData drawData = iLottery.lotteryDraw(lottery, playerLotteries);
+                if (!StringUtils.isBlank(lottery.getNumber())) {
+                    drawData.setDrawNum(lottery.getNumber());
                 }
                 //更新lottery数据，已计算
-                lottery.setNumber(num);
+                lottery.setNumber(drawData.getDrawNum());
                 lottery.setStatus(1);
                 lottery.setOpenTime(time + 20);
                 lottery.setPrice(LotteryUtil.getPrice() + lottery.getPeriod());
 
-                int drawNum = Integer.parseInt(num);
+                int drawNum = Integer.parseInt(drawData.getDrawNum());
 
                 BigDecimal totalPay = BigDecimal.ZERO;
                 BigDecimal totalFee = BigDecimal.ZERO;
-                for (PlayerLottery playerLottery : playerLotteries) {
-                    totalPay = totalPay.add(playerLottery.getPay());
-                    totalFee = totalFee.add(playerLottery.getFee());
+                if (CollectionUtils.isNotEmpty(playerLotteries)) {
+                    for (PlayerLottery playerLottery : playerLotteries) {
+                        totalPay = totalPay.add(playerLottery.getPay());
+                        totalFee = totalFee.add(playerLottery.getFee());
 
-                    iLottery.playerLotteryCheck(lottery, playerLottery, time);
+                        iLottery.playerLotteryCheck(lottery, playerLottery, time);
 
-                    updatePlayerLotteryList.add(playerLottery);
+                        updatePlayerLotteryList.add(playerLottery);
+                    }
                 }
 
                 lottery.setTotalPay(totalPay);
                 lottery.setTotalFee(totalFee);
-                lottery.setTotalAward(drawNumMap.get(drawNum));
+                lottery.setTotalAward(drawData.getDrawNumMap().get(drawNum));
                 lottery.setTotalProfit(lottery.getTotalPay().subtract(lottery.getTotalAward()));
                 updateLotteryList.add(lottery);
 
@@ -144,7 +152,7 @@ public class LotteryDrawTask implements Runnable {
 
         //下一期
         List<Integer> rbRoomLotteryTypes = ManageLotteryRoom.getInstance().getType(5000001);
-        List<Integer> bjRoomLotteryTypes = ManageLotteryRoom.getInstance().getType(5000002);
+        List<Integer> bjRoomLotteryTypes = ManageLotteryRoom.getInstance().getType(6000001);
         rbRoomLotteryTypes.addAll(bjRoomLotteryTypes);
         String rbTypes = CommonUtils.inString(rbRoomLotteryTypes);
 
@@ -175,12 +183,15 @@ public class LotteryDrawTask implements Runnable {
         });
 
         //发送开奖号码
-        lotteryBattleRoleMap.forEach((key, value) -> {
-            LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
-            lotteryDrawNum.setDrawNumInfos(lotteryDrawInfoMap.get(value.getRoomId()));
-            lotteryDrawNum.setLotteryTypeInfos(lotteryTypeInfoMap.get(value.getRoomId()));
-            value.getISession().sendMessageByID(lotteryDrawNum, value.getConnId());
-        });
+//        lotteryBattleRoleMap.forEach((key, value) -> {
+//            LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
+//            lotteryDrawNum.setDrawNumInfos(lotteryDrawInfoMap.get(value.getRoomId()));
+//            lotteryDrawNum.setLotteryTypeInfos(lotteryTypeInfoMap.get(value.getRoomId()));
+//            if (value.getRoomId() == 6000001) {
+//                lotteryDrawNum.setSeed(RandomUtils.nextInt(10));
+//            }
+//            value.getISession().sendMessageByID(lotteryDrawNum, value.getConnId());
+//        });
         //缓存开奖结果
         lotteryDrawInfoMap.forEach((roomId, lotteryDrawInfo) -> {
             LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();

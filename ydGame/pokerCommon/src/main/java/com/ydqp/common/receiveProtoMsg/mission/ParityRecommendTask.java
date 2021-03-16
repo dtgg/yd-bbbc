@@ -1,4 +1,4 @@
-package com.ydqp.common.receiveProtoMsg.lottery;
+package com.ydqp.common.receiveProtoMsg.mission;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.FieldType;
@@ -11,9 +11,9 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 5000012)
+@ReceiveCommandAnnotation(command = 1000073)
 @GenProto(modulePro = "lottery")
-public class ParityOrderDetail extends AbstartParaseMessage {
+public class ParityRecommendTask extends AbstartParaseMessage {
 
     @Getter
     @Setter
@@ -24,9 +24,9 @@ public class ParityOrderDetail extends AbstartParaseMessage {
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<ParityOrderDetail> parityOrderDetailCodec = ProtobufProxy
-                .create(ParityOrderDetail.class);
+        Codec<ParityRecommendTask> parityRecommendTaskCodec = ProtobufProxy
+                .create(ParityRecommendTask.class);
 
-        return parityOrderDetailCodec.decode(body);
+        return parityRecommendTaskCodec.decode(body);
     }
 }

@@ -1,4 +1,4 @@
-package com.ydqp.lottery.handler;
+package com.ydqp.lobby.handler.mission;
 
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
@@ -6,6 +6,7 @@ import com.cfq.handler.IServerHandler;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
+import com.ydqp.common.ManagePlayerPromote;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.constant.TaskRewardSource;
 import com.ydqp.common.dao.PlayerRewardHistoryDao;
@@ -14,13 +15,12 @@ import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.PlayerPromote;
 import com.ydqp.common.entity.PlayerRewardHistory;
 import com.ydqp.common.entity.TaskConfig;
-import com.ydqp.common.receiveProtoMsg.lottery.ParityReceive;
+import com.ydqp.common.receiveProtoMsg.mission.ParityReceive;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
-import com.ydqp.common.sendProtoMsg.lottery.ParityReceiveSuc;
+import com.ydqp.common.sendProtoMsg.mission.ParityReceiveSuc;
 import com.ydqp.common.service.PlayerService;
-import com.ydqp.lottery.ManagePlayerPromote;
 
-@ServerHandler(module = "lottery", command = 5000015)
+@ServerHandler(module = "mission", command = 5000015)
 public class ParityReceiveHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityReceiveHandler.class);
 

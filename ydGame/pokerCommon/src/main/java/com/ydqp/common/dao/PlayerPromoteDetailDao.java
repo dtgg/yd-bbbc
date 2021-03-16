@@ -1,9 +1,7 @@
-package com.ydqp.lottery.dao;
+package com.ydqp.common.dao;
 
 import com.cfq.jdbc.JdbcOrm;
-import com.ydqp.common.data.Total;
 import com.ydqp.common.entity.PlayerPromoteDetail;
-import jdk.nashorn.internal.scripts.JD;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;

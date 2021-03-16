@@ -11,30 +11,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
-@SendCommandAnnotation(command = 5001007)
-public class LotteryDrawNum extends AbstartCreateMessage {
+@SendCommandAnnotation(command = 5001018)
+public class LotteryHotNumSuc extends AbstartCreateMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT, order = 1)
-    private List<LotteryDrawNumInfo> drawNumInfos;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.OBJECT, order = 2)
-    private List<LotteryTypeInfo> lotteryTypeInfos;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 3)
-    private int seed;
+    @Protobuf(fieldType = FieldType.MAP, order = 1)
+    private Map<String, String> hotNums;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<LotteryDrawNum> lotteryDrawNumCodec = ProtobufProxy.create(LotteryDrawNum.class);
-            byte[] bytes = lotteryDrawNumCodec.encode(this);
+            Codec<LotteryHotNumSuc> lotteryHotNumSucCodec = ProtobufProxy.create(LotteryHotNumSuc.class);
+            byte[] bytes = lotteryHotNumSucCodec.encode(this);
             netProtoMessage.getNetProtoMessageBody().setBody(bytes);
         } catch (Exception e) {
             e.printStackTrace();

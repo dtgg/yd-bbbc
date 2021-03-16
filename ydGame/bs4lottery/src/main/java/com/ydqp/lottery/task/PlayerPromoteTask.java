@@ -3,8 +3,9 @@ package com.ydqp.lottery.task;
 import com.cfq.connection.ISession;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
-import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.ManagePlayerPromote;
 import com.ydqp.common.dao.PlayerOrderDao;
+import com.ydqp.common.dao.PlayerPromoteDetailDao;
 import com.ydqp.common.dao.lottery.PlayerLotteryDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerData;
@@ -13,11 +14,8 @@ import com.ydqp.common.entity.PlayerPromote;
 import com.ydqp.common.entity.PlayerPromoteConfig;
 import com.ydqp.common.entity.PlayerPromoteDetail;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
-import com.ydqp.common.sendProtoMsg.lottery.ParityOrderSuc;
-import com.ydqp.common.service.PlayerService;
+import com.ydqp.common.sendProtoMsg.mission.ParityOrderSuc;
 import com.ydqp.common.utils.ShortCodeKit;
-import com.ydqp.lottery.ManagePlayerPromote;
-import com.ydqp.lottery.dao.PlayerPromoteDetailDao;
 
 import java.math.BigDecimal;
 

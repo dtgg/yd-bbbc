@@ -1,4 +1,4 @@
-package com.ydqp.lottery.handler;
+package com.ydqp.lobby.handler.mission;
 
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
@@ -7,14 +7,14 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.dao.PlayerPromoteDetailDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.PlayerPromote;
 import com.ydqp.common.entity.PlayerPromoteDetail;
-import com.ydqp.common.receiveProtoMsg.lottery.ParityOrderDetail;
-import com.ydqp.common.sendProtoMsg.lottery.ParityOrderDetailInfo;
-import com.ydqp.common.sendProtoMsg.lottery.ParityOrderDetailSuc;
-import com.ydqp.lottery.dao.PlayerPromoteDetailDao;
+import com.ydqp.common.receiveProtoMsg.mission.ParityOrderDetail;
+import com.ydqp.common.sendProtoMsg.mission.ParityOrderDetailInfo;
+import com.ydqp.common.sendProtoMsg.mission.ParityOrderDetailSuc;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ServerHandler(module = "lottery", command = 5000012)
+@ServerHandler(module = "mission", command = 5000012)
 public class ParityOrderDetailHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityOrderDetailHandler.class);
 

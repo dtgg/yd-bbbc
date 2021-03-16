@@ -9,11 +9,9 @@ c->s
 5000008 = LotteryDrawInfo
 5000009 = LotteryNow
 
-5000011 = ParityOrder                   //My Parity Order
-5000012 = ParityOrderDetail             //Available balance
-5000013 = ParityOrderLv                 //LEVEL 1/LEVEL 2.
-5000014 = ParityRecommendTask           //Recommended task
-5000015 = ParityReceive                 //Receive
+5000016 = LotteryTrend
+5000017 = LotteryRaceSeed
+5000018 = LotteryHotNum
 
 s->c
 5001001 = LotteryRoomInfo
@@ -27,8 +25,6 @@ s->c
 5001009 = LotteryGameSwitch
 5001010 = LotteryNowSuc
 
-5001011 = ParityOrderSuc
-5001012 = ParityOrderDetailSuc
-5001013 = ParityOrderLvSuc
-5001014 = ParityRecommendTaskSuc
-5001015 = ParityReceiveSuc
+5001016 = LotteryTrendSuc
+5001017 = LotteryRaceSeedSuc
+5001018 = LotteryHotNumSuc

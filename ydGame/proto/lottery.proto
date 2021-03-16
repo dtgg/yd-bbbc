@@ -5,6 +5,7 @@ option java_outer_classname = "lottery";
 message LotteryEnterRoom {
   int64 playerId = 1;
   int32 roomId = 2;
+  int32 type=3;
 }
 
 message LotteryBuy {
@@ -108,6 +109,7 @@ message LotteryDrawNumInfo {
 message LotteryDrawNum {
   repeated LotteryDrawNumInfo drawNumInfos = 1;
   repeated LotteryTypeInfo lotteryTypeInfos = 2;
+  int32 seed = 3;
 }
 
 message LotteryDrawNotificationSuc {
@@ -127,7 +129,7 @@ message PlayerLotteryListSuc {
 }
 
 message LotteryNext {
-  bool next = 1;
+  int32 type = 1;
 }
 
 message LotteryNextSuc {
@@ -135,7 +137,7 @@ message LotteryNextSuc {
 }
 
 message LotteryDrawInfo {
-  int32 draw = 1;
+  int32 type = 1;
 }
 
 message LotterySysCloseServer {
@@ -148,7 +150,7 @@ message LotteryTypeListInfo {
 }
 
 message LotteryNow {
-  int64 playerId = 1;
+  int32 type = 1;
 }
 
 message LotteryNowSuc {
@@ -209,6 +211,14 @@ message ParityOrderSuc {
   // 推广链接
   string referralLink = 9;
 }
+message TaskConfigData {
+  int32 id = 1;
+  string name = 2;
+  int32 type = 3;
+  int32 reward = 4;
+  int32 nextTaskId = 5;
+  int32 target = 6;
+}
 message ParityRecommendTaskSuc {
   int32 effectiveNum = 1;
   repeated TaskConfigData taskConfigDataList = 2;
@@ -219,4 +229,23 @@ message ParityReceiveSuc {
   bool success = 1;
   string message = 2;
   double amount = 3;
+}
+
+message LotteryTrend {
+  int32 type = 1;
+}
+message LotteryTrendSuc {
+  repeated string nums = 1;
+}
+message LotteryRaceSeed {
+  int32 type = 1;
+}
+message LotteryRaceSeedSuc {
+  map<int32, int32> seedMap = 1;
+}
+message LotteryHotNum {
+  int32 type = 1;
+}
+message LotteryHotNumSuc {
+  map<string, string> hotNums = 1;
 }

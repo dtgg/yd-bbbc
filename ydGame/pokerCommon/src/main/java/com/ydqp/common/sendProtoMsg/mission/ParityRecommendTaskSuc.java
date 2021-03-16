@@ -1,4 +1,4 @@
-package com.ydqp.common.sendProtoMsg.lottery;
+package com.ydqp.common.sendProtoMsg.mission;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.FieldType;
@@ -8,35 +8,37 @@ import com.cfq.annotation.GenProto;
 import com.cfq.annotation.SendCommandAnnotation;
 import com.cfq.message.AbstartCreateMessage;
 import com.cfq.message.NetProtoMessage;
+import com.ydqp.common.data.TaskConfigData;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@SendCommandAnnotation(command = 5001013)
+@SendCommandAnnotation(command = 1001073)
 @GenProto(modulePro = "lottery")
-public class ParityOrderLvSuc extends AbstartCreateMessage {
+public class ParityRecommendTaskSuc extends AbstartCreateMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT, order = 1)
-    private List<ParityOrderDetailInfo> infos;
+    @Protobuf(fieldType = FieldType.INT32, order = 1)
+    private int effectiveNum;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT64, order = 2)
-    private long playerId;
+    @Protobuf(fieldType = FieldType.OBJECT, order = 2)
+    private List<TaskConfigData> taskConfigDataList;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 3)
-    private int count;
+    @Protobuf(fieldType = FieldType.STRING, order = 3, description = "已领取奖励的任务ID")
+    private String rewardTaskIds;
+
 
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<ParityOrderLvSuc> parityOrderLvSucCodec = ProtobufProxy.create(ParityOrderLvSuc.class);
-            byte[] bytes = parityOrderLvSucCodec.encode(this);
+            Codec<ParityRecommendTaskSuc> recommendTaskSucCodec = ProtobufProxy.create(ParityRecommendTaskSuc.class);
+            byte[] bytes = recommendTaskSucCodec.encode(this);
             netProtoMessage.getNetProtoMessageBody().setBody(bytes);
         } catch (Exception e) {
             e.printStackTrace();

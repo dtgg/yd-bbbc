@@ -5,6 +5,7 @@ import com.cfq.connection.NettySession;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.receiveProtoMsg.lottery.*;
+import com.ydqp.common.receiveProtoMsg.mission.*;
 import com.ydqp.lottery.handler.*;
 import com.ydqp.lottery.task.LotteryDrawTask;
 import com.ydqp.lottery.task.LotteryGenerateTask;
@@ -113,13 +114,13 @@ public class LotteryTest {
     private static void parityOrderTest() {
         ParityOrder parityOrder = new ParityOrder();
         parityOrder.setPlayerId(1069108);
-        new ParityOrderHandler().process(iSession, parityOrder);
+//        new ParityOrderHandler().process(iSession, parityOrder);
     }
 
     private static void parityOrderDetailTest() {
         ParityOrderDetail detail = new ParityOrderDetail();
         detail.setPlayerId(1069108);
-        new ParityOrderDetailHandler().process(iSession, detail);
+//        new ParityOrderDetailHandler().process(iSession, detail);
     }
 
     private static void parityOrderLvTest() {
@@ -128,20 +129,20 @@ public class LotteryTest {
         lv.setLv(2);
         lv.setPage(1);
         lv.setSize(5);
-        new ParityOrderLvHandler().process(iSession, lv);
+//        new ParityOrderLvHandler().process(iSession, lv);
     }
 
     private static void recommendTask() {
         ParityRecommendTask recommendTask = new ParityRecommendTask();
         recommendTask.setPlayerId(1069108);
-        new ParityRecommendTaskHandler().process(iSession, recommendTask);
+//        new ParityRecommendTaskHandler().process(iSession, recommendTask);
     }
 
     private static void parityReceive() {
         ParityReceive parityReceive = new ParityReceive();
         parityReceive.setPlayerId(1069108);
         parityReceive.setTaskId(16);
-        new ParityReceiveHandler().process(iSession, parityReceive);
+//        new ParityReceiveHandler().process(iSession, parityReceive);
     }
 
     public static void main(String[] args) {

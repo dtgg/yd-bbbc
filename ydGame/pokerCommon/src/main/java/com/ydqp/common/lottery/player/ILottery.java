@@ -2,6 +2,7 @@ package com.ydqp.common.lottery.player;
 
 import com.cfq.connection.ISession;
 import com.cfq.message.AbstartCreateMessage;
+import com.ydqp.common.data.LotteryDrawData;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.entity.PlayerLottery;
@@ -15,7 +16,7 @@ public interface ILottery {
 
     PlayerLottery lotteryBuy(Lottery lottery, PlayerLottery playerLottery);
 
-    String lotteryDraw(Lottery lottery, List<PlayerLottery> playerLotteries);
+    LotteryDrawData lotteryDraw(Lottery lottery, List<PlayerLottery> playerLotteries);
 
     Map<Integer, BigDecimal> settleAwardPrice(List<PlayerLottery> playerLotteries);
 

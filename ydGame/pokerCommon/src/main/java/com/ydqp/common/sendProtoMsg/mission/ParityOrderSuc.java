@@ -1,4 +1,4 @@
-package com.ydqp.common.sendProtoMsg.lottery;
+package com.ydqp.common.sendProtoMsg.mission;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.FieldType;
@@ -11,7 +11,7 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@SendCommandAnnotation(command = 5001011)
+@SendCommandAnnotation(command = 1001070)
 @GenProto(modulePro = "lottery")
 public class ParityOrderSuc extends AbstartCreateMessage {
 

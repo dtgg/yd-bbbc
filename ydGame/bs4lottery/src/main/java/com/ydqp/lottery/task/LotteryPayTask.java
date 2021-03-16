@@ -38,7 +38,7 @@ public class LotteryPayTask implements Runnable {
         long startTime = System.currentTimeMillis();
 
         //查询已计算的彩票期数
-        int createTime = new Long(System.currentTimeMillis() / 1000).intValue() - 178;
+        int createTime = new Long(System.currentTimeMillis() / 1000).intValue() - 179;
         List<Lottery> lotteries = LotteryDao.getInstance().findByStatus(1, createTime);
         if (CollectionUtils.isEmpty(lotteries)) return;
 

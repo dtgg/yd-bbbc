@@ -92,8 +92,8 @@ public abstract class AbstractLottery implements ILottery {
                 lotteryTypeInfo.setLotteryId(lottery.getId());
                 lotteryTypeInfo.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
                 lotteryTypeInfo.setCreateTime(lottery.getCreateTime());
-                lotteryTypeInfo.setDrawNum(lottery.getNumber());
-                lotteryTypeInfo.setDraw(StringUtils.isNotBlank(lottery.getNumber()));
+                lotteryTypeInfo.setDrawNum("");
+                lotteryTypeInfo.setDraw(false);
 
                 Lottery lastLottery = lastLotteryMap.get(lottery.getType());
                 String period = DateUtil.timestampToStr(lastLottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod());
@@ -147,8 +147,8 @@ public abstract class AbstractLottery implements ILottery {
                     lotteryTypeInfo.setLotteryId(lottery.getId());
                     lotteryTypeInfo.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
                     lotteryTypeInfo.setCreateTime(lottery.getCreateTime());
-                    lotteryTypeInfo.setDrawNum(lottery.getNumber());
-                    lotteryTypeInfo.setDraw(StringUtils.isNotBlank(lottery.getNumber()));
+                    lotteryTypeInfo.setDrawNum("");
+                    lotteryTypeInfo.setDraw(false);
 
                     Lottery lastLottery = lastLotteryMap.get(lottery.getType());
                     String period = DateUtil.timestampToStr(lastLottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod());

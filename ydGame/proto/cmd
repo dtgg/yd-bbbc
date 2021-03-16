@@ -17,6 +17,12 @@ C->s
 1000032 = SmsSend               //发送验证码
 1000033 = PlayerResetPassword   //重置密码
 
+#mission
+1000070 = ParityOrder
+1000071 = ParityOrderDetail
+1000072 = ParityOrderLv
+1000073 = ParityRecommendTask
+1000074 = ParityReceive
 
 s->c
 1000005 = LoginSuccess
@@ -37,6 +43,12 @@ s->c
 1001032 = SmsSendSuc            //发送验证码成功
 1001033 = PlayerResetPasswordSuc//重置密码成功
 
+#mission
+1001070 = ParityOrderSuc
+1001071 = ParityOrderDetailSuc
+1001072 = ParityOrderLvSuc
+1001073 = ParityRecommendTaskSuc
+1001074 = ParityReceiveSuc
 
 #battle
 c->s

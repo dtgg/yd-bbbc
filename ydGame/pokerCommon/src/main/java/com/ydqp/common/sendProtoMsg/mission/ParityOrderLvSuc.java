@@ -1,4 +1,4 @@
-package com.ydqp.common.sendProtoMsg.lottery;
+package com.ydqp.common.sendProtoMsg.mission;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.FieldType;
@@ -11,30 +11,32 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@SendCommandAnnotation(command = 5001015)
+import java.util.List;
+
+@SendCommandAnnotation(command = 1001072)
 @GenProto(modulePro = "lottery")
-public class ParityReceiveSuc extends AbstartCreateMessage {
+public class ParityOrderLvSuc extends AbstartCreateMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.BOOL, order = 1)
-    private boolean success;
+    @Protobuf(fieldType = FieldType.OBJECT, order = 1)
+    private List<ParityOrderDetailInfo> infos;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 2)
-    private String message;
+    @Protobuf(fieldType = FieldType.INT64, order = 2)
+    private long playerId;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.DOUBLE, order = 3)
-    private double amount;
+    @Protobuf(fieldType = FieldType.INT32, order = 3)
+    private int count;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<ParityReceiveSuc> parityReceiveSucCodec = ProtobufProxy.create(ParityReceiveSuc.class);
-            byte[] bytes = parityReceiveSucCodec.encode(this);
+            Codec<ParityOrderLvSuc> parityOrderLvSucCodec = ProtobufProxy.create(ParityOrderLvSuc.class);
+            byte[] bytes = parityOrderLvSucCodec.encode(this);
             netProtoMessage.getNetProtoMessageBody().setBody(bytes);
         } catch (Exception e) {
             e.printStackTrace();

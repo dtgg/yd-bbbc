@@ -3,6 +3,7 @@ package com.ydqp.common.lottery.player;
 import com.alibaba.fastjson.JSON;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
+import com.ydqp.common.data.LotteryDrawData;
 import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.entity.LotteryConfig;
 import com.ydqp.common.entity.PlayerLottery;
@@ -23,7 +24,7 @@ public class RBLottery extends AbstractLottery {
     private static final Logger logger = LoggerFactory.getLogger(RBLottery.class);
 
     @Override
-    public String lotteryDraw(Lottery lottery, List<PlayerLottery> playerLotteries) {
+    public LotteryDrawData lotteryDraw(Lottery lottery, List<PlayerLottery> playerLotteries) {
         //计算不同颜色、号码的中奖总金额
         Map<Integer, BigDecimal> drawNumMap = settleAwardPrice(playerLotteries);
         //根据value获取key排序，颜色倒序，数字顺序
@@ -36,10 +37,13 @@ public class RBLottery extends AbstractLottery {
         //判断开奖数字
         Integer drawNum = getDrawNum(numList, config, drawNumMap, lottery.getPeriod());
 
-
         String period = DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod());
         logger.info("{}期开奖{}号码为：{}", period, lottery.getType(), drawNum);
-        return String.valueOf(drawNum);
+
+        LotteryDrawData drawData = new LotteryDrawData();
+        drawData.setDrawNum(String.valueOf(drawNum));
+        drawData.setDrawNumMap(drawNumMap);
+        return drawData;
     }
 
     @Override

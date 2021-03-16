@@ -1,10 +1,10 @@
-package com.ydqp.lottery;
+package com.ydqp.common;
 
 import com.ydqp.common.constant.TaskType;
+import com.ydqp.common.dao.PlayerPromoteConfigDao;
 import com.ydqp.common.dao.TaskDao;
 import com.ydqp.common.entity.PlayerPromoteConfig;
 import com.ydqp.common.entity.TaskConfig;
-import com.ydqp.lottery.dao.PlayerPromoteConfigDao;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.List;

@@ -10,31 +10,23 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Map;
 
-@SendCommandAnnotation(command = 5001007)
-public class LotteryDrawNum extends AbstartCreateMessage {
+@SendCommandAnnotation(command = 5001017)
+public class LotteryRaceSeedSuc extends AbstartCreateMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT, order = 1)
-    private List<LotteryDrawNumInfo> drawNumInfos;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.OBJECT, order = 2)
-    private List<LotteryTypeInfo> lotteryTypeInfos;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 3)
-    private int seed;
+    @Protobuf(fieldType = FieldType.MAP, order = 1)
+    private Map<Integer, Integer> seedMap;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<LotteryDrawNum> lotteryDrawNumCodec = ProtobufProxy.create(LotteryDrawNum.class);
-            byte[] bytes = lotteryDrawNumCodec.encode(this);
+            Codec<LotteryRaceSeedSuc> lotteryRaceSeedSucCodec = ProtobufProxy.create(LotteryRaceSeedSuc.class);
+            byte[] bytes = lotteryRaceSeedSucCodec.encode(this);
             netProtoMessage.getNetProtoMessageBody().setBody(bytes);
         } catch (Exception e) {
             e.printStackTrace();

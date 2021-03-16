@@ -1,4 +1,4 @@
-package com.ydqp.lottery.dao;
+package com.ydqp.common.dao;
 
 import com.cfq.jdbc.JdbcOrm;
 import com.ydqp.common.entity.PlayerPromoteConfig;

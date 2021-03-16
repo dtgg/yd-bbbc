@@ -1,4 +1,4 @@
-package com.ydqp.common.sendProtoMsg.lottery;
+package com.ydqp.common.sendProtoMsg.mission;
 
 import com.baidu.bjf.remoting.protobuf.FieldType;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;

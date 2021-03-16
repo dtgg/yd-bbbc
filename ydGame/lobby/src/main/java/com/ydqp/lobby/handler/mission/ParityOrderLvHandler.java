@@ -1,4 +1,4 @@
-package com.ydqp.lottery.handler;
+package com.ydqp.lobby.handler.mission;
 
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
@@ -11,14 +11,14 @@ import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.data.Total;
 import com.ydqp.common.entity.PlayerPromote;
-import com.ydqp.common.receiveProtoMsg.lottery.ParityOrderLv;
-import com.ydqp.common.sendProtoMsg.lottery.ParityOrderDetailInfo;
-import com.ydqp.common.sendProtoMsg.lottery.ParityOrderLvSuc;
+import com.ydqp.common.receiveProtoMsg.mission.ParityOrderLv;
+import com.ydqp.common.sendProtoMsg.mission.ParityOrderDetailInfo;
+import com.ydqp.common.sendProtoMsg.mission.ParityOrderLvSuc;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@ServerHandler(module = "lottery", command = 5000013)
+@ServerHandler(module = "mission", command = 5000013)
 public class ParityOrderLvHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityOrderLvHandler.class);
 

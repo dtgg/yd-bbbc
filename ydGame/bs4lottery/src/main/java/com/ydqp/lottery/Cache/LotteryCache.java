@@ -9,6 +9,8 @@ public class LotteryCache {
 
     public static final String DRAW_INFO_KEY = "drawInfo:";
 
+    public static final String RACING_SEED_KEY = "RACINGSEED";
+
     private LotteryCache() {}
 
     private static LotteryCache instance;
@@ -43,5 +45,29 @@ public class LotteryCache {
             JedisUtil.getInstance().closeJedis(jedis);
         }
         return lotteryDrawNum;
+    }
+
+    public String getRacingSeed() {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        String data = null;
+        try {
+            data = jedis.get(RACING_SEED_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
+        }
+        return data;
+    }
+
+    public void setRacingSeed(String data) {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        try {
+            jedis.set(RACING_SEED_KEY, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
+        }
     }
 }

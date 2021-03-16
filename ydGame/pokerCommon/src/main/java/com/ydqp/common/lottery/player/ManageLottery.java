@@ -49,7 +49,7 @@ public class ManageLottery {
                         lottery.setType(lotteryConfig.getLotteryType());
                         lotteryMap.put(lotteryConfig.getLotteryType(), lottery);
                         break;
-                    case 5000002:
+                    case 6000001:
                         BJRaceLottery lottery1 = new BJRaceLottery();
                         lottery1.setRoomId(roomId);
                         lottery1.setType(lotteryConfig.getLotteryType());

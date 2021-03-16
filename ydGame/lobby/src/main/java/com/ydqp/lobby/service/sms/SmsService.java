@@ -56,7 +56,7 @@ public class SmsService {
         String code = "1234";
         if (code != null) {
             // 保存验证码至redis
-            PlayerCache.getInstance().addVerificationCode(areaCode + mobile, code);
+            PlayerCache.getInstance().addVerificationCode(mobile, code);
             return true;
         }
         return false;

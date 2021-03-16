@@ -1,4 +1,4 @@
-package com.ydqp.lottery.handler;
+package com.ydqp.lobby.handler.mission;
 
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
@@ -6,6 +6,7 @@ import com.cfq.handler.IServerHandler;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
+import com.ydqp.common.ManagePlayerPromote;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PlayerRewardHistoryDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
@@ -14,9 +15,8 @@ import com.ydqp.common.data.TaskConfigData;
 import com.ydqp.common.entity.PlayerPromote;
 import com.ydqp.common.entity.PlayerRewardHistory;
 import com.ydqp.common.entity.TaskConfig;
-import com.ydqp.common.receiveProtoMsg.lottery.ParityRecommendTask;
-import com.ydqp.common.sendProtoMsg.lottery.ParityRecommendTaskSuc;
-import com.ydqp.lottery.ManagePlayerPromote;
+import com.ydqp.common.receiveProtoMsg.mission.ParityRecommendTask;
+import com.ydqp.common.sendProtoMsg.mission.ParityRecommendTaskSuc;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ServerHandler(module = "lottery", command = 5000014)
+@ServerHandler(module = "mission", command = 5000014)
 public class ParityRecommendTaskHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityRecommendTaskHandler.class);
 
