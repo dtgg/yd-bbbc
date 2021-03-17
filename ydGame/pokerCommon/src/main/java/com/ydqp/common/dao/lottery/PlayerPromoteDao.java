@@ -34,8 +34,8 @@ public class PlayerPromoteDao {
         JdbcOrm.getInstance().updateByArray(sql, param);
     }
 
-    public void updateSubEffective(Long superiorId, int sonNum) {
-        String sql = "update player_promote set subNum = subNum + 1, sonNum = sonNum + " + sonNum + " where playerId = " + superiorId + ";";
+    public void updateSubEffective(Long superiorId) {
+        String sql = "update player_promote set subNum = subNum + 1 where playerId = " + superiorId + ";";
         JdbcOrm.getInstance().update(sql);
     }
 
@@ -67,5 +67,10 @@ public class PlayerPromoteDao {
         String columnName = lv == 1 ? "superiorId" : "grandId";
         String sql = "select count(1) as total from player_promote where isEffective = 1 and " + columnName + " = " + playerId;
         return (Total) JdbcOrm.getInstance().getBean(sql, Total.class);
+    }
+
+    private static final String UPDATE_BONUS_AMOUNT = "update player_promote set bonusAmount = bonusAmount + ? where playerId = ? and bonusAmount > 0;";
+    public int updateBonusAmount(Object[] params) {
+        return JdbcOrm.getInstance().updateRowByArray(UPDATE_BONUS_AMOUNT, params);
     }
 }

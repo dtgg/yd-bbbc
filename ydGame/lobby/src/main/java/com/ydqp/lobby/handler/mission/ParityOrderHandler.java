@@ -28,12 +28,14 @@ public class ParityOrderHandler implements IServerHandler {
         PlayerData playerData = PlayerCache.getInstance().getPlayer(parityOrder.getConnId());
         if (playerData == null) {
             logger.error("player is not true");
+            iSession.sendMessageByID(new ParityOrderSuc(), parityOrder.getConnId());
             return;
         }
 
         PlayerPromote playerPromote = PlayerPromoteDao.getInstance().findByPlayerId(playerData.getPlayerId());
         if (playerPromote == null) {
             logger.error("playerPromote is not true");
+            iSession.sendMessageByID(new ParityOrderSuc(), parityOrder.getConnId());
             return;
         }
 

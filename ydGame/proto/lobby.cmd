@@ -14,6 +14,9 @@ C->s
 1000073 = ParityRecommendTask
 1000074 = ParityReceive
 
+1000075 = ParityBonusAmountDraw
+1000076 = ParityCollectBonus
+
 s->c
 1000005 = LoginSuccess
 1000002 = LobbyKickPlayer //踢掉用户
@@ -33,6 +36,9 @@ s->c
 1001072 = ParityOrderLvSuc
 1001073 = ParityRecommendTaskSuc
 1001074 = ParityReceiveSuc
+
+1001075 = ParityBonusAmountDrawSuc
+1001076 = ParityCollectBonusSuc
 
 addmoney
 1000030

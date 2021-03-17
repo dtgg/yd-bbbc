@@ -35,6 +35,8 @@ public class TypeMapping {
         typeMapping.put("INT UNSIGNED", "int");
         typeMapping.put("SMALLINT UNSIGNED", "int");
         typeMapping.put("MEDIUMINT UNSIGNED", "int");
+        typeMapping.put("DECIMAL", "BigDecimal");
+
         fieldTypeMapping.put("BIGINT UNSIGNED", "BIG_INT");
         fieldTypeMapping.put("BIGINT", "BIG_INT");
         fieldTypeMapping.put("DATETIME", "DATETIME");
@@ -54,7 +56,8 @@ public class TypeMapping {
         fieldTypeMapping.put("CHAR", "CHAR8");
         fieldTypeMapping.put("DOUBLE", "DOUBLE");
         fieldTypeMapping.put("TEXT", "CHAR2048");
-  
+        fieldTypeMapping.put("DECIMAL", "DECIMAL");
+
        
     }
 

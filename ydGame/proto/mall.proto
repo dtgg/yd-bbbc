@@ -35,6 +35,7 @@ message ProductList {
 message PlayerOrder {
   int64 playerId = 1;
   int32 productId = 2;
+  string payType = 3;
 }
 message PlayerAccountSave {
   int64 playerId = 1;

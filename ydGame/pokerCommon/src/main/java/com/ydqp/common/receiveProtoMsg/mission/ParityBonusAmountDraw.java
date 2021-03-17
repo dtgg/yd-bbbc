@@ -1,4 +1,4 @@
-package com.ydqp.common.receiveProtoMsg.mall;
+package com.ydqp.common.receiveProtoMsg.mission;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.FieldType;
@@ -10,30 +10,23 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 1004002)
-public class PlayerOrder extends AbstartParaseMessage {
-
+@ReceiveCommandAnnotation(command = 1000075)
+public class ParityBonusAmountDraw extends AbstartParaseMessage {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.INT64, order = 1)
     private long playerId;
-
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 2)
-    private int productId;
-
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 3)
-    private String payType;
+    @Protobuf(fieldType = FieldType.DOUBLE, order = 2)
+    private double bonusAmount;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
-        byte[] bytes = netProtoMessage.getNetProtoMessageBody().getBody();
+        byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<PlayerOrder> playerShoppingCodec = ProtobufProxy.create(PlayerOrder.class);
+        Codec<ParityBonusAmountDraw> parityBonusAmountDrawCodec = ProtobufProxy.create(ParityBonusAmountDraw.class);
 
-        return playerShoppingCodec.decode(bytes);
+        return parityBonusAmountDrawCodec.decode(body);
     }
 }

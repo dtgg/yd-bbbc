@@ -11,7 +11,7 @@ public class GeneratorDao {
     private static String template;
     static {
         StringBuilder sb = new StringBuilder(200);
-        String fileName = "D:\\yanfa\\youxi\\qp\\ydGame\\generator\\src\\main\\java\\com\\ydqp\\generator\\dao\\template";
+        String fileName = "D:\\work\\code\\yd-bbbc\\ydGame\\generator\\src\\main\\java\\com\\ydqp\\generator\\dao\\template";
         File file = new File(fileName);
         BufferedReader reader = null;
         try {
@@ -42,10 +42,10 @@ public class GeneratorDao {
 
     public static void main(String[] args) {
         try {
-            String url = "jdbc:mysql://127.0.0.1:3306/ydGame?useUnicode=true&autoReconnect=true&rewriteBatchedStatements=true";
+            String url = "jdbc:mysql://127.0.0.1:3306/lottery_game?useUnicode=true&autoReconnect=true&rewriteBatchedStatements=true";
             String user = "root";
             String password = "";
-            String dbName = "ydGame";
+            String dbName = "lottery_game";
             String dbType = "MYSQL";
             String cacheChain = "";
             String caches = "CacheType.REDIS";

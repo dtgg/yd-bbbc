@@ -6,7 +6,6 @@ import com.cfq.log.LoggerFactory;
 import com.ydqp.common.ManagePlayerPromote;
 import com.ydqp.common.dao.PlayerOrderDao;
 import com.ydqp.common.dao.PlayerPromoteDetailDao;
-import com.ydqp.common.dao.lottery.PlayerLotteryDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.data.Total;
@@ -54,8 +53,6 @@ public class PlayerPromoteTask implements Runnable {
             isEffective = true;
         }
 
-        PlayerPromote superior = new PlayerPromote();
-        int superiorTotal = 0;
         if (isEffective) {
             //获取上级奖金比例的配置
             PlayerPromoteConfig config = ManagePlayerPromote.getInstance().getConfig();
@@ -63,12 +60,9 @@ public class PlayerPromoteTask implements Runnable {
             //计算上级获得的奖金，保存player_promote_detail
             if (playerPromote.getSuperiorId() != null) {
                 playerPromoteDetail.setSuperiorAmount(playerPromoteDetail.getBetAmount().multiply(new BigDecimal(config.getSuperiorRate())));
-
-                superior = PlayerPromoteDao.getInstance().findByPlayerId(playerPromote.getGrandId());
-                superiorTotal = PlayerLotteryDao.getInstance().countByPlayerId(playerPromote.getSuperiorId()).getTotal();
             }
             //superior是有效用户
-            if (playerPromote.getGrandId() != null && superior.getIsEffective() == 1 && superiorTotal > 0) {
+            if (playerPromote.getGrandId() != null) {
                 playerPromoteDetail.setGrandAmount(playerPromoteDetail.getBetAmount().multiply(new BigDecimal(config.getGrandRate())));
             }
         }
@@ -91,10 +85,14 @@ public class PlayerPromoteTask implements Runnable {
         if (isNew) {
             //上级玩家的一级有效用户加一，2级有效用户加上当前玩家的一级有效用户数量
             if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
-                PlayerPromoteDao.getInstance().updateSubEffective(playerPromote.getSuperiorId(), playerPromote.getSubNum());
+                PlayerPromoteDao.getInstance().updateSubEffective(playerPromote.getSuperiorId());
+                Object[] params = new Object[]{playerPromoteDetail.getSuperiorAmount(), playerPromote.getSuperiorId()};
+                PlayerPromoteDao.getInstance().updateBonusAmount(params);
             }
-            if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0 && superior.getIsEffective() == 1 && superiorTotal > 0) {
+            if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0) {
                 PlayerPromoteDao.getInstance().updateSonEffective(playerPromote.getGrandId());
+                Object[] params = new Object[]{playerPromoteDetail.getGrandAmount(), playerPromote.getGrandId()};
+                PlayerPromoteDao.getInstance().updateBonusAmount(params);
             }
         }
 
@@ -135,6 +133,7 @@ public class PlayerPromoteTask implements Runnable {
 
     /**
      * 通知上级玩家
+     *
      * @param playerData
      */
     private void sendToSuperiorAndGrand(PlayerData playerData) {

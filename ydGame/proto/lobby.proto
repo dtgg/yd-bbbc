@@ -179,3 +179,27 @@ message ParityReceiveSuc {
   string message = 2;
   double amount = 3;
 }
+//提取返利
+message ParityBonusAmountDraw {
+  int64 playerId = 1;
+  double bonusAmount = 2;
+}
+message ParityBonusAmountDrawSuc {
+  bool success = 1;
+  string message = 2;
+}
+message ParityCollectBonus {
+  int64 playerId = 1;
+}
+message ParityCollectBonusSuc {
+  double totalBonus = 1;
+  repeated PlayerBonusDrawData bonusDrawList = 2;
+}
+message PlayerBonusDrawData {
+  int32 id = 1;
+  int64 playerId = 2;
+  string orderId = 3;
+  double amount = 4;
+  int32 status = 5;
+  int32 createTime = 6;
+}
