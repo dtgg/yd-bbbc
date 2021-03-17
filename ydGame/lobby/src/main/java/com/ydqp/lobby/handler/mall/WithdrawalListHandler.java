@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ServerHandler(command = 1004008, module = "mall")
+@ServerHandler(command = 1004006, module = "mall")
 public class WithdrawalListHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(WithdrawalListHandler.class);
 
@@ -26,10 +26,11 @@ public class WithdrawalListHandler implements IServerHandler {
     @Override
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         WithdrawalList withdrawalList = (WithdrawalList) abstartParaseMessage;
-        List<PlayerWithdrawal> list = PlayerWithdrawalService.getInstance().page(
+        logger.info("查询提现记录：playerId：{}，page：{}，limit：{}",
                 withdrawalList.getPlayerId(), withdrawalList.getPage(), withdrawalList.getLimit());
 
-        logger.info("玩家{}提现记录有{}条", withdrawalList.getPlayerId(), list.size());
+        List<PlayerWithdrawal> list = PlayerWithdrawalService.getInstance().page(
+                withdrawalList.getPlayerId(), withdrawalList.getPage(), withdrawalList.getLimit());
 
         List<WithdrawalData> data = list.stream().map(withdrawal -> {
             String time = sdf.format(new Date(withdrawal.getCreateTime() * 1000L));

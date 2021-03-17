@@ -10,7 +10,7 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 1004006)
+@ReceiveCommandAnnotation(command = 1004004)
 public class PlayerAccountInfo extends AbstartParaseMessage {
 
     @Getter

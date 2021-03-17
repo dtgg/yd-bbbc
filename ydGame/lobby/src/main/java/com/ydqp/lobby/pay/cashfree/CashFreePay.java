@@ -5,7 +5,7 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.entity.*;
 import com.ydqp.common.sendProtoMsg.mall.PlayerOrderSuccess;
-import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuc;
+import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuccess;
 import com.ydqp.lobby.cache.PayCache;
 import com.ydqp.lobby.pay.OrderPay;
 import com.ydqp.lobby.pay.cashfree.api.CashFreeApi;
@@ -66,8 +66,8 @@ public class CashFreePay extends OrderPay {
     }
 
     @Override
-    public PlayerWithdrawalSuc payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
-        PlayerWithdrawalSuc withdrawalSuc = new PlayerWithdrawalSuc();
+    public PlayerWithdrawalSuccess payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
+        PlayerWithdrawalSuccess withdrawalSuc = new PlayerWithdrawalSuccess();
 
         JSONObject tokenJson = getToken(config);
         if (!tokenJson.getBoolean("success")) {
@@ -165,7 +165,6 @@ public class CashFreePay extends OrderPay {
         JSONObject params = new JSONObject() {{
             put("beneId", account.getAccountId());
             put("name", account.getName());
-            put("email", StringUtils.isBlank(account.getEmail()) ? "johndoe_1@cashfree.com" : account.getEmail());
             put("phone", account.getMobile());
             put("bankAccount", account.getAccNo());
             put("ifsc", account.getIfsc());

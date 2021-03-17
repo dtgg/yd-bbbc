@@ -30,7 +30,8 @@ public class MobileRegisterHandler implements IServerHandler {
         Player player = PlayerLoginDao.getInstance().selectPlayerByPN(mobileRegister.getMobile());
         if (player != null) {
             MobileRegisterSuc suc = new MobileRegisterSuc();
-            suc.setSuccess(true);
+            suc.setSuccess(false);
+            suc.setMessage("Repeat registration");
             suc.setPassword(player.getPassWord());
             suc.setPlayerName(mobileRegister.getMobile());
             iSession.sendMessageByID(suc, mobileRegister.getConnId());

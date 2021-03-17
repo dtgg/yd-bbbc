@@ -19,13 +19,8 @@ public class Player implements Serializable {
 	public static final String HEADURL_NAME = "headUrl";
 	public static final String ROOMID_NAME = "roomId";
 	public static final String ZJPOINT_NAME = "zjPoint";
-	public static final String COINPOINT_NAME = "coinPoint";
 	public static final String ONLINETIME_NAME = "onLineTime";
 	public static final String CREATETIME_NAME = "createTime";
-	public static final String GRADE_NAME = "grade";
-	public static final String EXPERIENCE_NAME = "experience";
-	public static final String FBUSERID_NAME = "fbUserId";
-	public static final String FBBIND_NAME = "fbBind";
 	public static final String APPID_NAME = "appId";
 	public static final String BANLOGIN_NAME = "banLogin";
 	public static final String REFERRALCODE_NAME = "referralCode";
@@ -90,14 +85,6 @@ public class Player implements Serializable {
 	 this.zjPoint = zjPoint;
 	 entityMap.put(ZJPOINT_NAME, zjPoint);
 	}
-	private double coinPoint;
-	public double getCoinPoint() {
-	return coinPoint;
-	}
- 	 public void setCoinPoint(double coinPoint){
-	 this.coinPoint = coinPoint;
-	 entityMap.put(COINPOINT_NAME, coinPoint);
-	}
 	private int onLineTime;
 	public int getOnLineTime() {
 	return onLineTime;
@@ -113,38 +100,6 @@ public class Player implements Serializable {
  	 public void setCreateTime(int createTime){
 	 this.createTime = createTime;
 	 entityMap.put(CREATETIME_NAME, createTime);
-	}
-	private int grade;
-	public int getGrade() {
-	return grade;
-	}
- 	 public void setGrade(int grade){
-	 this.grade = grade;
-	 entityMap.put(GRADE_NAME, grade);
-	}
-	private double experience;
-	public double getExperience() {
-	return experience;
-	}
- 	 public void setExperience(double experience){
-	 this.experience = experience;
-	 entityMap.put(EXPERIENCE_NAME, experience);
-	}
-	private String fbUserId;
-	public String getFbUserId() {
-	return fbUserId;
-	}
- 	 public void setFbUserId(String fbUserId){
-	 this.fbUserId = fbUserId;
-	 entityMap.put(FBUSERID_NAME, fbUserId);
-	}
-	private byte fbBind;
-	public byte getFbBind() {
-	return fbBind;
-	}
- 	 public void setFbBind(byte fbBind){
-	 this.fbBind = fbBind;
-	 entityMap.put(FBBIND_NAME, fbBind);
 	}
 	private int appId;
 	public int getAppId() {

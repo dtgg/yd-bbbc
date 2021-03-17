@@ -7,25 +7,30 @@ import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.cfq.annotation.SendCommandAnnotation;
 import com.cfq.message.AbstartCreateMessage;
 import com.cfq.message.NetProtoMessage;
+import com.ydqp.common.sendProtoMsg.player.PlayerResetPasswordSuc;
 import lombok.Getter;
 import lombok.Setter;
 
-@SendCommandAnnotation(command = 1004102)
-public class PayChannelSuccess extends AbstartCreateMessage {
+@SendCommandAnnotation(command = 1004108)
+public class PlayerAccountResetPasswordSuc extends AbstartCreateMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 1)
-    private int payChannel;
+    @Protobuf(fieldType = FieldType.BOOL, order = 1)
+    private boolean success;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.STRING, order = 2)
+    private String message;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<PayChannelSuccess> payChannelSuccessCodec = ProtobufProxy.create(PayChannelSuccess.class);
-            byte[] body = payChannelSuccessCodec.encode(this);
-            netProtoMessage.getNetProtoMessageBody().setBody(body);
+            Codec<PlayerAccountResetPasswordSuc> codec = ProtobufProxy.create(PlayerAccountResetPasswordSuc.class);
+            byte[] bytes = codec.encode(this);
+            netProtoMessage.getNetProtoMessageBody().setBody(bytes);
         } catch (Exception e) {
             e.printStackTrace();
         }

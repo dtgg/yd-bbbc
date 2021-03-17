@@ -5,7 +5,7 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.entity.*;
 import com.ydqp.common.sendProtoMsg.mall.PlayerOrderSuccess;
-import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuc;
+import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuccess;
 import com.ydqp.common.utils.HttpUtils;
 import com.ydqp.lobby.pay.CommonPay;
 import com.ydqp.lobby.pay.OrderPay;
@@ -68,7 +68,7 @@ public class Pay777 extends OrderPay {
     }
 
     @Override
-    public PlayerWithdrawalSuc payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
+    public PlayerWithdrawalSuccess payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
         Map<String, String> header = new HashMap<String, String>() {{
             put("Content-Type", "application/json");
         }};
@@ -104,20 +104,20 @@ public class Pay777 extends OrderPay {
 
         JSONObject response = JSONObject.parseObject(result);
 
-        PlayerWithdrawalSuc playerWithdrawalSuc = new PlayerWithdrawalSuc();
+        PlayerWithdrawalSuccess playerWithdrawalSuccess = new PlayerWithdrawalSuccess();
         if (response.getInteger("success") == 0) {
             withdrawal.setStatus(2);
             withdrawal.setErrorMsg(response.getString("message"));
 
-            playerWithdrawalSuc.setSuccess(false);
-            playerWithdrawalSuc.setMessage("Withdrawal failed!");
+            playerWithdrawalSuccess.setSuccess(false);
+            playerWithdrawalSuccess.setMessage("Withdrawal failed!");
         }
 
         withdrawal.setReferenceId(response.getString("ticket"));
         withdrawal.setStatus(1);
 
-        playerWithdrawalSuc.setSuccess(true);
-        return playerWithdrawalSuc;
+        playerWithdrawalSuccess.setSuccess(true);
+        return playerWithdrawalSuccess;
     }
 
     public static void main(String[] args) {

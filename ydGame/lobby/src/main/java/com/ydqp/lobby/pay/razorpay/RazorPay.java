@@ -8,7 +8,7 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.ydqp.common.entity.*;
 import com.ydqp.common.sendProtoMsg.mall.PlayerOrderSuccess;
-import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuc;
+import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuccess;
 import com.ydqp.lobby.pay.OrderPay;
 import com.ydqp.lobby.pay.razorpay.api.RazorPayApi;
 import com.ydqp.lobby.service.mall.PlayerAccountService;
@@ -83,8 +83,8 @@ public class RazorPay extends OrderPay {
     }
 
     @Override
-    public PlayerWithdrawalSuc payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
-        PlayerWithdrawalSuc withdrawalSuc = new PlayerWithdrawalSuc();
+    public PlayerWithdrawalSuccess payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
+        PlayerWithdrawalSuccess withdrawalSuc = new PlayerWithdrawalSuccess();
 
         //判断下faId存不存在
         String faId = account.getAccountId();

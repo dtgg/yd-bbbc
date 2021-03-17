@@ -7,13 +7,12 @@ import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.cfq.annotation.SendCommandAnnotation;
 import com.cfq.message.AbstartCreateMessage;
 import com.cfq.message.NetProtoMessage;
+import com.ydqp.common.data.PlayerAccountData;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.IOException;
-
-@SendCommandAnnotation(command = 1004302)
-public class PlayerWithdrawalSuc extends AbstartCreateMessage {
+@SendCommandAnnotation(command = 1004103)
+public class PlayerAccountSaveSuccess extends AbstartCreateMessage {
 
     @Getter
     @Setter
@@ -25,15 +24,20 @@ public class PlayerWithdrawalSuc extends AbstartCreateMessage {
     @Protobuf(fieldType = FieldType.STRING, order = 2)
     private String message;
 
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.OBJECT, order = 3)
+    private PlayerAccountData playerAccountData;
+
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<PlayerWithdrawalSuc> withdrawalSuccessCodec = ProtobufProxy.create(PlayerWithdrawalSuc.class);
-            byte[] bytes = withdrawalSuccessCodec.encode(this);
-            netProtoMessage.getNetProtoMessageBody().setBody(bytes);
-        } catch (IOException e) {
+            Codec<PlayerAccountSaveSuccess> beneInfoSuccessCodec = ProtobufProxy.create(PlayerAccountSaveSuccess.class);
+            byte[] body = beneInfoSuccessCodec.encode(this);
+            netProtoMessage.getNetProtoMessageBody().setBody(body);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return netProtoMessage;

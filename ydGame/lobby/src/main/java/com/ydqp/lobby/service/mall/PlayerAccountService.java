@@ -53,4 +53,12 @@ public class PlayerAccountService {
     public void updateYaarAccount(Object[] params) {
         PlayerAccountDao.getInstance().updateYaarAccount(params);
     }
+
+    public PlayerAccount findByAccNo(String accNo) {
+        return PlayerAccountDao.getInstance().findByAccNo(accNo);
+    }
+
+    public void updatePassword(Object[] params) {
+        PlayerAccountDao.getInstance().updatePassword(params);
+    }
 }

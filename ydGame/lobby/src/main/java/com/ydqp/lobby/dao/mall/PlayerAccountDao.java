@@ -22,7 +22,7 @@ public class PlayerAccountDao {
         JdbcOrm.getInstance().insert("player_account", params);
     }
 
-    private static final String UPDATE = "update player_account set name = ?, accNo = ?, ifsc = ?, mobile = ?, beneId = ? where playerId = ?;";
+    private static final String UPDATE = "update player_account set name = ?, mobile = ?, bankName = ?, accNo = ?, ifsc = ? where playerId = ?;";
     public void updatePlayerAccount(Object[] params) {
         JdbcOrm.getInstance().updateByArray(UPDATE, params);
     }
@@ -62,5 +62,16 @@ public class PlayerAccountDao {
     private static final String UPDATE_PLAYER_ACCOUNT = "update player_account set name = ?, accNo = ?, ifsc = ?, mobile = ?, bankCode = ? where playerId = ?;";
     public void updateYaarAccount(Object[] params) {
         JdbcOrm.getInstance().updateByArray(UPDATE_PLAYER_ACCOUNT, params);
+    }
+
+    private static final String FIND_BY_ACCNO = "select * from player_account where accNo = ";
+    public PlayerAccount findByAccNo(String accNo) {
+        String sql = FIND_BY_ACCNO + accNo + ";";
+        return (PlayerAccount) JdbcOrm.getInstance().getBean(sql, PlayerAccount.class);
+    }
+
+    private static final String UPDATE_ACCOUNT_PASSWORD = "update player_account set password = ? where playerId = ?;";
+    public void updatePassword(Object[] params) {
+        JdbcOrm.getInstance().updateByArray(UPDATE_ACCOUNT_PASSWORD, params);
     }
 }

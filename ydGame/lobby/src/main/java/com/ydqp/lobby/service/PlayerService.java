@@ -119,15 +119,9 @@ public class PlayerService {
         loginSuccess.setPlayerId(playerData.getPlayerId());
         loginSuccess.setPlayerName(playerData.getPlayerName());
         loginSuccess.setPlayerNickName(playerData.getNickName());
-        loginSuccess.setPlayerCoinPoint(playerData.getCoinPoint());
         loginSuccess.setPlayerZJPoint(playerData.getZjPoint());
-        loginSuccess.setRoomId(playerData.getRoomId());
+        loginSuccess.setRoomId(0);
         loginSuccess.setPlayerUrl(playerData.getHeadUrl());
-        loginSuccess.setGrade(playerData.getGrade());
-//        loginSuccess.setExperience(playerData.getExperience());
-        loginSuccess.setBindFb(player.getFbBind() == 1);
-        loginSuccess.setLoginType(0);
-        loginSuccess.setFbUserId("");
 
         //获取开关游戏
         String serverCodes = getGameSwitch();
@@ -136,54 +130,6 @@ public class PlayerService {
         iSession.sendMessageByID(loginSuccess, playerLogin.getConnId());
         //更新在线状态
         PlayerLoginDao.getInstance().updateOnLineTime(playerData.getPlayerId(), 0);
-    }
-
-    public void guestRegister(ISession iSession, GuestRegister guestRegister) {
-        String playerName = UUID.randomUUID().toString().replaceAll("-", "");
-        if (guestRegister.getDeviceId() != null && !guestRegister.getDeviceId().isEmpty()) {
-            playerName = guestRegister.getDeviceId();
-            //login
-            Player player = PlayerLoginDao.getInstance().selectPlayerByPN(playerName);
-            if (player != null) {
-                GuestRegisterSuccess guestRegisterSuccess = new GuestRegisterSuccess();
-                guestRegisterSuccess.setPassWord(player.getPassWord());
-                guestRegisterSuccess.setPlayerName(playerName);
-
-                iSession.sendMessageByID(guestRegisterSuccess, guestRegister.getConnId());
-                return;
-            }
-        }
-        //头像是 1-8 序号随机生成
-        Random r = new Random();
-        int t = r.nextInt(8) + 1;
-        //final String playerName = randomStr(GuestRegisterConstant.PLAYER_NAME_LONGTH);
-        final String password = getMD5Str(playerName + GuestRegisterConstant.MD5_SUFFIX);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("playerName", playerName);
-        params.put("passWord", password);
-        params.put("nickname", GuestRegisterConstant.NICKNAME_PREFIX + randomStr(GuestRegisterConstant.NICKNAME_LONGTH));
-        params.put("headUrl", 1 + "");
-        params.put("roomId", GuestRegisterConstant.ROOM_ID);
-        params.put("zjPoint", GuestRegisterConstant.ZJ_POINT);
-        params.put("coinPoint", GuestRegisterConstant.COIN_POINT);
-        params.put("createTime", new Long(System.currentTimeMillis() / 1000L).intValue());
-        params.put("appId", guestRegister.getAppId());
-        long playerId = PlayerLoginDao.getInstance().insertPlayer(params);
-
-        GuestRegisterSuccess guestRegisterSuccess = new GuestRegisterSuccess();
-        guestRegisterSuccess.setPassWord(password);
-        guestRegisterSuccess.setPlayerName(playerName);
-
-        iSession.sendMessageByID(guestRegisterSuccess, guestRegister.getConnId());
-
-        //上报注册数据
-        Map<String, Object> data = new HashMap<>();
-        data.put("playerId", playerId);
-        data.put("appId", guestRegister.getAppId());
-        data.put("registerTime", new Long(System.currentTimeMillis() / 1000L).intValue());
-        data.put("type", 1);
-        ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.PLAYER_REGISTER,
-                new JSONObject(data)));
     }
 
     public Player queryByCondition(String queryCondition) {
@@ -200,18 +146,6 @@ public class PlayerService {
 
     public void updatePlayerZjPoint(double coinPoint, long id) {
         PlayerLoginDao.getInstance().updatePlayerZjPoint(coinPoint, id);
-    }
-
-    public void updatePlayerGrade(long playerId, int grade, double experience) {
-        PlayerLoginDao.getInstance().updatePlayerGrade(playerId, grade, experience);
-    }
-
-
-    private String getPlayerName(int length) {
-        String playerName = randomStr(length);
-        Player player = PlayerLoginDao.getInstance().selectPlayerByPN(playerName);
-        if (player != null) getPlayerName(length);
-        return playerName;
     }
 
     private static String randomStr(int length) {
@@ -238,118 +172,6 @@ public class PlayerService {
         return new BigInteger(1, digest).toString(16);
     }
 
-
-    public void fbLogin(ISession iSession, PlayerFbLogin playerFbLogin) {
-
-        String fbUserId = playerFbLogin.getFbUserId();
-        String accessToken = playerFbLogin.getAccessToken();
-        if (fbUserId == null || accessToken == null) {
-            return;
-        }
-
-        PlayerData playerData = null;
-        //login
-        Player player = PlayerLoginDao.getInstance().selectPlayerByFb(fbUserId);
-        if (player == null) {
-            logger.info("fb注册用户！！！");
-            //注册一个用户
-            Map<String, Object> params = new HashMap<String, Object>() {{
-                put("fbUserId", playerFbLogin.getFbUserId());
-                put("nickname", playerFbLogin.getFbNickName());
-                put("headUrl", GuestRegisterConstant.HEAD_URL);
-                put("roomId", GuestRegisterConstant.ROOM_ID);
-                put("zjPoint", GuestRegisterConstant.ZJ_POINT);
-                put("coinPoint", GuestRegisterConstant.COIN_POINT);
-                put("playerName", "");
-                put("fbBind", 1);
-                put("createTime", new Long(System.currentTimeMillis() / 1000L).intValue());
-                put("appId", playerFbLogin.getAppId());
-            }};
-            long playerId = PlayerLoginDao.getInstance().insertPlayer(params);
-            playerData = new PlayerData();
-            playerData.setCoinPoint(50000.0);
-            playerData.setZjPoint(30.0);
-            playerData.setRoomId(0);
-            playerData.setExperience(0.0);
-            playerData.setGrade(0);
-            playerData.setHeadUrl(GuestRegisterConstant.HEAD_URL);
-            playerData.setNickName(playerFbLogin.getFbNickName());
-            playerData.setPlayerId(playerId);
-            playerData.setAppId(playerFbLogin.getAppId());
-            playerData.setFbUserId(playerFbLogin.getFbUserId());
-            playerData.setRegisterTime(new Long(System.currentTimeMillis() / 1000L).intValue());
-
-            //上报注册数据
-            Map<String, Object> data = new HashMap<>();
-            data.put("playerId", playerId);
-            data.put("appId", playerFbLogin.getAppId());
-            data.put("registerTime", new Long(System.currentTimeMillis() / 1000L).intValue());
-            data.put("type", 2);
-            ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.PLAYER_REGISTER,
-                    new JSONObject(data)));
-        } else {
-            //这边要踢人，将之前登陆的给踢下去
-            PlayerData kickPlayer = PlayerCache.getInstance().getPlayerByPlayerID(player.getId());
-            if (kickPlayer != null) {
-                logger.debug("玩家登陆，通过id获取connID ，playerId = {}  connId = {}  nconndi = {}", player.getId(),
-                        kickPlayer.getSessionId(), playerFbLogin.getConnId());
-                PlayerData checkPlayer = PlayerCache.getInstance().getPlayer(kickPlayer.getSessionId());
-                if (checkPlayer != null && checkPlayer.getPlayerId() == kickPlayer.getPlayerId()) {
-                    logger.debug("玩家登陆重复登陆，通过id获取connID ，playerId = {}  connId = {}  nconndi = {}", checkPlayer.getPlayerId(),
-                            checkPlayer.getSessionId(), playerFbLogin.getConnId());
-                    //PlayerCache.getInstance().delPlayerByConnId(kickPlayer.getSessionId());
-                    LobbyKickPlayer lobbyKickPlayer = new LobbyKickPlayer();
-                    lobbyKickPlayer.setPlayerId(kickPlayer.getPlayerId());
-                    iSession.sendMessageByID(lobbyKickPlayer, kickPlayer.getSessionId());
-                }
-            }
-
-            playerData = new PlayerData(player);
-        }
-
-        playerData.setSessionId(playerFbLogin.getConnId());
-        PlayerCache.getInstance().addPlayer(playerFbLogin.getConnId(), playerData);
-        //通过playerId找到connId
-        PlayerCache.getInstance().addPlayerByPlayerId(playerData.getPlayerId(), playerData);
-
-        logger.info("玩家登陆成功，playerId = {} ， ConnId= {} ", playerData.getPlayerId(), playerData.getSessionId());
-
-        //发送登陆命令给业务服务器
-        LoginSuccess loginSuccessBYBs = new LoginSuccess();
-        if (playerData.getRoomId() == 0) {
-            //return;
-        } else if ((playerData.getRoomId() / 100000) == 20) {
-            loginSuccessBYBs.setCommand(2010000);
-        } else if ((playerData.getRoomId() / 100000) == 30) {
-            loginSuccessBYBs.setCommand(3010000);
-        }
-        iSession.sendMessage(loginSuccessBYBs, playerFbLogin);
-
-        LoginSuccess loginSuccess = new LoginSuccess();
-        loginSuccess.setCommand(1000005);
-        loginSuccess.setPlayerId(playerData.getPlayerId());
-        loginSuccess.setPlayerName(playerData.getPlayerName());
-        loginSuccess.setPlayerNickName(playerData.getNickName());
-        loginSuccess.setPlayerCoinPoint(playerData.getCoinPoint());
-        loginSuccess.setPlayerZJPoint(playerData.getZjPoint());
-        loginSuccess.setRoomId(playerData.getRoomId());
-        loginSuccess.setPlayerUrl(playerData.getHeadUrl());
-        loginSuccess.setGrade(playerData.getGrade());
-//        loginSuccess.setExperience(playerData.getExperience());
-        loginSuccess.setBindFb(true);
-        loginSuccess.setLoginType(1);
-        loginSuccess.setFbUserId(playerFbLogin.getFbUserId());
-
-        //获取开关游戏
-        String serverCodes = getGameSwitch();
-        loginSuccess.setOpenGames(serverCodes);
-
-        iSession.sendMessageByID(loginSuccess, playerFbLogin.getConnId());
-
-        //更新在线状态
-        PlayerLoginDao.getInstance().updateOnLineTime(playerData.getPlayerId(), 0);
-    }
-
     private String getGameSwitch() {
         List<GameSwitch> gameSwitches = GameSwitchDao.getInstance().getGameSwitch();
         List<Integer> serverCodes = new ArrayList<>();
@@ -372,147 +194,6 @@ public class PlayerService {
 
     public void updateHeadUrl(Object[] params) {
         PlayerDao.getInstance().updateHeadUrl(params);
-    }
-
-    public void guestRegisterByAppId(ISession iSession, GuestRegisterByAppId guestRegisterByAppId) {
-//        String playerName = UUID.randomUUID().toString().replaceAll("-", "");
-//        if (guestRegisterByAppId.getDeviceId() != null && !guestRegisterByAppId.getDeviceId().isEmpty()) {
-//            playerName = guestRegisterByAppId.getDeviceId();
-//            //login
-//            Player player = PlayerLoginDao.getInstance().selectPlayerByPN(playerName);
-//            if (player != null) {
-//                GuestRegisterSuccess guestRegisterSuccess = new GuestRegisterSuccess();
-//                guestRegisterSuccess.setPassWord(player.getPassWord());
-//                guestRegisterSuccess.setPlayerName(playerName);
-//
-//                iSession.sendMessageByID(guestRegisterSuccess, guestRegisterByAppId.getConnId());
-//                return;
-//            }
-//        }
-//        //头像是 1-8 序号随机生成
-//        final String password = getMD5Str(playerName + GuestRegisterConstant.MD5_SUFFIX);
-//        Map<String, Object> params = new HashMap<String, Object>();
-//        params.put("playerName", playerName);
-//        params.put("passWord", password);
-//        params.put("nickname", GuestRegisterConstant.NICKNAME_PREFIX + randomStr(GuestRegisterConstant.NICKNAME_LONGTH));
-//        params.put("headUrl", 1 + "");
-//        params.put("roomId", GuestRegisterConstant.ROOM_ID);
-//        params.put("zjPoint", GuestRegisterConstant.ZJ_POINT);
-//        params.put("coinPoint", GuestRegisterConstant.COIN_POINT);
-//        params.put("createTime", new Long(System.currentTimeMillis() / 1000L).intValue());
-//        params.put("appId", guestRegisterByAppId.getAppId());
-//        long playerId = PlayerLoginDao.getInstance().insertPlayer(params);
-//        //初始化用户信息
-//        initPlayerPlayInfo(playerId);
-//
-//        GuestRegisterSuccess guestRegisterSuccess = new GuestRegisterSuccess();
-//        guestRegisterSuccess.setPassWord(password);
-//        guestRegisterSuccess.setPlayerName(playerName);
-//
-//        iSession.sendMessageByID(guestRegisterSuccess, guestRegisterByAppId.getConnId());
-    }
-
-
-    public void fbLoginByAppId(ISession iSession, PlayerFbLoginByAppId playerFbLoginByAppId) {
-//
-//        String fbUserId = playerFbLoginByAppId.getFbUserId();
-//        String accessToken = playerFbLoginByAppId.getAccessToken();
-//        if (fbUserId == null || accessToken == null) {
-//            return;
-//        }
-//
-//        PlayerData playerData = null;
-//        //login
-//        Player player = PlayerLoginDao.getInstance().selectPlayerByFb(fbUserId);
-//        if (player == null) {
-//            logger.info("fb注册用户！！！");
-//            //注册一个用户
-//            Map<String, Object> params = new HashMap<String, Object>() {{
-//                put("fbUserId", playerFbLoginByAppId.getFbUserId());
-//                put("nickname", playerFbLoginByAppId.getFbNickName());
-//                put("headUrl", GuestRegisterConstant.HEAD_URL);
-//                put("roomId", GuestRegisterConstant.ROOM_ID);
-//                put("zjPoint", GuestRegisterConstant.ZJ_POINT);
-//                put("coinPoint", GuestRegisterConstant.COIN_POINT);
-//                put("playerName", "");
-//                put("fbBind", 1);
-//                put("createTime", new Long(System.currentTimeMillis() / 1000L).intValue());
-//                put("appId", playerFbLoginByAppId.getAppId());
-//            }};
-//            long playerId = PlayerLoginDao.getInstance().insertPlayer(params);
-//            playerData = new PlayerData();
-//            playerData.setCoinPoint(0.0);
-//            playerData.setZjPoint(0.0);
-//            playerData.setRoomId(0);
-//            playerData.setExperience(0.0);
-//            playerData.setGrade(0);
-//            playerData.setHeadUrl(GuestRegisterConstant.HEAD_URL);
-//            playerData.setNickName(playerFbLoginByAppId.getFbNickName());
-//            playerData.setPlayerId(playerId);
-//            //初始化用户信息
-//            initPlayerPlayInfo(playerId);
-//
-//        } else {
-//            //这边要踢人，将之前登陆的给踢下去
-//            PlayerData kickPlayer = PlayerCache.getInstance().getPlayerByPlayerID(player.getId());
-//            if (kickPlayer != null) {
-//                logger.debug("玩家登陆，通过id获取connID ，playerId = {}  connId = {}  nconndi = {}", player.getId(),
-//                        kickPlayer.getSessionId(), playerFbLoginByAppId.getConnId());
-//                PlayerData checkPlayer = PlayerCache.getInstance().getPlayer(kickPlayer.getSessionId());
-//                if (checkPlayer != null && checkPlayer.getPlayerId() == kickPlayer.getPlayerId()) {
-//                    logger.debug("玩家登陆重复登陆，通过id获取connID ，playerId = {}  connId = {}  nconndi = {}", checkPlayer.getPlayerId(),
-//                            checkPlayer.getSessionId(), playerFbLoginByAppId.getConnId());
-//                    //PlayerCache.getInstance().delPlayerByConnId(kickPlayer.getSessionId());
-//                    LobbyKickPlayer lobbyKickPlayer = new LobbyKickPlayer();
-//                    lobbyKickPlayer.setPlayerId(kickPlayer.getPlayerId());
-//                    iSession.sendMessageByID(lobbyKickPlayer, kickPlayer.getSessionId());
-//                }
-//            }
-//
-//            playerData = new PlayerData(player);
-//        }
-//
-//        playerData.setSessionId(playerFbLoginByAppId.getConnId());
-//        PlayerCache.getInstance().addPlayer(playerFbLoginByAppId.getConnId(), playerData);
-//        //通过playerId找到connId
-//        PlayerCache.getInstance().addPlayerByPlayerId(playerData.getPlayerId(), playerData);
-//
-//        logger.info("玩家登陆成功，playerId = {} ， ConnId= {} ", playerData.getPlayerId(), playerData.getSessionId());
-//
-//        //发送登陆命令给业务服务器
-//        LoginSuccess loginSuccessBYBs = new LoginSuccess();
-//        if (playerData.getRoomId() == 0) {
-//            //return;
-//        } else if ((playerData.getRoomId() / 100000) == 20) {
-//            loginSuccessBYBs.setCommand(2010000);
-//        } else if ((playerData.getRoomId() / 100000) == 30) {
-//            loginSuccessBYBs.setCommand(3010000);
-//        }
-//        iSession.sendMessage(loginSuccessBYBs, playerFbLoginByAppId);
-//
-//        LoginSuccess loginSuccess = new LoginSuccess();
-//        loginSuccess.setCommand(1000005);
-//        loginSuccess.setPlayerId(playerData.getPlayerId());
-//        loginSuccess.setPlayerName(playerData.getPlayerName());
-//        loginSuccess.setPlayerNickName(playerData.getNickName());
-//        loginSuccess.setPlayerCoinPoint(playerData.getCoinPoint());
-//        loginSuccess.setPlayerZJPoint(playerData.getZjPoint());
-//        loginSuccess.setRoomId(playerData.getRoomId());
-//        loginSuccess.setPlayerUrl(playerData.getHeadUrl());
-//        loginSuccess.setGrade(playerData.getGrade());
-////        loginSuccess.setExperience(playerData.getExperience());
-//        loginSuccess.setExperience(GradeManager.getInstance().gradeExperience(playerData.getExperience()));
-//        loginSuccess.setBindFb(true);
-//        loginSuccess.setLoginType(1);
-//
-//        //获取开关游戏
-//        String serverCodes = getGameSwitch();
-//        loginSuccess.setOpenGames(serverCodes);
-//
-//        iSession.sendMessageByID(loginSuccess, playerFbLoginByAppId.getConnId());
-//
-//        //更新在线状态
-//        PlayerLoginDao.getInstance().updateOnLineTime(playerData.getPlayerId(), 0);
     }
 
     public void mobileRegister(ISession iSession, MobileRegister mobileRegister) {
@@ -545,7 +226,6 @@ public class PlayerService {
         player.setHeadUrl(GuestRegisterConstant.HEAD_URL);
         player.setRoomId(GuestRegisterConstant.ROOM_ID);
         player.setZjPoint(0);
-        player.setCoinPoint(GuestRegisterConstant.COIN_POINT);
         player.setCreateTime(createTime);
         player.setAppId(mobileRegister.getAppId() == 0 ? 1100001 : mobileRegister.getAppId());
         player.setKfId(kfId);
@@ -555,6 +235,7 @@ public class PlayerService {
         String referralCode = ShortCodeKit.convertDecimalToBase62(ShortCodeKit.permutedId(playerId), 8);
         PlayerDao.getInstance().updateReferralCode(new Object[] {referralCode, playerId});
 
+        suc.setSuccess(true);
         suc.setMessage("Registered successfully");
         suc.setPlayerName(mobileRegister.getMobile());
         suc.setPassword(password);

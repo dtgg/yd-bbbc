@@ -13,7 +13,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-@SendCommandAnnotation(command = 1004108)
+@SendCommandAnnotation(command = 1004106)
 public class WithdrawalListSuccess extends AbstartCreateMessage {
 
     @Getter

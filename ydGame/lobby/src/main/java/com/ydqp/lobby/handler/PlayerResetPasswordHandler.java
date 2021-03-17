@@ -27,8 +27,8 @@ public class PlayerResetPasswordHandler implements IServerHandler {
         //login
         Player player = PlayerLoginDao.getInstance().selectPlayerByPN(playerResetPassword.getMobile());
         if (player == null) {
-            MobileRegisterSuc suc = new MobileRegisterSuc();
-            suc.setSuccess(true);
+            PlayerResetPasswordSuc suc = new PlayerResetPasswordSuc();
+            suc.setSuccess(false);
             suc.setMessage("The number has not been registered, the password cannot be reset");
             iSession.sendMessageByID(suc, playerResetPassword.getConnId());
             return;
@@ -73,13 +73,13 @@ public class PlayerResetPasswordHandler implements IServerHandler {
             return;
         }
         //校验密码格式
-        if (!MessageCheckUtil.checkPassword(playerResetPassword.getPassword())) {
-            suc.setSuccess(false);
-            suc.setMessage("The password format is wrong, please enter a combination of 8 or more English and numbers");
-            iSession.sendMessageByID(suc, playerResetPassword.getConnId());
-            logger.error("手机注册，密码格式错误， mobile:{}", playerResetPassword.getPassword());
-            return;
-        }
+//        if (!MessageCheckUtil.checkPassword(playerResetPassword.getPassword())) {
+//            suc.setSuccess(false);
+//            suc.setMessage("The password format is wrong, please enter a combination of 8 or more English and numbers");
+//            iSession.sendMessageByID(suc, playerResetPassword.getConnId());
+//            logger.error("手机注册，密码格式错误， mobile:{}", playerResetPassword.getPassword());
+//            return;
+//        }
         //校验验证码
         String verificationCode = PlayerCache.getInstance().getVerificationCode(playerResetPassword.getMobile());
         if (!playerResetPassword.getVerificationCode().equals(verificationCode)) {

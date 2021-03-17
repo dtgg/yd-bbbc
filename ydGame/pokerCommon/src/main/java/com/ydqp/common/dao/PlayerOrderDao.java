@@ -16,7 +16,7 @@ public class PlayerOrderDao {
     }
 
     public Total countByPlayId(long playerId) {
-        String sql = "select count(1) as total from player_order where payStatus = 1 and productId >= 7 and playerId = " + playerId + ";";
+        String sql = "select count(1) as total from player_order where status = 1 and productId >= 7 and playerId = " + playerId + ";";
         return (Total) JdbcOrm.getInstance().getBean(sql, Total.class);
     }
 }

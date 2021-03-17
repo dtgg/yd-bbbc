@@ -18,11 +18,10 @@ public class PromotionDao {
         return instance;
     }
 
-    private static final String FIND_ALL_BY_TYPE = "select * from promotion where enabled = 1 and productType = ";
+    private static final String FIND_ALL_BY_TYPE = "select * from promotion where enabled = 1;";
 
-    public List<Promotion> findAllByType(int type) {
-        String sql = FIND_ALL_BY_TYPE + type + ";";
-        return JdbcOrm.getInstance().getListBean(sql, Promotion.class);
+    public List<Promotion> findAllPromotion() {
+        return JdbcOrm.getInstance().getListBean(FIND_ALL_BY_TYPE, Promotion.class);
     }
 
     private static final String FIND_BY_PRODUCT_ID = "select * from promotion where enabled = 1 and productId = ";

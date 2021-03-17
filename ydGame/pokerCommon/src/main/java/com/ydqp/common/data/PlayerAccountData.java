@@ -21,48 +21,39 @@ public class PlayerAccountData {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.STRING, order = 3)
-    private String accNo;
-
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 4)
-    private String ifsc;
-
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 5)
     private String mobile;
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 6)
-    private int withdrawalCount;
+    @Protobuf(fieldType = FieldType.STRING, order = 4)
+    private String accNo;
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 7)
-    private String payMobile;
+    @Protobuf(fieldType = FieldType.STRING, order = 5)
+    private String ifsc;
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 8)
-    private String email;
+    @Protobuf(fieldType = FieldType.STRING, order = 6)
+    private String bankName;
 
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 9)
-    private String bankCode;
+//    @Getter
+//    @Setter
+//    @Protobuf(fieldType = FieldType.INT32, order = 6)
+//    private int withdrawalCount;
 
     public PlayerAccountData() {
     }
 
-    public PlayerAccountData(PlayerAccount playerAccount, int withdrawalCount) {
+    //, int withdrawalCount
+    public PlayerAccountData(PlayerAccount playerAccount) {
         this.playerId = playerAccount.getPlayerId();
         this.name = playerAccount.getName();
         this.accNo = playerAccount.getAccNo();
         this.ifsc = playerAccount.getIfsc();
         this.mobile = playerAccount.getMobile();
-        this.withdrawalCount = withdrawalCount;
-        this.email = playerAccount.getEmail();
+        this.bankName = playerAccount.getBankName();
+//        this.withdrawalCount = withdrawalCount;
     }
 }

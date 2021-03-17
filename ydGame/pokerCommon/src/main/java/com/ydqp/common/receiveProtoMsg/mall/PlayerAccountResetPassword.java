@@ -10,33 +10,32 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 1004007)
-public class PlayerPayInfoSet extends AbstartParaseMessage {
+@ReceiveCommandAnnotation(command = 1004008)
+public class PlayerAccountResetPassword extends AbstartParaseMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 1)
-    private String payMobile;
-
+    @Protobuf(fieldType = FieldType.INT64, order = 1)
+    private long playerId;
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.STRING, order = 2)
-    private String email;
-
+    private String verificationCode;
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.STRING, order = 3)
-    private String depositName;
+    private String password;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.STRING, order = 4)
+    private String repeatedPassword;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<PlayerPayInfoSet> payInfoSetCodec = ProtobufProxy.create(PlayerPayInfoSet.class);
+        Codec<PlayerAccountResetPassword> codec = ProtobufProxy.create(PlayerAccountResetPassword.class);
 
-        PlayerPayInfoSet accountUpdate = payInfoSetCodec.decode(body);
-//        setPayMobile(accountUpdate.getPayMobile());
-//        setEmail(accountUpdate.getEmail());
-        return accountUpdate;
+        return codec.decode(body);
     }
 }

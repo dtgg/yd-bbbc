@@ -16,8 +16,8 @@ public class PromotionService {
         return instance;
     }
 
-    public List<Promotion> findAllByProductType(int productType) {
-        return PromotionDao.getInstance().findAllByType(productType);
+    public List<Promotion> findAllPromotion() {
+        return PromotionDao.getInstance().findAllPromotion();
     }
 
     public Promotion findByProductId(int productId) {

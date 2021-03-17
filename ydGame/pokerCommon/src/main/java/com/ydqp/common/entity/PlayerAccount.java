@@ -18,7 +18,6 @@ public class PlayerAccount implements Serializable {
 	public static final String ACCNO_NAME = "accNo";
 	public static final String IFSC_NAME = "ifsc";
 	public static final String MOBILE_NAME = "mobile";
-	public static final String EMAIL_NAME = "email";
 	public static final String ENABLED_NAME = "enabled";
 	public static final String ACCOUNTID_NAME = "accountId";
 	public static final String PASSWORD_NAME = "password";
@@ -75,14 +74,6 @@ public class PlayerAccount implements Serializable {
  	 public void setMobile(String mobile){
 	 this.mobile = mobile;
 	 entityMap.put(MOBILE_NAME, mobile);
-	}
-	private String email;
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-		entityMap.put(EMAIL_NAME, email);
 	}
 	private int enabled;
 	public int getEnabled() {

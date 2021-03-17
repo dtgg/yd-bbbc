@@ -18,20 +18,12 @@ public class ProductList extends AbstartParaseMessage {
     @Protobuf(fieldType = FieldType.INT64, order = 1)
     private long playerId;
 
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 2)
-    private int productType;
-
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
 
         Codec<ProductList> productListCodec = ProtobufProxy.create(ProductList.class);
 
-        ProductList productList = productListCodec.decode(body);
-//        setPlayerId(productList.getPlayerId());
-//        setProductType(productList.getProductType());
-        return productList;
+        return productListCodec.decode(body);
     }
 }

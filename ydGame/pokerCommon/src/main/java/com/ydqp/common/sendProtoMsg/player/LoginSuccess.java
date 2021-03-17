@@ -30,50 +30,24 @@ public class LoginSuccess extends AbstartCreateMessage {
     private Double playerZJPoint;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.DOUBLE, order = 3,description = "用户的筹码金币数量")
-    private Double playerCoinPoint;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 4,description = "用户的手机号")
+    @Protobuf(fieldType = FieldType.STRING, order = 3,description = "用户的手机号")
     private String playerName;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 5, description = "用户的昵称")
+    @Protobuf(fieldType = FieldType.STRING, order = 4, description = "用户的昵称")
     private String playerNickName;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 6, description = "用户的头像地址")
+    @Protobuf(fieldType = FieldType.STRING, order = 5, description = "用户的头像地址")
     private String playerUrl;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT64, order = 7, description = "用户id")
+    @Protobuf(fieldType = FieldType.INT64, order = 6, description = "用户id")
     private long playerId;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 8, description = "用户等级")
-    private int grade;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 9, description = "登陆类型 1 fb 0 游客")
-    private int loginType;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.BOOL, order = 10, description = "是否绑定fb")
-    private boolean bindFb;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.DOUBLE, order = 11, description = "经验")
-    private double experience;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 12, description = "开启的游戏")
+    @Protobuf(fieldType = FieldType.STRING, order = 7, description = "开启的游戏")
     private String openGames;
-
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.STRING, order = 13, description = "FBUSerId")
-    private String fbUserId;
-
 
     @Override
     public NetProtoMessage encodeSendMessage() {

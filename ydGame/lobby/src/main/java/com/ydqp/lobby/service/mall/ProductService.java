@@ -18,8 +18,8 @@ public class ProductService {
         return instance;
     }
 
-    public List<Product> findAllByProductType(int productType) {
-        return ProductDao.getInstance().findAllByType(productType);
+    public List<Product> findAllProduct() {
+        return ProductDao.getInstance().findAllProduct();
     }
 
     public Product findById(int productId) {

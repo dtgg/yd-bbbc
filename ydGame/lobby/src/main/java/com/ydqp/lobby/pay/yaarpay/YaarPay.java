@@ -1,15 +1,13 @@
 package com.ydqp.lobby.pay.yaarpay;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.entity.*;
 import com.ydqp.common.sendProtoMsg.mall.PlayerOrderSuccess;
-import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuc;
+import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuccess;
 import com.ydqp.lobby.pay.OrderPay;
 import com.ydqp.lobby.pay.yaarpay.api.YaarPayApi;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 
@@ -45,7 +43,7 @@ public class YaarPay extends OrderPay {
     }
 
     @Override
-    public PlayerWithdrawalSuc payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
+    public PlayerWithdrawalSuccess payout(PlayerWithdrawal withdrawal, PayWithdrawalConfig config, PlayerAccount account) {
         HashMap<String, String> param = new HashMap<String, String>() {{
             put("accountName", account.getName());
             put("accountNo", account.getAccNo());
@@ -58,7 +56,7 @@ public class YaarPay extends OrderPay {
             put("ifscCode", account.getIfsc());
         }};
 
-        PlayerWithdrawalSuc withdrawalSuc = new PlayerWithdrawalSuc();
+        PlayerWithdrawalSuccess withdrawalSuc = new PlayerWithdrawalSuccess();
         String payout;
         try {
             logger.info("Yaarpay payout params:{}", JSON.toJSONString(param));

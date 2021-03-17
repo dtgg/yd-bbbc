@@ -1,11 +1,8 @@
 package com.ydqp.common.data;
 
-import com.cfq.connection.ISession;
 import com.ydqp.common.entity.Player;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 public class PlayerData {
 
@@ -30,35 +27,18 @@ public class PlayerData {
     @Setter
     @Getter
     private Double zjPoint;
-    @Setter
-    @Getter
-    private Double coinPoint;
 //    @Setter
 //    @Getter
 //    private ISession session;
-
-    @Setter
-    @Getter
-    private int grade;
-    @Setter
-    @Getter
-    private Double experience;
-
     @Setter
     @Getter
     private int appId;
-
-    @Setter
-    @Getter
-    private String fbUserId;
-
-    @Setter
-    @Getter
-    private int registerTime;
-
     @Setter
     @Getter
     private long kfId;
+    @Setter
+    @Getter
+    private int registerTime;
 
     public PlayerData(){}
 
@@ -69,11 +49,7 @@ public class PlayerData {
         this.headUrl = player.getHeadUrl();
         this.roomId = player.getRoomId();
         this.zjPoint = player.getZjPoint();
-        this.coinPoint = player.getCoinPoint();
-        this.grade = player.getGrade();
-        this.experience = player.getExperience();
         this.appId = player.getAppId();
-        this.fbUserId = player.getFbUserId();
         this.registerTime = player.getCreateTime();
         this.kfId = player.getKfId();
     }

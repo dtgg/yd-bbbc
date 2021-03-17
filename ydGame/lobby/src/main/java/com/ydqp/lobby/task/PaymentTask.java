@@ -47,7 +47,6 @@ public class PaymentTask implements Runnable {
                         if (player == null) return;
                         if (paySuccessDeal.getType() == 1) {
                             PlayerService.getInstance().updatePlayerCoinPoint(point, playerId);
-                            point = point + player.getCoinPoint();
                         } else {
                             PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
                             point = point + player.getZjPoint();
@@ -62,7 +61,6 @@ public class PaymentTask implements Runnable {
                             Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerId));
                             if (paySuccessDeal.getType() == 1) {
                                 PlayerService.getInstance().updatePlayerCoinPoint(point, playerId);
-                                point = point + player.getCoinPoint();
                             } else {
                                 PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
                                 point = point + player.getZjPoint();
@@ -76,9 +74,7 @@ public class PaymentTask implements Runnable {
                             if (playerData1.getRoomId() == 0) {
                                 if (paySuccessDeal.getType() == 1) {
                                     PlayerService.getInstance().updatePlayerCoinPoint(point, playerId);
-                                    point = point + playerData1.getCoinPoint();
 
-                                    playerData1.setCoinPoint(point);
                                 } else {
                                     PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
                                     point = point + playerData1.getZjPoint();

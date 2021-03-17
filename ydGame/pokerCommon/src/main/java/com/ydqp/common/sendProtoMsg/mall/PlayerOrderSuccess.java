@@ -10,7 +10,7 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@SendCommandAnnotation(command = 1004301)
+@SendCommandAnnotation(command = 1004102)
 public class PlayerOrderSuccess extends AbstartCreateMessage {
 
     @Getter

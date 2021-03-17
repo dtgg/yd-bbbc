@@ -92,7 +92,7 @@ public class LotteryDao {
     }
 
     public List<Lottery> findRacingLotteries(String types, int time) {
-        String sql = "select * from lottery where type in " + types + " and createTime > " + time + ";";
+        String sql = "select * from lottery where type in " + types + " and createTime > " + time + " order by id asc limit 4;";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 

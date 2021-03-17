@@ -18,10 +18,9 @@ public class ProductDao {
         return instance;
     }
 
-    private static final String FIND_ALL_BY_TYPE = "select * from product where enabled = 1 and type = ";
-    public List<Product> findAllByType(int type) {
-        String sql = FIND_ALL_BY_TYPE + type + ";";
-        return JdbcOrm.getInstance().getListBean(sql, Product.class);
+    private static final String FIND_ALL_BY_TYPE = "select * from product where enabled = 1;";
+    public List<Product> findAllProduct() {
+        return JdbcOrm.getInstance().getListBean(FIND_ALL_BY_TYPE, Product.class);
     }
 
     private static final String FIND_BY_ID = "select * from product where enabled = 1 and id = ";

@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @ReceiveCommandAnnotation(command = 1004005)
-public class PlayerWithdrawalApply extends AbstartParaseMessage {
+public class PlayerWithdrawal extends AbstartParaseMessage {
 
     @Getter
     @Setter
@@ -27,9 +27,9 @@ public class PlayerWithdrawalApply extends AbstartParaseMessage {
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] bytes = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<PlayerWithdrawalApply> withdrawalApplyCodec = ProtobufProxy.create(PlayerWithdrawalApply.class);
+        Codec<PlayerWithdrawal> withdrawalApplyCodec = ProtobufProxy.create(PlayerWithdrawal.class);
 
-        PlayerWithdrawalApply withdrawalApply = withdrawalApplyCodec.decode(bytes);
+        PlayerWithdrawal withdrawalApply = withdrawalApplyCodec.decode(bytes);
 //        setPlayerId(withdrawalApply.getPlayerId());
 //        setAmount(withdrawalApply.getAmount());
         return withdrawalApply;

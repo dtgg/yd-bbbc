@@ -10,8 +10,8 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 1004202)
-public class PlayerWithdrawals extends AbstartParaseMessage {
+@ReceiveCommandAnnotation(command = 1004002)
+public class PlayerOrder extends AbstartParaseMessage {
 
     @Getter
     @Setter
@@ -20,18 +20,15 @@ public class PlayerWithdrawals extends AbstartParaseMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.DOUBLE, order = 2)
-    private double amount;
+    @Protobuf(fieldType = FieldType.INT32, order = 2)
+    private int productId;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] bytes = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<PlayerWithdrawals> withdrawalApplyCodec = ProtobufProxy.create(PlayerWithdrawals.class);
+        Codec<PlayerOrder> playerShoppingCodec = ProtobufProxy.create(PlayerOrder.class);
 
-        PlayerWithdrawals withdrawalApply = withdrawalApplyCodec.decode(bytes);
-//        setPlayerId(withdrawalApply.getPlayerId());
-//        setAmount(withdrawalApply.getAmount());
-        return withdrawalApply;
+        return playerShoppingCodec.decode(bytes);
     }
 }

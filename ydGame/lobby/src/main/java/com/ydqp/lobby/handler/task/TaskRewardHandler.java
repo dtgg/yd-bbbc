@@ -46,13 +46,10 @@ public class TaskRewardHandler implements IServerHandler {
             //更新缓存数据
             PlayerData playerData = PlayerCache.getInstance().getPlayer(taskReward.getConnId());
             if (playerData != null) {
-                playerData.setCoinPoint(playerData.getCoinPoint() + reward);
                 PlayerCache.getInstance().addPlayer(taskReward.getConnId(), playerData);
 
-                coinPoint = playerData.getCoinPoint() + reward;
             } else {
                 Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerId));
-                coinPoint = player.getCoinPoint() + reward;
             }
 
             Object[] completeParam = new Object[]{1, new Long(System.currentTimeMillis() / 1000).intValue(), playerTask.getId()};

@@ -10,9 +10,8 @@ import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.PayChannelConfig;
-import com.ydqp.common.entity.PlayerOrder;
 import com.ydqp.common.entity.Product;
-import com.ydqp.common.receiveProtoMsg.mall.PlayerOrders;
+import com.ydqp.common.receiveProtoMsg.mall.PlayerOrder;
 import com.ydqp.common.sendProtoMsg.mall.PlayerOrderSuccess;
 import com.ydqp.lobby.cache.MallCache;
 import com.ydqp.lobby.cache.PlayerCache;
@@ -40,7 +39,7 @@ public class PlayerOrderHandler implements IServerHandler {
     @Override
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         logger.info("Player pay request: {}", JSONObject.toJSONString(abstartParaseMessage));
-        PlayerOrders playerOrder = (PlayerOrders) abstartParaseMessage;
+        PlayerOrder playerOrder = (PlayerOrder) abstartParaseMessage;
 
         PlayerOrderSuccess orderSuccess = new PlayerOrderSuccess();
 
@@ -77,7 +76,7 @@ public class PlayerOrderHandler implements IServerHandler {
             PayChannelConfig payChannelConfig = PayUtil.getInstance().getConfig(configs, playerData.getPlayerId());
             logger.info("支付渠道信息，payChannelConfig:{}", JSON.toJSONString(payChannelConfig));
 
-            PlayerOrder order = new PlayerOrder();
+            com.ydqp.common.entity.PlayerOrder order = new com.ydqp.common.entity.PlayerOrder();
             String orderId = UUID.randomUUID().toString().replace("-", "");
             order.setOrderId(orderId);
             order.setPlayerId(playerData.getPlayerId());

@@ -10,22 +10,30 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 1004002)
-public class PayChannel extends AbstartParaseMessage {
+@ReceiveCommandAnnotation(command = 1004007)
+public class PlayerAccountSet extends AbstartParaseMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT64, order = 1)
-    private long playerId;
+    @Protobuf(fieldType = FieldType.STRING, order = 1)
+    private String payMobile;
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.STRING, order = 2)
+    private String email;
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.STRING, order = 3)
+    private String depositName;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<PayChannel> payChannelCodec = ProtobufProxy.create(PayChannel.class);
+        Codec<PlayerAccountSet> payInfoSetCodec = ProtobufProxy.create(PlayerAccountSet.class);
 
-        PayChannel payChannel = payChannelCodec.decode(body);
-        //setPlayerId(payChannel.getPlayerId());
-        return payChannel;
+        return payInfoSetCodec.decode(body);
     }
 }

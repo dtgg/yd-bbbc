@@ -13,22 +13,15 @@ message LoginSuccess {
  int32 roomId=1;
 // 用户的zj
  double playerZJPoint=2;
-// 用户的筹码金币数量
- double playerCoinPoint=3;
 // 用户的手机号
- string playerName=4;
+ string playerName=3;
 // 用户的昵称
- string playerNickName=5;
+ string playerNickName=4;
 // 用户的头像地址
- string playerUrl=6;
+ string playerUrl=5;
 // 用户id
- int64 playerId=7;
- int32 grade=8;
- int32 loginType=9;
- bool bindFb=10;
- double experience=11;
- string openGames=12;
- string fbUserId=13;
+ int64 playerId=6;
+ string openGames=7;
 }
 
 message LobbyError {
@@ -40,69 +33,10 @@ message LobbyKickPlayer {
 	int64 playerId=1;
 }
 
-message BattleCheckCanEnterRoom {  
- int64 playerId=1;
-// 默认为0，当明确知道roomId时要传入id
- int32 roomId=2;
- double roomPoint=3;
- bool isZJ=4;
-}
-
-message BattleCanEnterRoomSuc {  
-// 200 可以进入，400不行
- int32 code=1;
-}
-
-message GuestRegister {
-	bool isGuest=1;
-	string deviceId=2;
-	int32 appId=3;
-}
-
-message GuestRegisterSuccess {
-	string playerName=1;
-	string passWord=2;
-}
-
-
 message CoinPointSuccess {
     int64 playerId = 1;     //玩家ID
     double coinPoint = 2;   //coin
     int32 coinType = 3;     //1:筹码;2:金币
-}
-
-message RoomChat{
-    int64 playerId=1;
-    int32 roomId=2;
-    int32 type=3;
-    string info=4;
-}
-
-message RoomChatInfo{
-    int64 playerId=1;
-    int32 roomId=2;
-    int32 type=3;
-    string info=4;
-    int32 posNum=5;
-    string nickName=6;
-}
-
-message PlayerFbLogin {
-    string fbUserId=1;
-    string accessToken=2;
-    string fbNickName=3;
-    int32 appId=4;
-}
-
-message PlayerFbBind{
-    string fbUserId=1;
-    string accessToken=2;
-    string fbNickName=3;
-}
-
-message PlayerFbBindSuccess {
-    int64 playerId=1;
-    int32 status=2;
 }
 
 message Refresh {
@@ -171,4 +105,77 @@ message PlayerResetPasswordSuc {
   string message=2;
   string playerName=3;
   string password=4;
+}
+//推广
+message ParityOrder {
+  int64 playerId = 1;
+}
+message ParityOrderDetail {
+  int64 playerId = 1;
+}
+message ParityOrderLv {
+  int64 playerId = 1;
+  // lv1: 1; lv2: 2
+  int32 lv = 2;
+  int32 page = 3;
+  int32 size = 4;
+}
+message ParityReceive {
+  int64 playerId = 1;
+  int32 taskId = 2;
+}
+message ParityRecommendTask {
+  int64 playerId = 1;
+}
+message ParityOrderDetailInfo {
+  int64 playerId = 1;
+  string nickname = 2;
+  double contribute = 3;
+  int32 date = 4;
+}
+message ParityOrderDetailSuc {
+  repeated ParityOrderDetailInfo parityOrderDetailInfos = 1;
+  int64 playerId = 2;
+}
+message ParityOrderLvSuc {
+  repeated ParityOrderDetailInfo infos = 1;
+  int64 playerId = 2;
+  int32 total = 3;
+}
+message ParityOrderSuc {
+  int64 playerId = 1;
+  double playerZJ = 2;
+  // 有效用户数
+  int32 effectiveNum = 3;
+  // LV1有效用户数
+  int32 effectiveNumLv1 = 4;
+  // LV1获得的金币
+  double bonusLv1 = 5;
+  // LV2有效用户数
+  int32 effectiveNumLv2 = 6;
+  // LV2获得的金币
+  double bonusLv2 = 7;
+  // 推广码
+  string referralCode = 8;
+  // 推广链接
+  string referralLink = 9;
+}
+message TaskConfigData {
+  int32 id = 1;
+  string name = 2;
+  int32 type = 3;
+  int32 reward = 4;
+  int32 nextTaskId = 5;
+  int32 target = 6;
+}
+message ParityRecommendTaskSuc {
+  int32 effectiveNum = 1;
+  repeated TaskConfigData taskConfigDataList = 2;
+  // 已领取奖励的任务ID
+  string rewardTaskIds = 3;
+}
+message ParityReceiveSuc {
+  bool success = 1;
+  string message = 2;
+  double amount = 3;
 }

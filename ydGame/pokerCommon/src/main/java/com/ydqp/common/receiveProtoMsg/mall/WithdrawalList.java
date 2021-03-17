@@ -10,7 +10,7 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 1004008)
+@ReceiveCommandAnnotation(command = 1004006)
 public class WithdrawalList extends AbstartParaseMessage {
 
     @Getter
@@ -34,10 +34,6 @@ public class WithdrawalList extends AbstartParaseMessage {
 
         Codec<WithdrawalList> withdrawalListCodec = ProtobufProxy.create(WithdrawalList.class);
 
-        WithdrawalList productList = withdrawalListCodec.decode(body);
-//        setPlayerId(productList.getPlayerId());
-//        setPage(productList.getPage());
-//        setLimit(productList.getLimit());
-        return productList;
+        return withdrawalListCodec.decode(body);
     }
 }

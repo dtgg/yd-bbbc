@@ -16,7 +16,7 @@ import com.ydqp.lobby.cache.PlayerCache;
 import com.ydqp.lobby.service.mall.PlayerAccountService;
 import com.ydqp.lobby.service.mall.PlayerWithdrawalService;
 
-@ServerHandler(command = 1004006, module = "mall")
+@ServerHandler(command = 1004004, module = "mall")
 public class PlayerAccountInfoHandler implements IServerHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(PlayerAccountInfoHandler.class);
@@ -33,11 +33,11 @@ public class PlayerAccountInfoHandler implements IServerHandler {
         }
 
         PlayerAccount playerAccount = PlayerAccountService.getInstance().findByPlayerId(playerData.getPlayerId());
-        int withdrawalCount = PlayerWithdrawalService.getInstance().withdrawalCount(playerData.getPlayerId());
+//        int withdrawalCount = PlayerWithdrawalService.getInstance().withdrawalCount(playerData.getPlayerId());
 
         PlayerAccountInfoSuccess success = new PlayerAccountInfoSuccess();
         success.setPlayerAccountData(
-                playerAccount == null ? new PlayerAccountData() : new PlayerAccountData(playerAccount, withdrawalCount));
+                playerAccount == null ? new PlayerAccountData() : new PlayerAccountData(playerAccount));
         iSession.sendMessageByID(success, accountInfo.getConnId());
     }
 }

@@ -10,8 +10,8 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 1004007)
-public class PlayerAccountUpdate extends AbstartParaseMessage {
+@ReceiveCommandAnnotation(command = 1004003)
+public class PlayerAccountSave extends AbstartParaseMessage {
 
     @Getter
     @Setter
@@ -40,13 +40,17 @@ public class PlayerAccountUpdate extends AbstartParaseMessage {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.STRING, order = 7)
-    private String verificationCode;
+    private String password;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.STRING, order = 8)
+    private String repeatedPassword;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<PlayerAccountUpdate> accountUpdateCodec = ProtobufProxy.create(PlayerAccountUpdate.class);
+        Codec<PlayerAccountSave> accountUpdateCodec = ProtobufProxy.create(PlayerAccountSave.class);
 
         return accountUpdateCodec.decode(body);
     }

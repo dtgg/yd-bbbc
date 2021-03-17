@@ -32,7 +32,7 @@ public class ProductListHandler implements IServerHandler {
         logger.info("Product list request: {}", JSONObject.toJSONString(abstartParaseMessage));
         ProductList productList = (ProductList) abstartParaseMessage;
 
-        List<Product> products = ProductService.getInstance().findAllByProductType(productList.getProductType());
+        List<Product> products = ProductService.getInstance().findAllProduct();
         if (CollectionUtils.isEmpty(products)) {
             iSession.sendMessageByID(new ProductListSuccess(), productList.getConnId());
             return;
@@ -40,7 +40,7 @@ public class ProductListHandler implements IServerHandler {
 
         List<ProductData> productDataList = new ArrayList<>();
 
-        List<Promotion> promotions = PromotionService.getInstance().findAllByProductType(productList.getProductType());
+        List<Promotion> promotions = PromotionService.getInstance().findAllPromotion();
         if (CollectionUtils.isNotEmpty(promotions)) {
             logger.info("商品促销中");
             Map<Integer, Product> productMap = products.stream().collect(Collectors.toMap(Product::getId, Function.identity()));
@@ -53,12 +53,12 @@ public class ProductListHandler implements IServerHandler {
                 ProductData productData;
                 if (historyMap.get(promotion.getId()) == null || historyMap.get(promotion.getId()).getBuyNum() < promotion.getLimit()) {
                     productData = new ProductData(productMap.get(promotion.getProductId()), promotion, true);
-                    logger.info("玩家未购买过该商品；playerId:{},productType:{},productId:{}",
-                            productList.getPlayerId(), productList.getProductType(), promotion.getProductId());
+                    logger.info("玩家未购买过该商品；playerId:{},,productId:{}",
+                            productList.getPlayerId(), promotion.getProductId());
                 } else {
                     productData = new ProductData(productMap.get(promotion.getProductId()), new Promotion(), false);
-                    logger.info("玩家已购买过该商品；playerId:{},productType:{},productId:{}",
-                            productList.getPlayerId(), productList.getProductType(), promotion.getProductId());
+                    logger.info("玩家已购买过该商品；playerId:{},productId:{}",
+                            productList.getPlayerId(), promotion.getProductId());
                 }
                 productDataList.add(productData);
             }

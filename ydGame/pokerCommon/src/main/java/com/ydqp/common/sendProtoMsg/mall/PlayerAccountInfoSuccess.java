@@ -11,7 +11,7 @@ import com.ydqp.common.data.PlayerAccountData;
 import lombok.Getter;
 import lombok.Setter;
 
-@SendCommandAnnotation(command = 1004106)
+@SendCommandAnnotation(command = 1004104)
 public class PlayerAccountInfoSuccess extends AbstartCreateMessage {
 
     @Getter
