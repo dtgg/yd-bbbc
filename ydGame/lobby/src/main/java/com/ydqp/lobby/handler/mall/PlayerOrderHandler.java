@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@ServerHandler(command = 1004201, module = "mall")
+@ServerHandler(command = 1004002, module = "mall")
 public class PlayerOrderHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(PlayerOrderHandler.class);
 

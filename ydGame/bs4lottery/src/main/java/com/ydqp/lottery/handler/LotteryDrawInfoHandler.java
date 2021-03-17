@@ -26,6 +26,8 @@ public class LotteryDrawInfoHandler implements IServerHandler {
             return;
         }
 
+        //todo 判断时间
+
         Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryDrawInfo.getType());
         LotteryDrawNum lotteryDrawNum = LotteryCache.getInstance().getDrawInfo(LotteryCache.DRAW_INFO_KEY + roomId);
         if (lotteryDrawNum == null) {

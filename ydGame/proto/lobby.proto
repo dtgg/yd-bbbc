@@ -36,7 +36,6 @@ message LobbyKickPlayer {
 message CoinPointSuccess {
     int64 playerId = 1;     //玩家ID
     double coinPoint = 2;   //coin
-    int32 coinType = 3;     //1:筹码;2:金币
 }
 
 message Refresh {

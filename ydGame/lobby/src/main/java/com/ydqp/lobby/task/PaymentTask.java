@@ -12,8 +12,6 @@ import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.PaySuccessDeal;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
-import com.ydqp.common.sendProtoMsg.Refresh;
-import com.ydqp.common.sendProtoMsg.addmoney.SPlayerAddMoney;
 import com.ydqp.common.task.StatisticsUploadTask;
 import com.ydqp.lobby.ThreadManager;
 import com.ydqp.lobby.cache.PlayerCache;
@@ -35,8 +33,7 @@ public class PaymentTask implements Runnable {
             allNotDeal.forEach(paySuccessDeal -> {
                 long playerId = paySuccessDeal.getPlayerId();
                 double point = paySuccessDeal.getPoint();
-                int type = paySuccessDeal.getType();
-                logger.info("paySuccessDeal，playerId:{}, point:{}, type:{}, payType:{}", playerId, point, type, paySuccessDeal.getPayType());
+                logger.info("paySuccessDeal，playerId:{}, point:{}, payType:{}", playerId, point, paySuccessDeal.getPayType());
                 try {
                     int appId = 0;
                     int registerTime = 0;
@@ -45,12 +42,7 @@ public class PaymentTask implements Runnable {
                     if (playerData == null || playerData.getPlayerId() == 0) {
                         Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerId));
                         if (player == null) return;
-                        if (paySuccessDeal.getType() == 1) {
-                            PlayerService.getInstance().updatePlayerCoinPoint(point, playerId);
-                        } else {
-                            PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
-                            point = point + player.getZjPoint();
-                        }
+                        PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
                         PaySuccessDealDao.getInstance().setDealSuccess(paySuccessDeal.getId());
 
                         appId = player.getAppId();
@@ -59,71 +51,29 @@ public class PaymentTask implements Runnable {
                         PlayerData playerData1 = PlayerCache.getInstance().getPlayer(playerData.getSessionId());
                         if (playerData1 == null || playerData1.getPlayerId() == 0) {
                             Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerId));
-                            if (paySuccessDeal.getType() == 1) {
-                                PlayerService.getInstance().updatePlayerCoinPoint(point, playerId);
-                            } else {
-                                PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
-                                point = point + player.getZjPoint();
-                            }
+                            PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
                             PaySuccessDealDao.getInstance().setDealSuccess(paySuccessDeal.getId());
 
                             appId = player.getAppId();
                             registerTime = player.getCreateTime();
                         } else {
                             long sessionId = playerData1.getSessionId();
-                            if (playerData1.getRoomId() == 0) {
-                                if (paySuccessDeal.getType() == 1) {
-                                    PlayerService.getInstance().updatePlayerCoinPoint(point, playerId);
+                            PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
 
-                                } else {
-                                    PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
-                                    point = point + playerData1.getZjPoint();
+                            point = point + playerData1.getZjPoint();
+                            playerData1.setZjPoint(point);
+                            PlayerCache.getInstance().addPlayer(sessionId, playerData1);
 
-                                    playerData1.setZjPoint(point);
-                                }
-                                PlayerCache.getInstance().addPlayer(sessionId, playerData1);
-                                PaySuccessDealDao.getInstance().setDealSuccess(paySuccessDeal.getId());
+                            PaySuccessDealDao.getInstance().setDealSuccess(paySuccessDeal.getId());
 
-                                CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
-                                coinPointSuccess.setPlayerId(playerId);
-                                coinPointSuccess.setCoinType(type);
-                                coinPointSuccess.setCoinPoint(point);
+                            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+                            coinPointSuccess.setPlayerId(playerId);
+                            coinPointSuccess.setCoinPoint(point);
 
-                                Map<Long, ISession> sessionMap = ManagerSession.getInstance().getSessionMap();
-                                NettySession iSession = (NettySession) sessionMap.get(new ArrayList<>(sessionMap.keySet()).get(0));
-                                iSession.sendMessageByID(coinPointSuccess, sessionId);
+                            Map<Long, ISession> sessionMap = ManagerSession.getInstance().getSessionMap();
+                            NettySession iSession = (NettySession) sessionMap.get(new ArrayList<>(sessionMap.keySet()).get(0));
+                            iSession.sendMessageByID(coinPointSuccess, sessionId);
 
-                                if (paySuccessDeal.getPayType() == 0) {
-                                    Refresh refresh = new Refresh();
-                                    refresh.setType(type == 1 ? 0 : 1);
-                                    iSession.sendMessageByID(refresh, sessionId);
-                                }
-                            } else {
-                                SPlayerAddMoney playerAddMoney = new SPlayerAddMoney();
-                                playerAddMoney.setCommand(1000050);
-                                playerAddMoney.setPlayerId(playerId);
-                                playerAddMoney.setRoomId(playerData1.getRoomId());
-                                playerAddMoney.setMoney(point);
-                                int pointType = 0;
-                                if (type == 2) {
-                                    pointType = 1;
-                                }
-                                playerAddMoney.setType(pointType);
-                                playerAddMoney.setTableId(paySuccessDeal.getId());
-                                playerAddMoney.setConnId(sessionId);
-
-                                Map<Long, ISession> sessionMap = ManagerSession.getInstance().getSessionMap();
-                                NettySession iSession = (NettySession) sessionMap.get(new ArrayList<>(sessionMap.keySet()).get(0));
-                                iSession.sendMessageByID(playerAddMoney, sessionId);
-
-                                if (paySuccessDeal.getPayType() == 0) {
-                                    Refresh refresh = new Refresh();
-                                    refresh.setType(type == 1 ? 0 : 1);
-                                    iSession.sendMessageByID(refresh, sessionId);
-                                }
-
-                                PaySuccessDealDao.getInstance().setDealPending(paySuccessDeal.getId());
-                            }
                             appId = playerData1.getAppId();
                             registerTime = playerData1.getRegisterTime();
                         }
@@ -136,7 +86,6 @@ public class PaymentTask implements Runnable {
                         jsonObject.put("registerTime", registerTime);
                         jsonObject.put("amount", paySuccessDeal.getPoint());
                         jsonObject.put("createTime", new Long(System.currentTimeMillis() / 1000).intValue());
-                        jsonObject.put("type", type);
                         ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.ORDER, jsonObject));
                     }
                 } catch (Exception e) {

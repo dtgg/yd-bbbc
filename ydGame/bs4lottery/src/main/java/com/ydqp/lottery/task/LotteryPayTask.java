@@ -49,6 +49,7 @@ public class LotteryPayTask implements Runnable {
         if (CollectionUtils.isNotEmpty(lotteryIds)) {
             playerLotteries = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIds);
         }
+        if (CollectionUtils.isEmpty(playerLotteries)) return;
 
         //房间中的用户连接ID
         Set<Long> connIds = new HashSet<>();
@@ -143,7 +144,6 @@ public class LotteryPayTask implements Runnable {
                         }
 
                         CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
-                        coinPointSuccess.setCoinType(2);
                         coinPointSuccess.setCoinPoint(connPlayerDataMap.get(playerData.getSessionId()).getZjPoint());
                         coinPointSuccess.setPlayerId(playerLottery.getPlayerId());
                         coinPointSuccessMap.put(playerData.getSessionId(), coinPointSuccess);

@@ -29,8 +29,8 @@ public class PlayerService {
         PlayerDao.getInstance().updatePlayerCoinPoint(coinPoint, id);
     }
 
-    public void updatePlayerZjPoint(double coinPoint, long id) {
-        PlayerDao.getInstance().updatePlayerZjPoint(coinPoint, id);
+    public int updatePlayerZjPoint(double coinPoint, long id) {
+        return PlayerDao.getInstance().updatePlayerZjPoint(coinPoint, id);
     }
 
     public void updatePlayerGrade(long playerId, int grade, double experience) {

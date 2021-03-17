@@ -144,8 +144,8 @@ public class PlayerService {
         PlayerLoginDao.getInstance().updatePlayerCoinPoint(coinPoint, id);
     }
 
-    public void updatePlayerZjPoint(double coinPoint, long id) {
-        PlayerLoginDao.getInstance().updatePlayerZjPoint(coinPoint, id);
+    public int updatePlayerZjPoint(double coinPoint, long id) {
+        return PlayerLoginDao.getInstance().updatePlayerZjPoint(coinPoint, id);
     }
 
     private static String randomStr(int length) {

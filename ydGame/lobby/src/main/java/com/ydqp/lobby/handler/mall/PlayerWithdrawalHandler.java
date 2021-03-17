@@ -26,7 +26,9 @@ import com.ydqp.lobby.service.mall.PayWithdrawalConfigService;
 import com.ydqp.lobby.service.mall.PlayerAccountService;
 import com.ydqp.lobby.service.mall.PlayerWithdrawalService;
 import com.ydqp.lobby.utils.PayUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,8 +48,16 @@ public class PlayerWithdrawalHandler implements IServerHandler {
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         logger.info("Player withdrawal request: {}", JSONObject.toJSONString(abstartParaseMessage));
         PlayerWithdrawal withdrawals = (PlayerWithdrawal) abstartParaseMessage;
-
         PlayerWithdrawalSuccess withdrawalSuccess = new PlayerWithdrawalSuccess();
+
+        if (StringUtils.isBlank(withdrawals.getPassword())) {
+            withdrawalSuccess.setSuccess(false);
+            withdrawalSuccess.setMessage("Please enter the password");
+            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+            logger.error("提现失败，提现密码为空，playerId：{}", withdrawals.getPlayerId());
+            return;
+        }
+
         double amount = withdrawals.getAmount();
         if (amount < 100) {
             withdrawalSuccess.setSuccess(false);
@@ -72,13 +82,13 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             logger.error("提现失败，玩家不在线，playerId：{}，amount:{}", withdrawals.getPlayerId(), amount);
             return;
         }
-        if (playerData.getRoomId() != 0) {
-            withdrawalSuccess.setSuccess(false);
-            withdrawalSuccess.setMessage("No withdrawal is allowed in the game");
-            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
-            logger.error("提现失败，游戏房间中不允许提现，playerId：{}，amount:{}", playerData.getPlayerId(), amount);
-            return;
-        }
+//        if (playerData.getRoomId() != 0) {
+//            withdrawalSuccess.setSuccess(false);
+//            withdrawalSuccess.setMessage("No withdrawal is allowed in the game");
+//            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+//            logger.error("提现失败，游戏房间中不允许提现，playerId：{}，amount:{}", playerData.getPlayerId(), amount);
+//            return;
+//        }
 
         //查询提现次数
         String key = WITHDRAWAL + playerData.getPlayerId() + ":" + sdf.format(new Date());
@@ -100,15 +110,32 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             return;
         }
 
+        PlayerAccount playerAccount = PlayerAccountService.getInstance().findByPlayerId(player.getId());
+        String password = DigestUtils.md5Hex(withdrawals.getPassword());
+        if (!playerAccount.getPassword().equals(password)) {
+            withdrawalSuccess.setSuccess(false);
+            withdrawalSuccess.setMessage("Please enter the withdrawal password");
+            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+            logger.error("提现失败，密码错误，playerId：{}，password:{}", withdrawals.getPlayerId(), withdrawals.getPassword());
+            return;
+        }
+
         //校验通过，扣钱
         double coin = 0 - amount;
         //数据库
-        PlayerService.getInstance().updatePlayerZjPoint(coin, player.getId());
+        int row = PlayerService.getInstance().updatePlayerZjPoint(coin, player.getId());
+        if (row == 0) {
+            withdrawalSuccess.setSuccess(false);
+            withdrawalSuccess.setMessage("Insufficient balance");
+            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+            logger.error("提现失败，余额不足，playerId：{}，amount:{}", withdrawals.getPlayerId(), amount);
+            return;
+        }
+
         //缓存
         playerData.setZjPoint(player.getZjPoint() - amount);
         PlayerCache.getInstance().addPlayer(withdrawals.getConnId(), playerData);
 
-        PlayerAccount playerAccount = PlayerAccountService.getInstance().findByPlayerId(player.getId());
         com.ydqp.common.entity.PlayerWithdrawal withdrawal = new com.ydqp.common.entity.PlayerWithdrawal();
         withdrawal.setPlayerId(player.getId());
         withdrawal.setName(playerAccount.getName());
@@ -135,7 +162,6 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             //通知客户端
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
             coinPointSuccess.setCoinPoint(player.getZjPoint() - amount);
-            coinPointSuccess.setCoinType(2);
             coinPointSuccess.setPlayerId(player.getId());
             iSession.sendMessageByID(coinPointSuccess, withdrawals.getConnId());
 
@@ -188,13 +214,12 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             //通知客户端
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
             coinPointSuccess.setCoinPoint(player.getZjPoint() - amount);
-            coinPointSuccess.setCoinType(2);
             coinPointSuccess.setPlayerId(player.getId());
             iSession.sendMessageByID(coinPointSuccess, withdrawals.getConnId());
 
             PlayerWithdrawalService.getInstance().savePlayerWithdrawal(withdrawal.getParameterMap());
 
-            withdrawalSuccess.setSuccess(success);
+            withdrawalSuccess.setSuccess(true);
             withdrawalSuccess.setMessage(message);
             iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
             //数据上报

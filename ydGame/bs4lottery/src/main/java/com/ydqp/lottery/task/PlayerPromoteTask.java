@@ -165,7 +165,6 @@ public class PlayerPromoteTask implements Runnable {
 
         CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
         coinPointSuccess.setPlayerId(playerData.getPlayerId());
-        coinPointSuccess.setCoinType(2);
         coinPointSuccess.setCoinPoint(playerData.getZjPoint());
         iSession.sendMessageByID(coinPointSuccess, playerData.getSessionId());
     }

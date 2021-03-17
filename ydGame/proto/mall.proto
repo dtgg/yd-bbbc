@@ -15,8 +15,8 @@ message ProductData {
 }
 message PlayerAccountData {
   int64 playerId = 1;
-  string mobile = 2;
-  string name = 3;
+  string name = 2;
+  string mobile = 3;
   string accNo = 4;
   string ifsc = 5;
   string bankName = 6;
@@ -53,6 +53,7 @@ message PlayerAccountInfo {
 message PlayerWithdrawal {
   int64 playerId = 1;
   double amount = 2;
+  string password = 3;
 }
 message WithdrawalList {
   int64 playerId = 1;

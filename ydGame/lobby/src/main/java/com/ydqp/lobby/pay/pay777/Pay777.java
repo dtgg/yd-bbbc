@@ -63,7 +63,9 @@ public class Pay777 extends OrderPay {
 
         playerOrderSuccess.setSuccess(true);
         playerOrderSuccess.setPayChannel("url");
-        playerOrderSuccess.setData(response.getString("pageurl"));
+        JSONObject data = new JSONObject();
+        data.put("url", response.getString("pageurl"));
+        playerOrderSuccess.setData(data.toJSONString());
         return playerOrderSuccess;
     }
 

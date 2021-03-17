@@ -27,7 +27,7 @@ public class PlayerOrderDao {
     }
 
     public void updateOrder(Object[] params) {
-        String sql = "update player_order set payStatus = ? where id = ?;";
+        String sql = "update player_order set status = ? where id = ?;";
         JdbcOrm.getInstance().updateByArray(sql, params);
     }
 }

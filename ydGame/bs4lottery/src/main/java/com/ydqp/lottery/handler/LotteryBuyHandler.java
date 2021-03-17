@@ -120,9 +120,17 @@ public class LotteryBuyHandler implements IServerHandler {
 
             //扣钱
             double zj = Double.parseDouble(lotteryBuy.getPay());
+            int row = PlayerService.getInstance().updatePlayerZjPoint(0 - zj, playerId);
+            if (row == 0) {
+                lotteryBuySuc.setSuccess(false);
+                lotteryBuySuc.setMessage("Insufficient balance");
+                iSession.sendMessageByID(lotteryBuySuc, lotteryBuy.getConnId());
+                logger.error("用户账户异常余额不足，playerId:{}", playerId);
+                return;
+            }
+
             playerData.setZjPoint(playerData.getZjPoint() - zj);
             PlayerCache.getInstance().addPlayer(lotteryBuy.getConnId(), playerData);
-            PlayerService.getInstance().updatePlayerZjPoint(0 - zj, playerId);
 
             logger.info("彩票购买成功，用户ID:{}, 抽奖前zj:{}, 抽奖后zj:{}, 期数:{}, 颜色:{}, 数字:{}",
                     player.getId(), player.getZjPoint(), player.getZjPoint() - zj, playerLottery.getPeriod(),
@@ -131,7 +139,6 @@ public class LotteryBuyHandler implements IServerHandler {
             //通知客户端
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
             coinPointSuccess.setPlayerId(playerId);
-            coinPointSuccess.setCoinType(2);
             coinPointSuccess.setCoinPoint(player.getZjPoint() - zj);
             iSession.sendMessageByID(coinPointSuccess, lotteryBuy.getConnId());
 

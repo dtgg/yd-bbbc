@@ -89,7 +89,6 @@ public class ParityReceiveHandler implements IServerHandler {
 
         CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
         coinPointSuccess.setPlayerId(playerData.getPlayerId());
-        coinPointSuccess.setCoinType(2);
         coinPointSuccess.setCoinPoint(playerData.getZjPoint());
         iSession.sendMessageByID(coinPointSuccess, parityReceive.getConnId());
     }

@@ -23,11 +23,6 @@ public class CoinPointSuccess extends AbstartCreateMessage {
     @Protobuf(fieldType = FieldType.DOUBLE, order = 2, description = "coin")
     private double coinPoint;
 
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 3, description = "类型(1:chip:2:gold)")
-    private int coinType;
-
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();

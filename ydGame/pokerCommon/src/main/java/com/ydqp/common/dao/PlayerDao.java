@@ -29,9 +29,9 @@ public class PlayerDao {
         JdbcOrm.getInstance().update(sql);
     }
 
-    public void updatePlayerZjPoint(double zjPoint, long id) {
-        String sql = "update player set zjPoint = zjPoint + " + zjPoint + " where id = " + id + ";";
-        JdbcOrm.getInstance().update(sql);
+    public int updatePlayerZjPoint(double zjPoint, long id) {
+        String sql = "update player set zjPoint = zjPoint + " + zjPoint + " where id = " + id + " and zjPoint > 0;";
+        return JdbcOrm.getInstance().updateByRow(sql);
     }
 
     public void updatePlayerGrade(long playerId, int grade, double experience) {

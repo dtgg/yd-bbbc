@@ -23,6 +23,11 @@ public class PlayerWithdrawal extends AbstartParaseMessage {
     @Protobuf(fieldType = FieldType.DOUBLE, order = 2)
     private double amount;
 
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.STRING, order = 3)
+    private String password;
+
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] bytes = netProtoMessage.getNetProtoMessageBody().getBody();
