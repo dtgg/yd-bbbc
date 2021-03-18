@@ -7,7 +7,9 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.lottery.player.ManageLotteryRoom;
 import com.ydqp.common.receiveProtoMsg.lottery.LotteryDrawInfo;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryDrawNum;
@@ -26,14 +28,23 @@ public class LotteryDrawInfoHandler implements IServerHandler {
             return;
         }
 
-        //todo 判断时间
-
         Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryDrawInfo.getType());
         LotteryDrawNum lotteryDrawNum = LotteryCache.getInstance().getDrawInfo(LotteryCache.DRAW_INFO_KEY + roomId);
         if (lotteryDrawNum == null) {
             logger.info("客户端请求开奖数据为空");
             return;
         }
+
+        //判断时间
+        int lotteryId = lotteryDrawNum.getDrawNumInfos().get(0).getLotteryId();
+        Lottery lottery = LotteryDao.getInstance().findById(lotteryId);
+
+        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+        if (lottery.getOpenTime() - nowTime > 1) {
+            logger.info("味道开奖时间");
+            return;
+        }
+
         iSession.sendMessageByID(lotteryDrawNum, abstartParaseMessage.getConnId());
     }
 }

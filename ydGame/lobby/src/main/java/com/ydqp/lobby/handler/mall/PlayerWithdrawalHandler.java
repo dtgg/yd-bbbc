@@ -223,7 +223,7 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             withdrawalSuccess.setMessage(message);
             iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
             //数据上报
-            ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.WITHDRAWAL, new JSONObject(withdrawal.getParameterMap())));
+//            ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.WITHDRAWAL, new JSONObject(withdrawal.getParameterMap())));
         } else {
             withdrawalSuccess.setSuccess(false);
             withdrawalSuccess.setMessage("No payment channel");

@@ -79,15 +79,15 @@ public class PaymentTask implements Runnable {
                         }
                     }
 
-                    if (paySuccessDeal.getPayType() == 0) {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("playerId", playerId);
-                        jsonObject.put("appId", appId);
-                        jsonObject.put("registerTime", registerTime);
-                        jsonObject.put("amount", paySuccessDeal.getPoint());
-                        jsonObject.put("createTime", new Long(System.currentTimeMillis() / 1000).intValue());
-                        ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.ORDER, jsonObject));
-                    }
+//                    if (paySuccessDeal.getPayType() == 1) {
+//                        JSONObject jsonObject = new JSONObject();
+//                        jsonObject.put("playerId", playerId);
+//                        jsonObject.put("appId", appId);
+//                        jsonObject.put("registerTime", registerTime);
+//                        jsonObject.put("amount", paySuccessDeal.getPoint());
+//                        jsonObject.put("createTime", new Long(System.currentTimeMillis() / 1000).intValue());
+//                        ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.ORDER, jsonObject));
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     logger.error("payment deal error, playerId: {}", playerId);

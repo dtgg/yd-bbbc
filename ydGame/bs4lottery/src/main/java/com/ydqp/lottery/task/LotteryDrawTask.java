@@ -50,7 +50,8 @@ public class LotteryDrawTask implements Runnable {
         //未开奖的下注
         List<PlayerLottery> playerLotteryList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(lotteryIds)) {
-            playerLotteryList = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIds);
+            String lotteryIdsStr = CommonUtils.inString(lotteryIds);
+            playerLotteryList = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIdsStr);
         }
 
         Map<Integer, List<PlayerLottery>> playerLotteriesMap = new HashMap<>();
