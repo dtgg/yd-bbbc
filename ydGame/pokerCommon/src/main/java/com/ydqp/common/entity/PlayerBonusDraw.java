@@ -18,6 +18,8 @@ public class PlayerBonusDraw implements Serializable {
     public static final String AMOUNT_NAME = "amount";
     public static final String STATUS_NAME = "status";
     public static final String CREATETIME_NAME = "createTime";
+    public static final String APPID_NAME = "appId";
+    public static final String KFID_NAME = "kfId";
 
 
     private int id;
@@ -86,6 +88,27 @@ public class PlayerBonusDraw implements Serializable {
         entityMap.put(CREATETIME_NAME, createTime);
     }
 
+    private int appId;
+
+    public int getAppId() {
+        return appId;
+    }
+
+    public void setAppId(int appId) {
+        this.appId = appId;
+        entityMap.put(APPID_NAME, appId);
+    }
+
+    private long kfId;
+
+    public long getKfId() {
+        return kfId;
+    }
+
+    public void setKfId(long kfId) {
+        this.kfId = kfId;
+        entityMap.put(KFID_NAME, kfId);
+    }
 
     public Object getValueByFieldName(String fieldName) {
         return this.entityMap.get(fieldName);

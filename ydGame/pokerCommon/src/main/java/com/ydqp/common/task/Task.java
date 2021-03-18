@@ -38,19 +38,4 @@ public abstract class Task implements ITask {
     public int getReward(int taskId) {
         return taskConfigMap.get(taskId).getReward();
     }
-
-    public Integer firstTask() {
-        Integer firstTaskId = null;
-
-        Set<Integer> nextTaskIds = new HashSet<>();
-        taskConfigMap.forEach((taskId, taskConfig) -> nextTaskIds.add(taskConfig.getNextTaskId()));
-
-        for (Map.Entry<Integer, TaskConfig> entry : taskConfigMap.entrySet()) {
-            if (!nextTaskIds.contains(entry.getKey())) {
-                firstTaskId = entry.getKey();
-                break;
-            }
-        }
-        return firstTaskId;
-    }
 }

@@ -29,6 +29,10 @@ public class ParityOrderLvSuc extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.INT32, order = 3)
     private int count;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.DOUBLE, order = 4)
+    private double bonus;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

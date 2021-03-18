@@ -31,12 +31,12 @@ public class TaskConfigData {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.INT32, order = 5)
-    private Integer nextTaskId;
+    private Integer target;
 
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.INT32, order = 6)
-    private Integer target;
+    private Integer enabled;
 
     public TaskConfigData() {
     }
@@ -46,7 +46,7 @@ public class TaskConfigData {
         this.name = taskConfig.getName();
         this.type = taskConfig.getType();
         this.reward = taskConfig.getReward();
-        this.nextTaskId = taskConfig.getNextTaskId();
         this.target = taskConfig.getTarget();
+        this.enabled = taskConfig.getEnabled();
     }
 }

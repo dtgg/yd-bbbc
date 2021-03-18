@@ -131,6 +131,9 @@ message ParityOrderDetailInfo {
   string nickname = 2;
   double contribute = 3;
   int32 date = 4;
+  double rechargeAmount = 5;
+  double withdrawAmount = 6;
+  int32 recommendNumber = 7;
 }
 message ParityOrderDetailSuc {
   repeated ParityOrderDetailInfo parityOrderDetailInfos = 1;
@@ -140,6 +143,7 @@ message ParityOrderLvSuc {
   repeated ParityOrderDetailInfo infos = 1;
   int64 playerId = 2;
   int32 total = 3;
+  double bonus = 4;
 }
 message ParityOrderSuc {
   int64 playerId = 1;
@@ -164,8 +168,8 @@ message TaskConfigData {
   string name = 2;
   int32 type = 3;
   int32 reward = 4;
-  int32 nextTaskId = 5;
-  int32 target = 6;
+  int32 target = 5;
+  int32 enabled = 6;
 }
 message ParityRecommendTaskSuc {
   int32 effectiveNum = 1;

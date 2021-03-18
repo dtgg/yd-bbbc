@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2021-03-18 11:04:13
+Date: 2021-03-18 17:13:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -83,10 +83,11 @@ CREATE TABLE `lottery_config` (
 -- ----------------------------
 DROP TABLE IF EXISTS `lottery_platform_info`;
 CREATE TABLE `lottery_platform_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `totalNum` int(11) DEFAULT 0,
-  `newNum` int(11) DEFAULT 0,
-  `createTime` int(11) DEFAULT 0,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `totalNum` int(10) DEFAULT 0,
+  `newNum` int(10) DEFAULT 0,
+  `createTime` int(10) DEFAULT 0,
+  `appId` int(10) DEFAULT 1000001,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -95,11 +96,12 @@ CREATE TABLE `lottery_platform_info` (
 -- ----------------------------
 DROP TABLE IF EXISTS `lottery_promote_info`;
 CREATE TABLE `lottery_promote_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `promoteNum` int(11) DEFAULT 0,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `promoteNum` int(10) DEFAULT 0,
   `lv1Pump` decimal(10,0) DEFAULT 0,
   `lv2Pump` decimal(10,0) DEFAULT 0,
-  `createTime` int(11) DEFAULT 0,
+  `createTime` int(10) DEFAULT 0,
+  `appId` int(10) DEFAULT 1000001,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -108,20 +110,21 @@ CREATE TABLE `lottery_promote_info` (
 -- ----------------------------
 DROP TABLE IF EXISTS `lottery_turnover_info`;
 CREATE TABLE `lottery_turnover_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `payNum` int(11) DEFAULT 0,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `payNum` int(10) DEFAULT 0,
   `payAmount` decimal(10,0) DEFAULT 0,
-  `withdrawNum` int(11) DEFAULT 0,
+  `withdrawNum` int(10) DEFAULT 0,
   `withdrawAmount` decimal(10,0) DEFAULT 0,
-  `withdrawSucNum` int(11) DEFAULT 0,
+  `withdrawSucNum` int(10) DEFAULT 0,
   `withdrawSucAmount` decimal(10,0) DEFAULT 0,
-  `lotteryNum` int(11) DEFAULT 0,
+  `lotteryNum` int(10) DEFAULT 0,
   `lotteryFee` decimal(10,0) DEFAULT 0,
   `lotteryPay` decimal(10,0) DEFAULT 0,
   `lotteryAward` decimal(10,0) DEFAULT 0,
   `lotteryProfit` decimal(10,0) DEFAULT 0,
   `balance` decimal(10,0) DEFAULT 0,
   `createTime` decimal(10,0) DEFAULT 0,
+  `appId` int(10) DEFAULT 1000001,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -246,6 +249,8 @@ CREATE TABLE `player_bonus_draw` (
   `amount` decimal(10,0) NOT NULL DEFAULT 0,
   `status` int(10) NOT NULL DEFAULT 0,
   `createTime` int(10) NOT NULL DEFAULT 0,
+  `appId` int(10) NOT NULL DEFAULT 1000001,
+  `kfId` bigint(20) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
@@ -268,7 +273,7 @@ CREATE TABLE `player_lottery` (
   `createTime` int(10) NOT NULL COMMENT '下注时间',
   `openTime` int(10) DEFAULT NULL COMMENT '开奖时间',
   `result` varchar(20) DEFAULT NULL COMMENT '开奖结果',
-  `appId` int(10) DEFAULT 0,
+  `appId` int(10) DEFAULT 1000001,
   `kfId` bigint(20) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
@@ -295,7 +300,7 @@ CREATE TABLE `player_order` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `playerId_index` (`playerId`) USING BTREE,
   KEY `productId_index` (`productId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='支付订单';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='支付订单';
 
 -- ----------------------------
 -- Table structure for player_promote
@@ -348,10 +353,10 @@ CREATE TABLE `player_promote_detail` (
   `superiorAmount` decimal(10,3) NOT NULL DEFAULT 0.000 COMMENT '给上级产生的贡献',
   `grandAmount` decimal(10,3) NOT NULL DEFAULT 0.000 COMMENT '给上级产生的贡献',
   `createTime` int(10) NOT NULL COMMENT '下注时间',
-  `appId` int(10) NOT NULL DEFAULT 0,
+  `appId` int(10) NOT NULL DEFAULT 1000001,
   PRIMARY KEY (`id`),
   KEY `playerId_index` (`playerId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for player_reward_history
@@ -361,34 +366,12 @@ CREATE TABLE `player_reward_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `playerId` bigint(20) NOT NULL,
   `reward` double(15,2) NOT NULL COMMENT '奖励',
-  `rewardSource` int(1) NOT NULL COMMENT '奖励来源（1：升级，2：任务）',
-  `rewardType` int(1) DEFAULT 1 COMMENT '奖励类型(1: 筹码, 2:金币)',
-  `grade` int(4) DEFAULT NULL COMMENT '提升的等级',
-  `experience` double(15,2) DEFAULT NULL COMMENT '提升的经验',
+  `source` int(1) NOT NULL COMMENT '奖励来源（1：升级，2：任务）',
   `taskId` int(11) DEFAULT NULL COMMENT '完成的任务',
   `createTime` int(11) DEFAULT NULL COMMENT '时间',
+  `appId` int(10) DEFAULT 1000001,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='奖励记录表';
-
--- ----------------------------
--- Table structure for player_task
--- ----------------------------
-DROP TABLE IF EXISTS `player_task`;
-CREATE TABLE `player_task` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `playerId` int(11) NOT NULL COMMENT '玩家ID',
-  `taskId` int(11) NOT NULL COMMENT '任务ID',
-  `acceptTime` int(10) NOT NULL COMMENT '接受任务时间',
-  `progress` int(11) DEFAULT 0 COMMENT '任务进度',
-  `isComplete` int(1) NOT NULL DEFAULT 0 COMMENT '是否完成任务',
-  `completeTime` int(10) DEFAULT NULL COMMENT '任务完成时间',
-  `isReceived` int(1) NOT NULL DEFAULT 0 COMMENT '是否领取奖励',
-  `receiveTime` int(10) DEFAULT NULL COMMENT '奖励领取时间',
-  `taskType` int(2) NOT NULL COMMENT '任务类型',
-  PRIMARY KEY (`id`),
-  KEY `pi_index` (`playerId`),
-  KEY `ti_index` (`taskId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='玩家任务表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='奖励记录表';
 
 -- ----------------------------
 -- Table structure for player_withdrawal
@@ -407,7 +390,7 @@ CREATE TABLE `player_withdrawal` (
   `status` int(1) DEFAULT 0 COMMENT '订单状态: 0(处理中), 1(成功). 2(失败)',
   `errorMsg` varchar(255) DEFAULT NULL COMMENT '订单失败原因',
   `createTime` int(10) DEFAULT 0 COMMENT '订单创建时间',
-  `appId` int(10) DEFAULT 0 COMMENT '用户渠道',
+  `appId` int(10) DEFAULT 1000001 COMMENT '用户渠道',
   `registerTime` int(10) DEFAULT 0 COMMENT '用户注册时间',
   `payChannel` varchar(20) DEFAULT NULL,
   `kfId` int(10) DEFAULT 0,
@@ -462,18 +445,6 @@ CREATE TABLE `promotion` (
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='商品活动表';
 
 -- ----------------------------
--- Table structure for pump_config
--- ----------------------------
-DROP TABLE IF EXISTS `pump_config`;
-CREATE TABLE `pump_config` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `serverCode` int(10) DEFAULT 0,
-  `pump` double(10,2) DEFAULT 0.00 COMMENT '抽水比例',
-  `createTime` int(10) DEFAULT 0,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
 -- Table structure for sys_close_server
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_close_server`;
@@ -493,11 +464,9 @@ DROP TABLE IF EXISTS `task_config`;
 CREATE TABLE `task_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '任务名称',
-  `type` int(2) NOT NULL COMMENT '任务类型',
+  `type` int(2) NOT NULL COMMENT '任务类型(1:分享任务)',
   `reward` int(11) NOT NULL COMMENT '任务奖励',
-  `rewardType` int(1) DEFAULT 1 COMMENT '奖励类型(1: 筹码, 2:金币)',
-  `nextTaskId` int(11) DEFAULT NULL COMMENT '下个任务',
-  `target` int(11) DEFAULT 0 COMMENT '任务目标',
-  `enabled` int(1) DEFAULT 0 COMMENT '是否启用',
+  `target` int(11) NOT NULL DEFAULT 0 COMMENT '任务目标',
+  `enabled` int(1) NOT NULL DEFAULT 0 COMMENT '是否启用',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COMMENT='任务配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='任务配置表';

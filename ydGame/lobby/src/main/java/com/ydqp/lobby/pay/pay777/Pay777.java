@@ -34,7 +34,8 @@ public class Pay777 extends OrderPay {
 
         Integer amount = Double.valueOf(order.getAmount()).intValue();
         params.put("amount", amount);
-        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/777pay/notify");
+        params.put("notifyurl", config.getPaymentNotifyUrl());
+//        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/777pay/notify");
         params.put("returnurl", "https://nrly.paysempbf.com/api/pay/success");
 
         String signStr = config.getSecretKey() + order.getOrderId() + amount;
@@ -83,7 +84,8 @@ public class Pay777 extends OrderPay {
         BigDecimal am = new BigDecimal(String.valueOf(withdrawal.getAmount()));
         BigDecimal amount = am.multiply(BigDecimal.ONE.subtract(config.getWithdrawFee())).setScale(0, RoundingMode.DOWN);
         params.put("amount", amount.intValue());
-        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/777pay/notify");
+        params.put("notifyurl", config.getPayoutNotifyUrl());
+//        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/777pay/notify");
 
         String signStr = config.getSecretKey() + withdrawal.getTransferId() + amount.intValue();
         logger.info("signStr:{}", signStr);

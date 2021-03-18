@@ -24,9 +24,9 @@ public class PaySuccessDealDao {
         JdbcOrm.getInstance().update(sql);
     }
 
-    private static final String update = "update pay_success_deal set isDeal = 2 where id = ";
-    public void setDealSuccess(long id) {
-        String sql = update + id + ";";
+    private static final String update = "update pay_success_deal set isDeal = 2 where id in ";
+    public void setDealSuccess(String ids) {
+        String sql = update + ids + ";";
         JdbcOrm.getInstance().update(sql);
     }
 
