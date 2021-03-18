@@ -20,7 +20,7 @@ import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.mission.ParityReceiveSuc;
 import com.ydqp.common.service.PlayerService;
 
-@ServerHandler(module = "mission", command = 5000015)
+@ServerHandler(module = "mission", command = 1000074)
 public class ParityReceiveHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityReceiveHandler.class);
 

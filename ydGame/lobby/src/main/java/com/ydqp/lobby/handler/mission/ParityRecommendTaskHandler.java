@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ServerHandler(module = "mission", command = 5000014)
+@ServerHandler(module = "mission", command = 1000073)
 public class ParityRecommendTaskHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityRecommendTaskHandler.class);
 

@@ -17,7 +17,7 @@ import com.ydqp.common.receiveProtoMsg.mission.ParityOrder;
 import com.ydqp.common.sendProtoMsg.mission.ParityOrderSuc;
 import com.ydqp.common.utils.ShortCodeKit;
 
-@ServerHandler(module = "mission", command = 5000011)
+@ServerHandler(module = "mission", command = 1000070)
 public class ParityOrderHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityOrderHandler.class);
 
