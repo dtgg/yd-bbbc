@@ -32,13 +32,8 @@ public class PlayerLotteryDao {
         return JdbcOrm.getInstance().getListBean(sql, PlayerLottery.class);
     }
 
-    public List<PlayerLottery> findByLotteryIds(List<Integer> lotteryIds) {
-        String ids = "";
-        for (Integer id : lotteryIds) {
-            if (StringUtils.isBlank(ids)) ids += id;
-            else ids += "," + id;
-        }
-        String sql = "select * from player_lottery where lotteryId in (" + ids + ");";
+    public List<PlayerLottery> findByLotteryIds(String lotteryIdsStr) {
+        String sql = "select * from player_lottery where status = 1 and lotteryId in "+lotteryIdsStr+";";
         return JdbcOrm.getInstance().getListBean(sql, PlayerLottery.class);
     }
 

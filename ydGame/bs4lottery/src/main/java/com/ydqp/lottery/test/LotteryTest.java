@@ -145,6 +145,12 @@ public class LotteryTest {
 //        new ParityReceiveHandler().process(iSession, parityReceive);
     }
 
+    private static void drawInfo() {
+        LotteryDrawInfo drawInfo = new LotteryDrawInfo();
+        drawInfo.setType(1);
+        new LotteryDrawInfoHandler().process(iSession, drawInfo);
+    }
+
     public static void main(String[] args) {
 //        Player p = new Player();
 //        p.setId(1069106);
@@ -153,5 +159,6 @@ public class LotteryTest {
 //        playerData = new PlayerData(p);
 //        playerData.setSessionId(iSession.getSessionId());
 //        lotteryDrawTest();
+        drawInfo();
     }
 }

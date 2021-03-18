@@ -18,6 +18,7 @@ import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeInfo;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeListInfo;
 import com.ydqp.common.sendProtoMsg.lottery.PlayerLotteryInfo;
 import com.ydqp.common.service.PlayerService;
+import com.ydqp.common.utils.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -47,7 +48,8 @@ public class LotteryPayTask implements Runnable {
         logger.info("查询已计算的彩票期数:{}", JSON.toJSONString(lotteryIds));
         List<PlayerLottery> playerLotteries = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(lotteryIds)) {
-            playerLotteries = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIds);
+            String lotteryIdsStr = CommonUtils.inString(lotteryIds);
+            playerLotteries = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIdsStr);
         }
         if (CollectionUtils.isEmpty(playerLotteries)) return;
 

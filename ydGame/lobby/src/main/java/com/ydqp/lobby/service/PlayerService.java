@@ -265,8 +265,8 @@ public class PlayerService {
         data.put("appId", mobileRegister.getAppId());
         data.put("registerTime", createTime);
         data.put("type", 3);
-        ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.PLAYER_REGISTER,
-                new JSONObject(data)));
+//        ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.PLAYER_REGISTER,
+//                new JSONObject(data)));
     }
 
     public void resetPassword(ISession iSession, PlayerResetPassword playerResetPassword) {
