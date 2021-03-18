@@ -470,3 +470,12 @@ CREATE TABLE `task_config` (
   `enabled` int(1) NOT NULL DEFAULT 0 COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='任务配置表';
+
+-- 公告
+CREATE TABLE `game_announcement` (
+  `id` int(10) NOT NULL,
+  `appId` int(10) DEFAULT 1000001,
+  `announcement` varchar(200) DEFAULT NULL,
+  `createTime` varchar(10) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
