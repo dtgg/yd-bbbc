@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ServerHandler(module = "mission", command = 5000012)
+@ServerHandler(module = "mission", command = 1000071)
 public class ParityOrderDetailHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityOrderDetailHandler.class);
 

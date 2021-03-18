@@ -18,7 +18,7 @@ import com.ydqp.common.sendProtoMsg.mission.ParityOrderLvSuc;
 import java.util.ArrayList;
 import java.util.List;
 
-@ServerHandler(module = "mission", command = 5000013)
+@ServerHandler(module = "mission", command = 1000071)
 public class ParityOrderLvHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(ParityOrderLvHandler.class);
 
