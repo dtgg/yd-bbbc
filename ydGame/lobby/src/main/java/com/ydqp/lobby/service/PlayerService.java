@@ -51,15 +51,15 @@ public class PlayerService {
         if (player == null) {
             //send login error
             LobbyError lobbyError = new LobbyError();
-            lobbyError.setErrorCode(Constant.LOGIN_ERROR_PLAYER_NOT_IN);
+            lobbyError.setErrorCode(Constant.LOGIN_ERROR_PW);
             lobbyError.setErrorMsg(Constant.LOGIN_ERR_NOT_R);
             iSession.sendMessage(lobbyError, playerLogin);
             return;
         }
         if (player.getBanLogin() == 1) {
             LobbyError lobbyError = new LobbyError();
-            lobbyError.setErrorCode(Constant.LOGIN_ERROR_PLAYER_NOT_IN);
-            lobbyError.setErrorMsg(Constant.LOGIN_ERR_NOT_R);
+            lobbyError.setErrorCode(Constant.LOGIN_ERROR_PW);
+            lobbyError.setErrorMsg(Constant.LOGIN_ERR_BANLOGIN);
             iSession.sendMessage(lobbyError, playerLogin);
             logger.error("封号登陆, playerId= {}", player.getId());
             return;
