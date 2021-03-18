@@ -29,27 +29,12 @@ public class ConnDispatchMessage implements IClientDispatchMessage {
             int cmd = netProtoMessage.getNetProtoMessageHead().getCmd();
             //这边由服务端返回的数据，找到要发送的客户端具柄，直接发送
             long connId = netProtoMessage.getNetProtoMessageHead().getConnId();
-            if(connId == 0 || cmd == 2010000 ||cmd == 3010000) {
-                if (cmd == 2010000) {
-                    //发送给所有业务节点
-                    NettyClient nettyClient = RouteToBs.selectBs(cmd);
-                    ProtoEncode encode = new ProtoEncode();
-                    BinaryWebSocketFrame byteBuf = encode.encode(netProtoMessage);
-                    nettyClient.getChannel().writeAndFlush(byteBuf);
-                } else if (cmd == 3010000) {
-                    //发送给所有业务节点
-                    logger.info("玩家登陆成功，cmdId= {}    ConnId= {} ",cmd, connId);
-                    NettyClient nettyClient = RouteToBs.selectBs(cmd);
-                    ProtoEncode encode = new ProtoEncode();
-                    BinaryWebSocketFrame byteBuf = encode.encode(netProtoMessage);
-                    nettyClient.getChannel().writeAndFlush(byteBuf);
-                }
-//                nettySession = new NettySession();
-//                nettySession.setChannel(ctx.channel());
-//
-//                //TODO loalhandler
-//                IDispatchMessage iDispatchMessage = new DispatchMessage();
-//                iDispatchMessage.dispatchAction(nettySession, netProtoMessage);
+            if(connId == 0) {
+                //业务服务器发送命令到业务服务器
+//                NettyClient nettyClient = RouteToBs.selectBs(cmd);
+//                ProtoEncode encode = new ProtoEncode();
+//                BinaryWebSocketFrame byteBuf = encode.encode(netProtoMessage);
+//                nettyClient.getChannel().writeAndFlush(byteBuf);
             } else if (cmd == 1000050) {
                 //addMOney
                 int roomId = loadBsServerByAddMoneyRoomId (netProtoMessage);
