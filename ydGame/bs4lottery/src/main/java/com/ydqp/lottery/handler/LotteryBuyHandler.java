@@ -9,10 +9,7 @@ import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.data.PlayerData;
-import com.ydqp.common.entity.Lottery;
-import com.ydqp.common.entity.Player;
-import com.ydqp.common.entity.PlayerLottery;
-import com.ydqp.common.entity.PlayerPromoteDetail;
+import com.ydqp.common.entity.*;
 import com.ydqp.common.lottery.player.ILottery;
 import com.ydqp.common.lottery.player.ManageLottery;
 import com.ydqp.common.lottery.player.ManageLotteryRoom;
@@ -24,7 +21,9 @@ import com.ydqp.common.sendProtoMsg.lottery.LotteryQuitRoomSuc;
 import com.ydqp.common.sendProtoMsg.lottery.PlayerLotteryInfo;
 import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.LotteryUtil;
+import com.ydqp.lottery.Cache.LotteryCache;
 import com.ydqp.lottery.ThreadManager;
+import com.ydqp.lottery.dao.SysCloseServerDao;
 import com.ydqp.lottery.task.PlayerPromoteTask;
 import com.ydqp.lottery.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +40,20 @@ public class LotteryBuyHandler implements IServerHandler {
         LotteryBuy lotteryBuy = (LotteryBuy) abstartParaseMessage;
 
         LotteryBuySuc lotteryBuySuc = new LotteryBuySuc();
+
+        SysCloseServer sysCloseServer = SysCloseServerDao.getInstance().getSysCloseServer(50, 1);
+        if (sysCloseServer != null && sysCloseServer.getStatus() == 1) {
+            String maintainTimeStr = LotteryCache.getInstance().getMaintainTime();
+            int maintainTime = Integer.parseInt(maintainTimeStr);
+
+            int nowTime = new Long(System.currentTimeMillis() / 1000).intValue();
+            if (nowTime > maintainTime) {
+                lotteryBuySuc.setSuccess(false);
+                lotteryBuySuc.setMessage("System under maintenance");
+                iSession.sendMessageByID(lotteryBuySuc, lotteryBuy.getConnId());
+                return;
+            }
+        }
 
         if (StringUtils.isBlank(lotteryBuy.getPay())) {
             logger.info("下注金额为空, playerId:{}", lotteryBuy.getPlayerId());

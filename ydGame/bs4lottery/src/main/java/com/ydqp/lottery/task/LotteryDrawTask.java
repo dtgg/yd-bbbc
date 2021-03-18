@@ -43,8 +43,11 @@ public class LotteryDrawTask implements Runnable {
 
         int time = new Long(System.currentTimeMillis() / 1000).intValue();
         //两分半前未开奖的期数
-        List<Lottery> lotteries = LotteryDao.getInstance().findByStatus(0, time - 160);
+        List<Lottery> lotteries = LotteryDao.getInstance().findByStatus(0, time - 170);
         if (CollectionUtils.isEmpty(lotteries)) return;
+
+        if (time - lotteries.get(0).getCreateTime() < 170) return;
+        logger.info("到达开奖时间：nowTime:{}, createTime:{}", time, lotteries.get(0).getCreateTime());
 
         List<Integer> lotteryIds = lotteries.stream().map(Lottery::getId).collect(Collectors.toList());
         //未开奖的下注
@@ -70,11 +73,11 @@ public class LotteryDrawTask implements Runnable {
 
         List<Lottery> updateLotteryList = new ArrayList<>();
         List<PlayerLottery> updatePlayerLotteryList = new ArrayList<>();
-        Map<Long, LotteryBattleRole> lotteryBattleRoleMap = ManageLottery.getLotteryBattleRoleMap();
+//        Map<Long, LotteryBattleRole> lotteryBattleRoleMap = ManageLottery.getLotteryBattleRoleMap();
         List<LotteryDrawNumInfo> drawNumInfos = new ArrayList<>();
         for (Lottery lottery : lotteries) {
             //达到开奖时间
-            if (time - lottery.getCreateTime() >= 160) {
+            if (time - lottery.getCreateTime() >= 170) {
                 ILottery iLottery = ManageLottery.getInstance().getLotteryByType(lottery.getType());
 
                 List<PlayerLottery> playerLotteries = playerLotteriesMap.get(lottery.getId());

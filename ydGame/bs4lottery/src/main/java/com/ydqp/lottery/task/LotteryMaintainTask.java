@@ -7,8 +7,10 @@ import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.entity.SysCloseServer;
 import com.ydqp.common.lottery.player.ManageLottery;
 import com.ydqp.common.sendProtoMsg.lottery.LotterySysCloseServer;
+import com.ydqp.lottery.Cache.LotteryCache;
 import com.ydqp.lottery.dao.SysCloseServerDao;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
@@ -21,15 +23,21 @@ public class LotteryMaintainTask implements Runnable {
         //关闭服务器
         SysCloseServer sysCloseServer = SysCloseServerDao.getInstance().getSysCloseServer(50, 1);
         if (sysCloseServer != null && sysCloseServer.getStatus() == 1) {
-            //下一期的开始时间
-            List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery("(1)", 1);
-            int nextTime = 0;
-            if (CollectionUtils.isNotEmpty(lotteries)) {
-                nextTime = lotteries.get(0).getCreateTime();
+            String maintainTimeStr = LotteryCache.getInstance().getMaintainTime();
+            int maintainTime = 0;
+            if (StringUtils.isBlank(maintainTimeStr)) {
+                //下一期
+                List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery("(1)", 1);
+                if (CollectionUtils.isNotEmpty(lotteries)) {
+                    maintainTime = lotteries.get(0).getCreateTime();
+                    LotteryCache.getInstance().setMaintainTime(String.valueOf(maintainTime));
+                }
+            } else {
+                maintainTime = Integer.parseInt(maintainTimeStr);
             }
-            logger.info("预计关闭服务器时间：{}", nextTime);
+            logger.info("预计关闭服务器时间：{}", maintainTime);
             int nowTime = new Long(System.currentTimeMillis() / 1000).intValue();
-            if (nextTime > 0 && nowTime >= nextTime) {
+            if (maintainTime > 0 && nowTime >= maintainTime) {
                 logger.info("关闭服务器");
                 LotterySysCloseServer lotterySysCloseServer = new LotterySysCloseServer();
                 lotterySysCloseServer.setClose(true);

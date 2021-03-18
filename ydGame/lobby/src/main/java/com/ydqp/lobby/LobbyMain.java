@@ -12,7 +12,7 @@ public class LobbyMain {
 
     public static void main(String[] args) {
         //payment task
-        new Timer().schedule(new PaymentTimer() , 1000, 1000);
+        new Timer().schedule(new PaymentTimer() , 1000, 5000);
         //start server for app
         DispatchMessage serverDispatchMessage = new DispatchMessage();
         IServer iServer = new Server();

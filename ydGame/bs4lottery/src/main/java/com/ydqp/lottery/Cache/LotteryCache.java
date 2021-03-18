@@ -11,6 +11,8 @@ public class LotteryCache {
 
     public static final String RACING_SEED_KEY = "RACINGSEED";
 
+    public static final String MAINTAIN_TIME_KEY = "MAINTAIN_TIME";
+
     private LotteryCache() {}
 
     private static LotteryCache instance;
@@ -64,6 +66,30 @@ public class LotteryCache {
         Jedis jedis = JedisUtil.getInstance().getJedis();
         try {
             jedis.set(RACING_SEED_KEY, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
+        }
+    }
+
+    public String getMaintainTime() {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        String time = null;
+        try {
+            time = jedis.get(MAINTAIN_TIME_KEY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
+        }
+        return time;
+    }
+
+    public void setMaintainTime(String time) {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        try {
+            jedis.setex(MAINTAIN_TIME_KEY, 24 * 60 * 60, time);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

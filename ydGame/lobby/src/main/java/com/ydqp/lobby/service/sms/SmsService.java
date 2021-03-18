@@ -52,8 +52,8 @@ public class SmsService {
             return false;
         }
         // 发送短信验证码
-//        String code = sendSmsByTianYiHong(mobile, areaCode);
-        String code = "1234";
+        String code = sendSmsByTianYiHong(mobile, areaCode);
+//        String code = "1234";
         if (code != null) {
             // 保存验证码至redis
             PlayerCache.getInstance().addVerificationCode(mobile, code);
@@ -112,10 +112,11 @@ public class SmsService {
         param.setNumbers(areaCode + phone);
         param.setSenderid("");
         int smsCode = (int) ((Math.random() * 9 + 1) * 1000);
-        param.setContent("[Lucky Time] Your Verification Code is : " + smsCode);
+        param.setContent("[COCO] Your Verification Code is : " + smsCode);
         logger.info("请求地址为: {};请求参数为: {}", requestUrl, JSON.toJSONString(param));
         try {
             String result = HttpSmsUtil.post(requestUrl, JSON.toJSONString(param));
+            logger.info("天一弘短信通道返回结果: {}", result);
             JSONObject jsonObject = JSON.parseObject(result);
             Integer status = jsonObject.getInteger("status");
             logger.info("状态码: {}", status);

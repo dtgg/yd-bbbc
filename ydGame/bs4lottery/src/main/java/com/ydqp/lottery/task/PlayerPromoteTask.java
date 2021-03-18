@@ -86,14 +86,19 @@ public class PlayerPromoteTask implements Runnable {
             //上级玩家的一级有效用户加一，2级有效用户加上当前玩家的一级有效用户数量
             if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
                 PlayerPromoteDao.getInstance().updateSubEffective(playerPromote.getSuperiorId());
-                Object[] params = new Object[]{playerPromoteDetail.getSuperiorAmount(), playerPromote.getSuperiorId()};
-                PlayerPromoteDao.getInstance().updateBonusAmount(params);
             }
             if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0) {
                 PlayerPromoteDao.getInstance().updateSonEffective(playerPromote.getGrandId());
-                Object[] params = new Object[]{playerPromoteDetail.getGrandAmount(), playerPromote.getGrandId()};
-                PlayerPromoteDao.getInstance().updateBonusAmount(params);
             }
+        }
+
+        if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
+            Object[] params = new Object[]{playerPromoteDetail.getSuperiorAmount(), playerPromote.getSuperiorId()};
+            PlayerPromoteDao.getInstance().updateBonusAmount(params);
+        }
+        if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0) {
+            Object[] params = new Object[]{playerPromoteDetail.getGrandAmount(), playerPromote.getGrandId()};
+            PlayerPromoteDao.getInstance().updateBonusAmount(params);
         }
 
         //给上级玩家加钱

@@ -52,15 +52,15 @@ public class PlayerOrderHandler implements IServerHandler {
             return;
         }
 
-        String key = ORDER + playerData.getPlayerId() + ":" + sdf.format(new Date());
-        Long withdrawalCount = MallCache.getInstance().incrWithdrawalCount(key);
-        if (withdrawalCount > 20) {
-            orderSuccess.setSuccess(false);
-            orderSuccess.setMessage("Too frequent purchases or withdrawals, please try again the next day");
-            iSession.sendMessageByID(orderSuccess, playerOrder.getConnId());
-            logger.error("充值失败，购买次数达到上限，playerId:{}", playerOrder.getPlayerId());
-            return;
-        }
+//        String key = ORDER + playerData.getPlayerId() + ":" + sdf.format(new Date());
+//        Long withdrawalCount = MallCache.getInstance().incrWithdrawalCount(key);
+//        if (withdrawalCount > 20) {
+//            orderSuccess.setSuccess(false);
+//            orderSuccess.setMessage("Too frequent purchases or withdrawals, please try again the next day");
+//            iSession.sendMessageByID(orderSuccess, playerOrder.getConnId());
+//            logger.error("充值失败，购买次数达到上限，playerId:{}", playerOrder.getPlayerId());
+//            return;
+//        }
 
         Product product = ProductService.getInstance().findById(playerOrder.getProductId());
         if (product == null) {

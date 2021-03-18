@@ -13,9 +13,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class SMSUtils {
 
-    private static final String ACCOUNT = "cs_2al35o";
+    private static final String ACCOUNT = "cs_o6pifm";
 
-    private static final String PASSWORD = "ZdHEFd97";
+    private static final String PASSWORD = "UbJpNPes";
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 

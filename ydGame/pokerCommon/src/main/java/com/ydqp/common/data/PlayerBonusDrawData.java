@@ -32,6 +32,9 @@ public class PlayerBonusDrawData {
     @Protobuf(fieldType = FieldType.INT32, order = 6)
     private int createTime;
 
+    public PlayerBonusDrawData() {
+    }
+
     public PlayerBonusDrawData(PlayerBonusDraw playerBonusDraw) {
         this.id = playerBonusDraw.getId();
         this.playerId = playerBonusDraw.getPlayerId();
