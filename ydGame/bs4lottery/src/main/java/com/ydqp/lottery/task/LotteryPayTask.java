@@ -51,7 +51,6 @@ public class LotteryPayTask implements Runnable {
             String lotteryIdsStr = CommonUtils.inString(lotteryIds);
             playerLotteries = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIdsStr);
         }
-        if (CollectionUtils.isEmpty(playerLotteries)) return;
 
         //房间中的用户连接ID
         Set<Long> connIds = new HashSet<>();
