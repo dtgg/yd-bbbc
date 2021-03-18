@@ -40,14 +40,7 @@ public class ServerDispatchMessage implements IDispatchMessage {
                 }
                 int roomId = playerData.getRoomId();
                 if (roomId != 0) {
-                    cmd = roomId;
-                    if ((roomId / 100000) == 20) {
-                        netProtoMessage.getNetProtoMessageHead().setCmd(2020000);
-                    } else if ((roomId / 100000) == 30) {
-                        netProtoMessage.getNetProtoMessageHead().setCmd(3000035);
-                    } else if ((roomId / 100000) == 40) {
-                        return;
-                    } else if ((roomId / 100000) == 50) {
+                    if ((roomId / 100000) == 50) {
                         return;
                     }
                 } else {
@@ -66,11 +59,6 @@ public class ServerDispatchMessage implements IDispatchMessage {
                 ProtoEncode encode = new ProtoEncode();
                 BinaryWebSocketFrame byteBuf = encode.encode(netProtoMessage);
                 nettyClient.getChannel().writeAndFlush(byteBuf);
-                return;
-            } else if (cmd == 2000031) {
-                return;
-
-            } else if (cmd == 1100000) {
                 return;
             }
 
