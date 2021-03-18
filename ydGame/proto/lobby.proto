@@ -202,3 +202,11 @@ message PlayerBonusDrawData {
   int32 status = 5;
   int32 createTime = 6;
 }
+
+message GetAnnouncement {
+  int64 playerId = 1;
+}
+
+message SAnnouncement {
+  string announcement = 1;
+}

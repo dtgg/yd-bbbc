@@ -1,30 +1,33 @@
-package com.ydqp.common.receiveProtoMsg.player;
+package com.ydqp.common.receiveProtoMsg;
 
 import com.baidu.bjf.remoting.protobuf.Codec;
 import com.baidu.bjf.remoting.protobuf.FieldType;
 import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
+import com.cfq.annotation.GenProto;
 import com.cfq.annotation.ReceiveCommandAnnotation;
 import com.cfq.message.AbstartParaseMessage;
 import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
-@ReceiveCommandAnnotation(command = 3000035)
-public class TpPlayerDownLine extends AbstartParaseMessage {
+
+@ReceiveCommandAnnotation(command = 1000080)
+@GenProto(modulePro = "lobby")
+public class GetAnnouncement extends AbstartParaseMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT64, order = 1, description = "用户id")
+    @Protobuf(fieldType = FieldType.INT64, order = 1)
     private long playerId;
+
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
-        // LobbyProto.PlayerLogout playerLogout = LobbyProto.PlayerLogout.parseFrom(body);
 
-        Codec<TpPlayerDownLine> playerDownLineCodec = ProtobufProxy.create(TpPlayerDownLine.class);
-        TpPlayerDownLine playerDownLine = playerDownLineCodec.decode(body);
+        Codec<GetAnnouncement> getAnnouncementCodec = ProtobufProxy.create(GetAnnouncement.class);
+        GetAnnouncement getAnnouncement = getAnnouncementCodec.decode(body);
 
-        //setPlayerId(playerDownLine.getPlayerId());
-        return playerDownLine;
+        //setPlayerId(getGameVersion.getPlayerId());
+        return getAnnouncement;
     }
 }

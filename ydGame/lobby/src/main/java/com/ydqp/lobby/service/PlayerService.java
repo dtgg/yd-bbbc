@@ -198,6 +198,7 @@ public class PlayerService {
         //推广码是否有效
         Long superiorId = null;
         long kfId = 0L;
+        int appId = 1000001;
         if (StringUtils.isNotBlank(mobileRegister.getReferralCode())) {
             String s = ShortCodeKit.convertBase62ToDecimal(mobileRegister.getReferralCode());
             Long permutedId = ShortCodeKit.permutedId(Long.parseLong(s));
@@ -211,6 +212,7 @@ public class PlayerService {
             }
             superiorId = referralPlayer.getId();
             kfId = referralPlayer.getKfId();
+            appId = referralPlayer.getAppId();
         }
 
         String nickname = GuestRegisterConstant.MOBILE_NICKNAME_PREFIX + randomStr(GuestRegisterConstant.NICKNAME_LONGTH);
@@ -224,7 +226,7 @@ public class PlayerService {
         player.setRoomId(GuestRegisterConstant.ROOM_ID);
         player.setZjPoint(0);
         player.setCreateTime(createTime);
-        player.setAppId(mobileRegister.getAppId() == 0 ? 1100001 : mobileRegister.getAppId());
+        player.setAppId(appId);
         player.setKfId(kfId);
 
         long playerId = PlayerLoginDao.getInstance().insertPlayer(player.getParameterMap());
@@ -257,11 +259,11 @@ public class PlayerService {
         logger.info("新用户注册,playerId:{},superiorId:{},grandId:{}", playerId, playerPromote.getSuperiorId(), playerPromote.getGrandId());
 
         //上报注册数据
-        Map<String, Object> data = new HashMap<>();
-        data.put("playerId", playerId);
-        data.put("appId", mobileRegister.getAppId());
-        data.put("registerTime", createTime);
-        data.put("type", 3);
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("playerId", playerId);
+//        data.put("appId", mobileRegister.getAppId());
+//        data.put("registerTime", createTime);
+//        data.put("type", 3);
 //        ThreadManager.getInstance().getStatUploadExecutor().execute(new StatisticsUploadTask(UpLoadConstant.PLAYER_REGISTER,
 //                new JSONObject(data)));
     }

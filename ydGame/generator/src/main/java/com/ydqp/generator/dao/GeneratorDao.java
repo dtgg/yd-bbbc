@@ -11,7 +11,7 @@ public class GeneratorDao {
     private static String template;
     static {
         StringBuilder sb = new StringBuilder(200);
-        String fileName = "D:\\work\\code\\yd-bbbc\\ydGame\\generator\\src\\main\\java\\com\\ydqp\\generator\\dao\\template";
+        String fileName = "D:\\project\\gameproject\\yd-bbbc\\ydGame\\generator\\src\\main\\java\\com\\ydqp\\generator\\dao\\template";
         File file = new File(fileName);
         BufferedReader reader = null;
         try {
@@ -198,7 +198,8 @@ public class GeneratorDao {
                         fieldInfo.append(columnInfoStr);
                     }
                     toMap.append("\t return entityMap;\r\n");
-                    path = "D:\\yanfa\\youxi\\qp\\dao";
+                    path = "D:\\project\\gameproject\\yd-bbbc\\dao";
+                    //path = "D:\\project\\gameproject\\yd-bbbc\\dao";
 
                     System.out.println("path =" + path);
                     FileWriter fw = null;

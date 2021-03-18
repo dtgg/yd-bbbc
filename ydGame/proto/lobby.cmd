@@ -17,6 +17,9 @@ C->s
 1000075 = ParityBonusAmountDraw
 1000076 = ParityCollectBonus
 
+#获取公告
+1000080 = GetAnnouncement
+
 s->c
 1000005 = LoginSuccess
 1000002 = LobbyKickPlayer //踢掉用户
@@ -38,6 +41,9 @@ s->c
 
 1001075 = ParityBonusAmountDrawSuc
 1001076 = ParityCollectBonusSuc
+
+#获取公告
+1000081 = SAnnouncement
 
 addmoney
 1000030
