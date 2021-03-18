@@ -15,9 +15,8 @@ public class TaskConfig implements Serializable {
     public static final String NAME_NAME = "name";
     public static final String TYPE_NAME = "type";
     public static final String REWARD_NAME = "reward";
-    public static final String NEXTTASKID_NAME = "nextTaskId";
     public static final String TARGET_NAME = "target";
-    public static final String REWARDTYPE_NAME = "rewardType";
+    public static final String ENABLED_NAME = "enabled";
 
 
     private int id;
@@ -64,17 +63,6 @@ public class TaskConfig implements Serializable {
         entityMap.put(REWARD_NAME, reward);
     }
 
-    private Integer nextTaskId;
-
-    public Integer getNextTaskId() {
-        return nextTaskId;
-    }
-
-    public void setNextTaskId(Integer nextTaskId) {
-        this.nextTaskId = nextTaskId;
-        entityMap.put(NEXTTASKID_NAME, nextTaskId);
-    }
-
     private int target;
 
     public int getTarget() {
@@ -86,15 +74,15 @@ public class TaskConfig implements Serializable {
         entityMap.put(TARGET_NAME, target);
     }
 
-    private int rewardType;
+    private int enabled;
 
-    public int getRewardType() {
-        return rewardType;
+    public int getEnabled() {
+        return enabled;
     }
 
-    public void setRewardType(int rewardType) {
-        this.rewardType = rewardType;
-        entityMap.put(REWARDTYPE_NAME, rewardType);
+    public void setEnabled(int enabled) {
+        this.enabled = enabled;
+        entityMap.put(ENABLED_NAME, enabled);
     }
 
     public Object getValueByFieldName(String fieldName) {

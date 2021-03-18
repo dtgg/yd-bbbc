@@ -75,11 +75,11 @@ public class ParityReceiveHandler implements IServerHandler {
         //记录奖励记录
         PlayerRewardHistory playerRewardHistory = new PlayerRewardHistory();
         playerRewardHistory.setPlayerId(playerData.getPlayerId());
-        playerRewardHistory.setRewardSource(TaskRewardSource.RECOMMEND_TASK);
-        playerRewardHistory.setRewardType(2);
+        playerRewardHistory.setSource(TaskRewardSource.RECOMMEND_TASK);
         playerRewardHistory.setReward(taskConfig.getReward());
         playerRewardHistory.setTaskId(parityReceive.getTaskId());
         playerRewardHistory.setCreateTime(new Long(System.currentTimeMillis() / 1000).intValue());
+        playerRewardHistory.setAppId(playerData.getAppId());
         PlayerRewardHistoryDao.getInstance().insert(playerRewardHistory.getParameterMap());
 
         //通知客户端

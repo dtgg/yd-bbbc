@@ -145,6 +145,10 @@ public class PlayerService {
         return PlayerLoginDao.getInstance().updatePlayerZjPoint(coinPoint, id);
     }
 
+    public void batchUpdatePlayerZjPoint(Object[][] params) {
+        PlayerLoginDao.getInstance().batchUpdatePlayerZjPoint(params);
+    }
+
     private static String randomStr(int length) {
         StringBuilder builder = new StringBuilder();
 

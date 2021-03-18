@@ -15,12 +15,10 @@ public class PlayerRewardHistory implements Serializable {
 	   	public static final String ID_NAME = "id";
 	public static final String PLAYERID_NAME = "playerId";
 	public static final String REWARD_NAME = "reward";
-	public static final String REWARDSOURCE_NAME = "rewardSource";
-	public static final String GRADE_NAME = "grade";
-	public static final String EXPERIENCE_NAME = "experience";
+	public static final String REWARDSOURCE_NAME = "source";
 	public static final String TASKID_NAME = "taskId";
 	public static final String CREATETIME_NAME = "createTime";
-	public static final String REWARDTYPE_NAME = "rewardType";
+	public static final String APPID_NAME = "appId";
 
 
     	private int id;
@@ -47,29 +45,13 @@ public class PlayerRewardHistory implements Serializable {
 	 this.reward = reward;
 	 entityMap.put(REWARD_NAME, reward);
 	}
-	private int rewardSource;
-	public int getRewardSource() {
-	return rewardSource;
+	private int source;
+	public int getSource() {
+	return source;
 	}
- 	 public void setRewardSource(int rewardSource){
-	 this.rewardSource = rewardSource;
-	 entityMap.put(REWARDSOURCE_NAME, rewardSource);
-	}
-	private int grade;
-	public int getGrade() {
-	return grade;
-	}
- 	 public void setGrade(int grade){
-	 this.grade = grade;
-	 entityMap.put(GRADE_NAME, grade);
-	}
-	private double experience;
-	public double getExperience() {
-	return experience;
-	}
- 	 public void setExperience(double experience){
-	 this.experience = experience;
-	 entityMap.put(EXPERIENCE_NAME, experience);
+ 	 public void setSource(int source){
+	 this.source = source;
+	 entityMap.put(REWARDSOURCE_NAME, source);
 	}
 	private int taskId;
 	public int getTaskId() {
@@ -87,13 +69,13 @@ public class PlayerRewardHistory implements Serializable {
 	 this.createTime = createTime;
 	 entityMap.put(CREATETIME_NAME, createTime);
 	}
-	private int rewardType;
-	public int getRewardType() {
-		return rewardType;
+	private int appId;
+	public int getAppId() {
+		return appId;
 	}
-	public void setRewardType(int rewardType) {
-		this.rewardType = rewardType;
-		entityMap.put(REWARDTYPE_NAME, rewardType);
+	public void setAppId(int appId) {
+		this.appId = appId;
+		entityMap.put(APPID_NAME, appId);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

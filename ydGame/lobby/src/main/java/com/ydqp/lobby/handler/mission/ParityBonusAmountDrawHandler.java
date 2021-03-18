@@ -70,6 +70,8 @@ public class ParityBonusAmountDrawHandler implements IServerHandler {
         playerBonusDraw.setAmount(BigDecimal.valueOf(bonusAmountDraw.getBonusAmount()));
         playerBonusDraw.setStatus(0);
         playerBonusDraw.setCreateTime(new Long(System.currentTimeMillis() / 1000L).intValue());
+        playerBonusDraw.setAppId(playerData.getAppId());
+        playerBonusDraw.setKfId(playerData.getKfId());
         PlayerBonusDrawDao.getInstance().insert(playerBonusDraw.getParameterMap());
 
         suc.setSuccess(true);

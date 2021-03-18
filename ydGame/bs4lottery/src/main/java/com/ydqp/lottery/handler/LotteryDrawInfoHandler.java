@@ -41,7 +41,7 @@ public class LotteryDrawInfoHandler implements IServerHandler {
 
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
         if (lottery.getOpenTime() - nowTime > 1) {
-            logger.info("味道开奖时间");
+            logger.info("未到开奖时间");
             return;
         }
 

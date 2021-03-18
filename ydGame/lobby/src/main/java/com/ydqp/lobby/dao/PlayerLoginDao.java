@@ -92,4 +92,9 @@ public class PlayerLoginDao {
         String sql = "update player set onLineTime = "+ time + " where id = " + id + ";";
         JdbcOrm.getInstance().update(sql);
     }
+
+    public void batchUpdatePlayerZjPoint(Object[][] params) {
+        String sql = "update player set zjPoint = zjPoint + ? where id = ?;";
+        JdbcOrm.getInstance().batchUpdate(sql, params);
+    }
 }

@@ -25,4 +25,16 @@ public class ParityOrderDetailInfo {
     @Setter
     @Protobuf(fieldType = FieldType.INT32, order = 4)
     private int date;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.DOUBLE, order = 5)
+    private Double rechargeAmount;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.DOUBLE, order = 6)
+    private Double withdrawAmount;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32, order = 7)
+    private int recommendNumber;
 }
