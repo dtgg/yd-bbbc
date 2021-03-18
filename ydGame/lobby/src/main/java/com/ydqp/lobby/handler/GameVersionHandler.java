@@ -6,10 +6,10 @@ import com.cfq.handler.IServerHandler;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.GameVersion;
 import com.ydqp.common.sendProtoMsg.SGameVersion;
-import com.ydqp.lobby.cache.PlayerCache;
 import com.ydqp.lobby.dao.GetVersionDao;
 
 @ServerHandler(command = 1000060,module = "lobby")

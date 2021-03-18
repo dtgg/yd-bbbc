@@ -6,10 +6,10 @@ import com.cfq.handler.IServerHandler;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.receiveProtoMsg.player.PlayerHeadUrl;
 import com.ydqp.common.sendProtoMsg.player.PlayerHeadUrlSuccess;
-import com.ydqp.lobby.cache.PlayerCache;
 import com.ydqp.lobby.constant.HeadUrlConstant;
 import com.ydqp.lobby.service.PlayerService;
 

@@ -1,20 +1,16 @@
 package com.ydqp.lobby.task;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cfq.connection.ISession;
 import com.cfq.connection.ManagerSession;
 import com.cfq.connection.NettySession;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
-import com.ydqp.common.constant.UpLoadConstant;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PaySuccessDealDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.PaySuccessDeal;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
-import com.ydqp.common.task.StatisticsUploadTask;
-import com.ydqp.lobby.ThreadManager;
-import com.ydqp.lobby.cache.PlayerCache;
 import com.ydqp.lobby.service.PlayerService;
 
 import java.util.ArrayList;

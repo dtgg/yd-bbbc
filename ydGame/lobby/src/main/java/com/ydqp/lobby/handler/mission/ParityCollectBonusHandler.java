@@ -6,6 +6,7 @@ import com.cfq.handler.IServerHandler;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PlayerBonusDrawDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerBonusDrawData;
@@ -13,7 +14,6 @@ import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.PlayerPromote;
 import com.ydqp.common.entity.PlayerBonusDraw;
 import com.ydqp.common.sendProtoMsg.mission.ParityCollectBonusSuc;
-import com.ydqp.lobby.cache.PlayerCache;
 
 import java.util.List;
 import java.util.stream.Collectors;

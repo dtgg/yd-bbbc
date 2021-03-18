@@ -10,9 +10,9 @@ import com.cfq.message.NetProtoMessage;
 import com.cfq.message.websocket.ProtoEncode;
 import com.cfq.net.NettyClient;
 import com.cfq.util.StackTraceUtil;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.receiveProtoMsg.player.PlayerDownLine;
-import com.ydqp.conn.PlayerCache;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 
 

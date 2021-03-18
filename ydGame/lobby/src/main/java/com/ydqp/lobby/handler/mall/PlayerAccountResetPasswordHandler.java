@@ -6,10 +6,10 @@ import com.cfq.handler.IServerHandler;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.receiveProtoMsg.mall.PlayerAccountResetPassword;
 import com.ydqp.common.sendProtoMsg.mall.PlayerAccountResetPasswordSuc;
-import com.ydqp.lobby.cache.PlayerCache;
 import com.ydqp.lobby.service.mall.PlayerAccountService;
 import org.apache.commons.codec.digest.DigestUtils;
 
