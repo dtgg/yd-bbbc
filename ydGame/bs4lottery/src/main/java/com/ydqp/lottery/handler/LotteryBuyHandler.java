@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 
-@ServerHandler(module = "lottery", command = 5000002)
+@ServerHandler(module = "lotteryBuy", command = 5000002)
 public class LotteryBuyHandler implements IServerHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(LotteryBuyHandler.class);
