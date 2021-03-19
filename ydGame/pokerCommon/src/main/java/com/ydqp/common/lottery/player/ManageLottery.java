@@ -3,6 +3,8 @@ package com.ydqp.common.lottery.player;
 import com.ydqp.common.dao.lottery.LotteryConfigDao;
 import com.ydqp.common.entity.LotteryConfig;
 import com.ydqp.common.lottery.role.LotteryBattleRole;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,10 @@ public class ManageLottery {
         //从数据库中加载配置
         registerLottery();
     }
+
+    @Setter
+    @Getter
+    private int closeServer = 0;
 
     private static Map<Integer, ILottery> lotteryMap;
 

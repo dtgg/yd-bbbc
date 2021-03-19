@@ -41,8 +41,7 @@ public class LotteryBuyHandler implements IServerHandler {
 
         LotteryBuySuc lotteryBuySuc = new LotteryBuySuc();
 
-        SysCloseServer sysCloseServer = SysCloseServerDao.getInstance().getSysCloseServer(50, 1);
-        if (sysCloseServer != null && sysCloseServer.getStatus() == 1) {
+        if (ManageLottery.getInstance().getCloseServer() == 1) {
             String maintainTimeStr = LotteryCache.getInstance().getMaintainTime();
             int maintainTime = Integer.parseInt(maintainTimeStr);
 

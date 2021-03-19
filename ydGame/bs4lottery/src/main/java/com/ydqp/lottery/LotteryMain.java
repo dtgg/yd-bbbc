@@ -22,7 +22,7 @@ public class LotteryMain {
         //派奖任务
         new Timer().schedule(new LotteryPayTimer(), 1000, 1000);
         //关闭服务器任务
-        new Timer().schedule(new LotteryMaintainTimer(), 1000, 1000);
+        new Timer().schedule(new LotteryMaintainTimer(), 1000, 5000);
         //初始化
         ManageLottery.getInstance();
         //start server for app

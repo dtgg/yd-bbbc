@@ -54,7 +54,8 @@ public class LotteryDrawTask implements Runnable {
         List<PlayerLottery> playerLotteryList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(lotteryIds)) {
             String lotteryIdsStr = CommonUtils.inString(lotteryIds);
-            playerLotteryList = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIdsStr);
+            //这边获取所有下注状态为 0 的数据
+            playerLotteryList = PlayerLotteryDao.getInstance().findByLotteryIdsOnlyBuy(lotteryIdsStr);
         }
 
         Map<Integer, List<PlayerLottery>> playerLotteriesMap = new HashMap<>();
@@ -91,7 +92,7 @@ public class LotteryDrawTask implements Runnable {
                 //更新lottery数据，已计算
                 lottery.setNumber(drawData.getDrawNum());
                 lottery.setStatus(1);
-                lottery.setOpenTime(time + 20);
+                lottery.setOpenTime(time + 10);
                 lottery.setPrice(LotteryUtil.getPrice() + lottery.getPeriod());
 
                 int drawNum = Integer.parseInt(drawData.getDrawNum());

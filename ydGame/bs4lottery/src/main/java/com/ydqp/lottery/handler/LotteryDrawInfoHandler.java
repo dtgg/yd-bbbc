@@ -40,7 +40,7 @@ public class LotteryDrawInfoHandler implements IServerHandler {
         Lottery lottery = LotteryDao.getInstance().findById(lotteryId);
 
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
-        if (lottery.getOpenTime() - nowTime > 1) {
+        if (lottery.getOpenTime() - nowTime > 2) {
             logger.info("未到开奖时间");
             return;
         }

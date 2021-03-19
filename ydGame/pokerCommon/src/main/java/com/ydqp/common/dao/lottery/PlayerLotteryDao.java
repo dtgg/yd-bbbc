@@ -65,4 +65,10 @@ public class PlayerLotteryDao {
         String sql = "select count(1) as total from player_lottery where playerId = " + playerId + ";";
         return (Total) JdbcOrm.getInstance().getBean(sql, Total.class);
     }
+
+    //获取用户下注的数据
+    public List<PlayerLottery> findByLotteryIdsOnlyBuy(String lotteryIdsStr) {
+        String sql = "select * from player_lottery where status = 0 and lotteryId in "+lotteryIdsStr+";";
+        return JdbcOrm.getInstance().getListBean(sql, PlayerLottery.class);
+    }
 }

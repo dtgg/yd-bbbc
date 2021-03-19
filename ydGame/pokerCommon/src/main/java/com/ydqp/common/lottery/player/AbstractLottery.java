@@ -96,7 +96,7 @@ public abstract class AbstractLottery implements ILottery {
                 lotteryTypeInfo.setDraw(false);
 
                 Lottery lastLottery = lastLotteryMap.get(lottery.getType());
-                String period = DateUtil.timestampToStr(lastLottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod());
+                String period = DateUtil.timestampToStr(lastLottery.getCreateTime()) + LotteryUtil.intToPeriod(lastLottery.getPeriod());
                 lotteryTypeInfo.setLotteryInfo(new LotteryInfo(lastLottery, period));
                 if (CollectionUtils.isNotEmpty(newestPlayerLottery)) {
                     for (PlayerLottery playerLottery : newestPlayerLottery) {

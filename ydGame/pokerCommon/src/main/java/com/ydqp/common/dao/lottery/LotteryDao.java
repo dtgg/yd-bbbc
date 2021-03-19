@@ -86,8 +86,8 @@ public class LotteryDao {
         return (Lottery) JdbcOrm.getInstance().getBean(sql, Lottery.class);
     }
 
-    public List<Lottery> findCompleteLottery(int type) {
-        String sql = "select * from lottery where type = " + type + " and status = 2 order by createTime asc;";
+    public List<Lottery> findCompleteLotteryBy24H(int type,int createTime) {
+        String sql = "select * from lottery where type = " + type + " and status = 2 and createTime >= " + createTime + " order by createTime asc;";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 

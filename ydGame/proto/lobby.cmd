@@ -20,6 +20,8 @@ C->s
 #获取公告
 1000080 = GetAnnouncement
 
+#客户端进入房间前，判断是否可以进入房间
+1000800 = CheckEnterRoom
 s->c
 1000005 = LoginSuccess
 1000002 = LobbyKickPlayer //踢掉用户
@@ -44,6 +46,9 @@ s->c
 
 #获取公告
 1000081 = SAnnouncement
+
+#客户端进入房间前，判断是否可以进入房间
+1000801 = CheckEnterRoomSuc
 
 addmoney
 1000030

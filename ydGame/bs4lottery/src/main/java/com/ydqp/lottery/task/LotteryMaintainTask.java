@@ -21,6 +21,9 @@ public class LotteryMaintainTask implements Runnable {
     @Override
     public void run() {
         //关闭服务器
+        if (ManageLottery.getInstance().getCloseServer() == 1) {
+            return;
+        }
         SysCloseServer sysCloseServer = SysCloseServerDao.getInstance().getSysCloseServer(50, 1);
         if (sysCloseServer != null && sysCloseServer.getStatus() == 1) {
             String maintainTimeStr = LotteryCache.getInstance().getMaintainTime();
@@ -45,6 +48,8 @@ public class LotteryMaintainTask implements Runnable {
                     value.getISession().sendMessageByID(lotterySysCloseServer, value.getConnId());
                 });
             }
+
+            ManageLottery.getInstance().setCloseServer(1);
         }
     }
 }

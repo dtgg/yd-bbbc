@@ -18,7 +18,8 @@ public class LotteryTrendHandler implements IServerHandler {
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         LotteryTrend lotteryTrend = (LotteryTrend) abstartParaseMessage;
 
-        List<Lottery> completeLottery = LotteryDao.getInstance().findCompleteLottery(lotteryTrend.getType());
+        int createTime = new Long(System.currentTimeMillis() / 1000).intValue() - 86400;
+        List<Lottery> completeLottery = LotteryDao.getInstance().findCompleteLotteryBy24H(lotteryTrend.getType(), createTime);
         List<String> collect = completeLottery.stream().map(Lottery::getNumber).collect(Collectors.toList());
 
         LotteryTrendSuc trendSuc = new LotteryTrendSuc();

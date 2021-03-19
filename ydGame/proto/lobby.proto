@@ -214,3 +214,11 @@ message GetAnnouncement {
 message SAnnouncement {
   string announcement = 1;
 }
+
+message CheckEnterRoom {
+  int32 roomId = 1;
+}
+
+message CheckEnterRoomSuc {
+  int32 code = 1;
+}
