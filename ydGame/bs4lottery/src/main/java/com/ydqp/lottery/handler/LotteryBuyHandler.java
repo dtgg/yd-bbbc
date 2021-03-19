@@ -84,7 +84,7 @@ public class LotteryBuyHandler implements IServerHandler {
         }
 
         long playerId = playerData.getPlayerId();
-        Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerId));
+        Player player = PlayerService.getInstance().queryByPlayerId(playerId);
         if (player.getZjPoint() < Double.parseDouble(lotteryBuy.getPay())) {
             lotteryBuySuc.setSuccess(false);
             lotteryBuySuc.setMessage("Insufficient balance");
@@ -117,6 +117,21 @@ public class LotteryBuyHandler implements IServerHandler {
         lotteryBattleRole.setBuying(true);
 
         try {
+            //扣钱
+            double zj = Double.parseDouble(lotteryBuy.getPay());
+            int row = PlayerService.getInstance().updatePlayerZjPoint(0 - zj, playerId);
+            if (row == 0) {
+                lotteryBuySuc.setSuccess(false);
+                lotteryBuySuc.setMessage("Insufficient balance");
+                iSession.sendMessageByID(lotteryBuySuc, lotteryBuy.getConnId());
+                logger.error("用户账户异常余额不足，playerId:{}", playerId);
+                return;
+            }
+            logger.info("用户购买彩票扣钱成功,playerId = {},彩票期数 = {}",player.getId(),(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod())));
+
+            playerData.setZjPoint(playerData.getZjPoint() - zj);
+            PlayerCache.getInstance().addPlayer(lotteryBuy.getConnId(), playerData);
+
             PlayerLottery playerLottery = new PlayerLottery();
             playerLottery.setPlayerId(playerId);
             playerLottery.setType(lotteryBuy.getType());
@@ -130,20 +145,6 @@ public class LotteryBuyHandler implements IServerHandler {
             playerLottery.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
 
             PlayerLottery playerLottery1 = iLottery.lotteryBuy(lottery, playerLottery);
-
-            //扣钱
-            double zj = Double.parseDouble(lotteryBuy.getPay());
-            int row = PlayerService.getInstance().updatePlayerZjPoint(0 - zj, playerId);
-            if (row == 0) {
-                lotteryBuySuc.setSuccess(false);
-                lotteryBuySuc.setMessage("Insufficient balance");
-                iSession.sendMessageByID(lotteryBuySuc, lotteryBuy.getConnId());
-                logger.error("用户账户异常余额不足，playerId:{}", playerId);
-                return;
-            }
-
-            playerData.setZjPoint(playerData.getZjPoint() - zj);
-            PlayerCache.getInstance().addPlayer(lotteryBuy.getConnId(), playerData);
 
             logger.info("彩票购买成功，用户ID:{}, 抽奖前zj:{}, 抽奖后zj:{}, 期数:{}, 颜色:{}, 数字:{}",
                     player.getId(), player.getZjPoint(), player.getZjPoint() - zj, playerLottery.getPeriod(),

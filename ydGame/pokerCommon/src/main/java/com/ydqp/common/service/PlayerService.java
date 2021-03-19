@@ -44,4 +44,8 @@ public class PlayerService {
     public void batchUpdate(Object[][] params) {
         PlayerDao.getInstance().batchUpdate(params);
     }
+
+    public Player queryByPlayerId (long playerId) {
+        return PlayerDao.getInstance().queryById(playerId);
+    }
 }

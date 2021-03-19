@@ -68,4 +68,9 @@ public class PlayerDao {
         String sql = "update player set password = ? where playerName = ?";
         JdbcOrm.getInstance().updateByArray(sql, params);
     }
+
+    public Player queryById(long queryCondition) {
+        String sql = "select * from player where " + "id = '" + queryCondition + "';";
+        return (Player) JdbcOrm.getInstance().getBean(sql, Player.class);
+    }
 }
