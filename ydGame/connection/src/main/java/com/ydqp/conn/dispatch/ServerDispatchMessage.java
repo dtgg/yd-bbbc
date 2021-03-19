@@ -40,7 +40,7 @@ public class ServerDispatchMessage implements IDispatchMessage {
                 }
                 int roomId = playerData.getRoomId();
                 if (roomId != 0) {
-                    if ((roomId / 100000) == 50) {
+                    if ((roomId / 100000) == 50 || (roomId / 100000) == 60) {
                         return;
                     }
                 } else {
