@@ -6,6 +6,7 @@ import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuccess;
 import com.ydqp.lobby.pay.cashfree.CashFreePay;
 import com.ydqp.lobby.pay.pay777.Pay777;
 import com.ydqp.lobby.pay.razorpay.RazorPay;
+import com.ydqp.lobby.pay.uupay.UuPay;
 
 public class CommonPay extends OrderPay {
 
@@ -13,10 +14,8 @@ public class CommonPay extends OrderPay {
         switch (payConfigName) {
             case "777pay":
                 return new Pay777();
-            case "cashfree":
-                return new CashFreePay();
-            case "razorpay":
-                return new RazorPay();
+            case "uupay":
+                return new UuPay();
             default:
                 return null;
         }
