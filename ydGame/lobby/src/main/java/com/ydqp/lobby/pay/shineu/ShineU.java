@@ -50,7 +50,7 @@ public class ShineU extends OrderPay {
         String proxy = PayUrlUtil.getInstance().getUrl("isDebug");
 
         logger.info("ShineU payment params:{}", params.toJSONString());
-        String result = HttpUtils.getInstance().sendPost("https://testgateway.shineupay.com/pay/create", header, params, Boolean.parseBoolean(proxy));
+        String result = HttpUtils.getInstance().sendPost("https://gateway.shineupay.com/pay/create", header, params, Boolean.parseBoolean(proxy));
         logger.info("ShineU payment response:{}", result);
 
         PlayerOrderSuccess playerOrderSuccess = new PlayerOrderSuccess();
@@ -114,7 +114,7 @@ public class ShineU extends OrderPay {
         String proxy = PayUrlUtil.getInstance().getUrl("isDebug");
 
         logger.info("ShineU payout params:{}", params.toJSONString());
-        String result = HttpUtils.getInstance().sendPost("https://testgateway.shineupay.com/withdraw/create", header, params, Boolean.parseBoolean(proxy));
+        String result = HttpUtils.getInstance().sendPost("https://gateway.shineupay.com/withdraw/create", header, params, Boolean.parseBoolean(proxy));
         logger.info("ShineU payout response:{}", result);
 
         PlayerWithdrawalSuccess playerWithdrawalSuccess = new PlayerWithdrawalSuccess();
