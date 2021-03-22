@@ -142,8 +142,8 @@ public class ShineU extends OrderPay {
 
     public static void main(String[] args) {
 
-//        PayChannelConfig config = new PayChannelConfig();
-        PayWithdrawalConfig config = new PayWithdrawalConfig();
+        PayChannelConfig config = new PayChannelConfig();
+//        PayWithdrawalConfig config = new PayWithdrawalConfig();
         config.setName("shineu");
         config.setMchId("AFOSNS50BQPS5656");
         config.setSecretKey("b20ea60e8d8f4d5d91d1da924f460646");
@@ -153,22 +153,22 @@ public class ShineU extends OrderPay {
         config.setPayoutNotifyUrl("http://whw.ngrok2.xiaomiqiu.cn/api/shineu/payout/notify");
         config.setBusinessAccount("AFSHI9D29Z408907");
 
-//        PlayerOrder order = new PlayerOrder();
-//        order.setOrderId(UUID.randomUUID().toString().replace("-", ""));
-//        order.setAmount(100);
+        PlayerOrder order = new PlayerOrder();
+        order.setOrderId(UUID.randomUUID().toString().replace("-", ""));
+        order.setAmount(100);
+
+        new CommonPay().getOrderPay(config.getName()).payment(order, config);
+
+//        PlayerWithdrawal withdrawal = new PlayerWithdrawal();
+//        withdrawal.setTransferId(UUID.randomUUID().toString().replace("-", ""));
+//        withdrawal.setAmount(250);
 //
-//        new CommonPay().getOrderPay(config.getName()).payment(order, config);
-
-        PlayerWithdrawal withdrawal = new PlayerWithdrawal();
-        withdrawal.setTransferId(UUID.randomUUID().toString().replace("-", ""));
-        withdrawal.setAmount(250);
-
-        PlayerAccount account = new PlayerAccount();
-        account.setName("zhangsan");
-        account.setMobile("9876543210");
-        account.setAccNo("00000000000");
-        account.setIfsc("011");
-        new CommonPay().getOrderPay(config.getName()).payout(withdrawal, config, account);
+//        PlayerAccount account = new PlayerAccount();
+//        account.setName("zhangsan");
+//        account.setMobile("9876543210");
+//        account.setAccNo("00000000000");
+//        account.setIfsc("011");
+//        new CommonPay().getOrderPay(config.getName()).payout(withdrawal, config, account);
         //{"body":{"platformOrderId":"20210322AFSHSQ7YHB0G1761"},"status":0,"merchantId":"AFOSNS50BQPS5656","timestamp":"1616410969161"}
     }
 }

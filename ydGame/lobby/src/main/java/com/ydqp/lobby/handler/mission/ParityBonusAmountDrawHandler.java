@@ -28,6 +28,15 @@ public class ParityBonusAmountDrawHandler implements IServerHandler {
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         ParityBonusAmountDraw bonusAmountDraw = (ParityBonusAmountDraw) abstartParaseMessage;
         ParityBonusAmountDrawSuc suc = new ParityBonusAmountDrawSuc();
+
+        if (bonusAmountDraw.getBonusAmount() < 100) {
+            logger.error("bonus amount great than 100");
+            suc.setSuccess(false);
+            suc.setMessage("bonus amount great than 100");
+            iSession.sendMessageByID(suc, abstartParaseMessage.getConnId());
+            return;
+        }
+
         PlayerData playerData = PlayerCache.getInstance().getPlayer(abstartParaseMessage.getConnId());
         if (playerData == null) {
             logger.error("player is not ture");

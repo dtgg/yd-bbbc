@@ -38,11 +38,11 @@ public class PaySuccessDeal implements Serializable {
 	 this.playerId = playerId;
 	 entityMap.put(PLAYERID_NAME, playerId);
 	}
-	private int orderId;
-	public int getOrderId() {
+	private String orderId;
+	public String getOrderId() {
 	return orderId;
 	}
- 	 public void setOrderId(int orderId){
+ 	 public void setOrderId(String orderId){
 	 this.orderId = orderId;
 	 entityMap.put(ORDERID_NAME, orderId);
 	}
