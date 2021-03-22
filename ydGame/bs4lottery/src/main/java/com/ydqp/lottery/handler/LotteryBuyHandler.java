@@ -23,7 +23,6 @@ import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.LotteryUtil;
 import com.ydqp.lottery.Cache.LotteryCache;
 import com.ydqp.lottery.ThreadManager;
-import com.ydqp.lottery.dao.SysCloseServerDao;
 import com.ydqp.lottery.task.PlayerPromoteTask;
 import com.ydqp.lottery.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
@@ -166,7 +165,7 @@ public class LotteryBuyHandler implements IServerHandler {
             playerPromoteDetail.setNickname(player.getNickname());
             playerPromoteDetail.setBetAmount(playerLottery1.getPay().subtract(playerLottery1.getFee()));
             playerPromoteDetail.setCreateTime(playerLottery1.getCreateTime());
-            ThreadManager.getInstance().getExecutor().execute(new PlayerPromoteTask(iSession, playerPromoteDetail));
+            ThreadManager.getInstance().getExecutor().execute(new PlayerPromoteTask(iSession, playerPromoteDetail, playerLottery1.getFee()));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

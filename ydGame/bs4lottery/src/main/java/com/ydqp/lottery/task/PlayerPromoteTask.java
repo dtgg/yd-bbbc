@@ -26,9 +26,12 @@ public class PlayerPromoteTask implements Runnable {
 
     private final PlayerPromoteDetail playerPromoteDetail;
 
-    public PlayerPromoteTask(ISession iSession, PlayerPromoteDetail playerPromoteDetail) {
+    private final BigDecimal fee;
+
+    public PlayerPromoteTask(ISession iSession, PlayerPromoteDetail playerPromoteDetail, BigDecimal fee) {
         this.iSession = iSession;
         this.playerPromoteDetail = playerPromoteDetail;
+        this.fee = fee;
     }
 
     @Override
@@ -59,11 +62,11 @@ public class PlayerPromoteTask implements Runnable {
 
             //计算上级获得的奖金，保存player_promote_detail
             if (playerPromote.getSuperiorId() != null) {
-                playerPromoteDetail.setSuperiorAmount(playerPromoteDetail.getBetAmount().multiply(new BigDecimal(config.getSuperiorRate())));
+                playerPromoteDetail.setSuperiorAmount(fee.multiply(new BigDecimal(config.getSuperiorRate())));
             }
             //superior是有效用户
             if (playerPromote.getGrandId() != null) {
-                playerPromoteDetail.setGrandAmount(playerPromoteDetail.getBetAmount().multiply(new BigDecimal(config.getGrandRate())));
+                playerPromoteDetail.setGrandAmount(fee.multiply(new BigDecimal(config.getGrandRate())));
             }
         }
         PlayerPromoteDetailDao.getInstance().insert(playerPromoteDetail.getParameterMap());
