@@ -20,8 +20,8 @@ public class PlayerRewardHistoryDao {
         JdbcOrm.getInstance().insert("player_reward_history", params);
     }
 
-    public List<PlayerRewardHistory> findBySourceAndPlayerId(int rewardSource, long playerId) {
-        String sql = "select * from player_reward_history where rewardSource = " + rewardSource + " and playerId = " + playerId + ";";
+    public List<PlayerRewardHistory> findBySourceAndPlayerId(long playerId) {
+        String sql = "select * from player_reward_history where playerId = " + playerId + ";";
         return JdbcOrm.getInstance().getListBean(sql, PlayerRewardHistory.class);
     }
 

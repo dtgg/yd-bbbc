@@ -69,7 +69,7 @@ public class PlayerPromoteDao {
         return (Total) JdbcOrm.getInstance().getBean(sql, Total.class);
     }
 
-    private static final String UPDATE_BONUS_AMOUNT = "update player_promote set bonusAmount = bonusAmount + ? where playerId = ? and bonusAmount > 0;";
+    private static final String UPDATE_BONUS_AMOUNT = "update player_promote set bonusAmount = bonusAmount + ? where playerId = ? and bonusAmount >= 0;";
     public int updateBonusAmount(Object[] params) {
         return JdbcOrm.getInstance().updateRowByArray(UPDATE_BONUS_AMOUNT, params);
     }

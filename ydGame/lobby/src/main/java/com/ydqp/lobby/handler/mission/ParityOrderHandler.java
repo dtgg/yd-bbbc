@@ -55,7 +55,7 @@ public class ParityOrderHandler implements IServerHandler {
         Total totalLv2 = PlayerPromoteDao.getInstance().sumBonus(playerData.getPlayerId(), 2);
         suc.setBonusLv1(totalLv1.getSum());
         suc.setBonusLv2(totalLv2.getSum());
-        suc.setPlayerZJ(totalLv1.getSum() + totalLv2.getSum());
+        suc.setPlayerZJ(playerPromote.getBonusAmount().doubleValue());
 
         iSession.sendMessageByID(suc, parityOrder.getConnId());
     }

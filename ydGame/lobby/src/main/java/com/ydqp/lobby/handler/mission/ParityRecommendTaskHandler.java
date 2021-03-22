@@ -46,7 +46,7 @@ public class ParityRecommendTaskHandler implements IServerHandler {
         if (CollectionUtils.isNotEmpty(configs))
             taskConfigDataList = configs.stream().map(TaskConfigData::new).collect(Collectors.toList());
 
-        List<PlayerRewardHistory> rewardHistories = PlayerRewardHistoryDao.getInstance().findBySourceAndPlayerId(3, playerData.getPlayerId());
+        List<PlayerRewardHistory> rewardHistories = PlayerRewardHistoryDao.getInstance().findBySourceAndPlayerId(playerData.getPlayerId());
         List<Integer> taskIds = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(rewardHistories))
             taskIds = rewardHistories.stream().map(PlayerRewardHistory::getTaskId).collect(Collectors.toList());
