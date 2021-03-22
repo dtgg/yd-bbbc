@@ -71,4 +71,9 @@ public class PlayerLotteryDao {
         String sql = "select * from player_lottery where status = 0 and lotteryId in "+lotteryIdsStr+";";
         return JdbcOrm.getInstance().getListBean(sql, PlayerLottery.class);
     }
+
+    public List<PlayerLottery> findPlayerLotteries(String lotteryIdsStr, Long playerId) {
+        String sql = "select * from player_lottery where playerId = "+playerId+" and lotteryId in "+lotteryIdsStr+";";
+        return JdbcOrm.getInstance().getListBean(sql, PlayerLottery.class);
+    }
 }

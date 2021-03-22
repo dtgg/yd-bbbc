@@ -109,7 +109,7 @@ message LotteryDrawNumInfo {
 message LotteryDrawNum {
   repeated LotteryDrawNumInfo drawNumInfos = 1;
   repeated LotteryTypeInfo lotteryTypeInfos = 2;
-  int32 seed = 3;
+  repeated LotteryTypeListInfo lotteryTypeListInfos = 3;
 }
 
 message LotteryDrawNotificationSuc {

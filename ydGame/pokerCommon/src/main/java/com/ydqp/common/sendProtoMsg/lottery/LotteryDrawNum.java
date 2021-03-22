@@ -23,10 +23,10 @@ public class LotteryDrawNum extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.OBJECT, order = 2)
     private List<LotteryTypeInfo> lotteryTypeInfos;
-    @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 3)
-    private int seed;
+    @Getter
+    @Protobuf(fieldType = FieldType.OBJECT, order = 3)
+    private List<LotteryTypeListInfo> lotteryTypeListInfos;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
