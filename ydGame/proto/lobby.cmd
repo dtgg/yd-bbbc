@@ -19,6 +19,8 @@ C->s
 
 #获取公告
 1000080 = GetAnnouncement
+#获取客服配置
+1000082 = GetServiceConfig
 
 #客户端进入房间前，判断是否可以进入房间
 1000800 = CheckEnterRoom
@@ -46,6 +48,8 @@ s->c
 
 #获取公告
 1000081 = SAnnouncement
+#获取客服配置
+1000083 = SServiceConfig
 
 #客户端进入房间前，判断是否可以进入房间
 1000801 = CheckEnterRoomSuc

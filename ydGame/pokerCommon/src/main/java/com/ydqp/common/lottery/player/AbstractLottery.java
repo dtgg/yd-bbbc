@@ -221,7 +221,7 @@ public abstract class AbstractLottery implements ILottery {
             return randomDrawNum(numList);
         }
 
-        if (config.getEnabled() == 1 || (sum.intValue() > config.getBalance()) || period % config.getFrequency() != 0) {
+        if (config.getEnabled() == 1 || (sum.intValue() > config.getBalance()) || period % config.getFrequency() == 0) {
             String[] range = config.getDrawRange().split("-");
             numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
         }

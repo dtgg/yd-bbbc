@@ -222,3 +222,12 @@ message CheckEnterRoom {
 message CheckEnterRoomSuc {
   int32 code = 1;
 }
+
+message GetServiceConfig {
+  int64 playerId = 1;
+}
+
+message SServiceConfig {
+  string telegram = 1;
+  string whatsapp = 2;
+}

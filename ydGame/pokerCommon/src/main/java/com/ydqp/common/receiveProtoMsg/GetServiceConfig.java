@@ -1,0 +1,33 @@
+package com.ydqp.common.receiveProtoMsg;
+
+import com.baidu.bjf.remoting.protobuf.Codec;
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
+import com.cfq.annotation.GenProto;
+import com.cfq.annotation.ReceiveCommandAnnotation;
+import com.cfq.message.AbstartParaseMessage;
+import com.cfq.message.NetProtoMessage;
+import lombok.Getter;
+import lombok.Setter;
+
+@ReceiveCommandAnnotation(command = 1000082)
+@GenProto(modulePro = "lobby")
+public class GetServiceConfig extends AbstartParaseMessage {
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT64, order = 1)
+    private long playerId;
+
+    @Override
+    public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
+        byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
+
+        Codec<GetServiceConfig> getServiceConfigCodec = ProtobufProxy.create(GetServiceConfig.class);
+        GetServiceConfig getServiceConfig = getServiceConfigCodec.decode(body);
+
+        //setPlayerId(getGameVersion.getPlayerId());
+        return getServiceConfig;
+    }
+}

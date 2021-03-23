@@ -117,7 +117,7 @@ public class PlayerService {
         loginSuccess.setPlayerName(playerData.getPlayerName());
         loginSuccess.setPlayerNickName(playerData.getNickName());
         loginSuccess.setPlayerZJPoint(playerData.getZjPoint());
-        loginSuccess.setRoomId(0);
+        loginSuccess.setRoomId(player.getRoomId());
         loginSuccess.setPlayerUrl(playerData.getHeadUrl());
 
         //获取开关游戏

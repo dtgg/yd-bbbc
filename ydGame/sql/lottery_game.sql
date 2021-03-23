@@ -479,3 +479,11 @@ CREATE TABLE `game_announcement` (
   `createTime` varchar(10) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- 客服配置
+CREATE TABLE `service_config` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `appId` int(10) DEFAULT NULL,
+  `telegram` varchar(256) DEFAULT NULL,
+  `whatsapp` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

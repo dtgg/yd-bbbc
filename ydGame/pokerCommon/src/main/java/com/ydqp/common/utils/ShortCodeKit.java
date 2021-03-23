@@ -121,7 +121,7 @@ public class ShortCodeKit {
 
     public static void main(String[] args) {
         //转码测试
-        Long id = permutedId(10230L);
+        Long id = permutedId(50565564L);
         Long oid = permutedId(id);
         System.out.println(id);
         System.out.println(oid);
