@@ -479,3 +479,39 @@ CREATE TABLE `game_announcement` (
   `createTime` varchar(10) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+--
+CREATE TABLE `agent_quota` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `appId` varchar(255) NOT NULL,
+   `maxQuota` float NOT NULL DEFAULT 0,
+   `availableQuota` float NOT NULL DEFAULT 0,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `agent_withdraw` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `amount` float(15,2) NOT NULL,
+  `appId` varchar(10) NOT NULL,
+  `createTime` int(11) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+alter table lottery add index `st_index` (`status`,`type`);
+alter table pay_success_deal add index `deal_idx` (`isDeal`);
+alter table player_account add index `pi_idx` (`playerId`);
+alter table player_account add index `ac_idx` (`accNo`);
+alter table player_bonus_draw add index `pi_idx` (`playerId`);
+alter table player_lottery add index `lt_idx` (`lotteryId`);
+alter table player_lottery add index `status_idx` (`status`);
+alter table player_lottery add index `pi_idx` (`playerId`);
+alter table player_order add index `pi_idx` (`playerId`);
+alter table player_order add index `status_idx` (`status`);
+alter table player_promote_detail add index `playerId_index` (`playerId`);
+alter table player_reward_history add index `pi_idx` (`playerId`);
+alter table player_reward_history add index `ti_idx` (`taskId`);
+alter table player_withdrawal add index `pi_idx` (`playerId`);
+alter table player_withdrawal add index `status_idx` (`status`);
