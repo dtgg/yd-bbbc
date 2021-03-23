@@ -36,7 +36,7 @@ public class Pay777 extends OrderPay {
         params.put("amount", amount);
         params.put("notifyurl", config.getPaymentNotifyUrl());
 //        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/777pay/notify");
-        params.put("returnurl", "https://nrly.paysempbf.com/api/pay/success");
+        params.put("returnurl", "about:blank");
 
         String signStr = config.getSecretKey() + order.getOrderId() + amount;
         logger.info("signStr:{}", signStr);
