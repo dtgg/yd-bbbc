@@ -111,3 +111,19 @@ message PlayerAccountResetPasswordSuc {
   bool success = 1;
   string message = 2;
 }
+
+message RechargeData {
+  string orderNumber = 1;
+  double amount = 2;
+  string orderTime = 3;
+  int32 status = 4;                       //订单状态: 0(处理中), 1(成功), 2(失败)
+}
+message RechargeList {
+  int64 playerId = 1;
+  int32 page = 2;
+  int32 limit = 3;
+}
+message RechargeListSuccess {
+  repeated RechargeData rechargeData = 1;
+  bool success = 2;
+}

@@ -42,7 +42,7 @@ public class UuPay extends OrderPay {
         params.put("email", RandomValueUtil.getEmail(8,10));
         params.put("phone", RandomValueUtil.getTelephone());
         params.put("remark", "Recharge");
-        params.put("redirect_url", "http://whw.ngrok2.xiaomiqiu.cn/api/uupay/notify");
+        params.put("redirect_url", config.getPaymentNotifyUrl());
 //        params.put("redirect_url", "https://nrly.paysempbf.com/api/pay/success");
         Map<String, String> map = new HashMap<>();
         params.forEach((k, v) -> {map.put(k, String.valueOf(v));});
