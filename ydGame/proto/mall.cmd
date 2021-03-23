@@ -7,7 +7,7 @@ c->s
 1004006 = WithdrawalList                    //提现记录
 1004007 = PlayerAccountUpdate               //更新账户信息
 1004008 = PlayerAccountResetPassword        //充值密码
-
+1004009 = RechargeList
 
 
 
@@ -20,3 +20,4 @@ s->c
 1004106 = WithdrawalListSuccess
 1004107 = PlayerAccountUpdateSuccess
 1004108 = PlayerAccountResetPasswordSuc
+1004109 = RechargeListSuccess
