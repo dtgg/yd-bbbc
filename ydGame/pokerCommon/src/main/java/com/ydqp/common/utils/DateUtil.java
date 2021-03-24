@@ -38,4 +38,16 @@ public class DateUtil {
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(timestamp.toInstant(), ZoneId.of("+05:30"));
         return dateTimeFormatter.format(zonedDateTime);
     }
+
+    public static void main(String[] args) {
+//        String time = "2020-03-24 09:28:00";
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        ZonedDateTime ydTime = LocalDateTime.parse(time, formatter).atZone(ZoneId.of("+05:30"));
+
+        ZonedDateTime ydTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("+05:30"));
+        if (ydTime.getHour() >= 0 && ydTime.getHour() < 9 || ydTime.getHour() == 9 && ydTime.getMinute() < 30) {
+            System.out.println(ydTime.getHour());
+            System.out.println(ydTime.getMinute());
+        }
+    }
 }

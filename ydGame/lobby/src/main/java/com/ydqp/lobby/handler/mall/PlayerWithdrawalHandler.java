@@ -28,6 +28,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +48,16 @@ public class PlayerWithdrawalHandler implements IServerHandler {
         logger.info("Player withdrawal request: {}", JSONObject.toJSONString(abstartParaseMessage));
         PlayerWithdrawal withdrawals = (PlayerWithdrawal) abstartParaseMessage;
         PlayerWithdrawalSuccess withdrawalSuccess = new PlayerWithdrawalSuccess();
+
+        ZonedDateTime ydTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("+05:30"));
+        logger.info("当前提现时间：{}:{}", ydTime.getHour(), ydTime.getMinute());
+        if ((ydTime.getHour() >= 0 && ydTime.getHour() < 9) || (ydTime.getHour() == 9 && ydTime.getMinute() < 30)) {
+            withdrawalSuccess.setSuccess(false);
+            withdrawalSuccess.setMessage("Withdrawal time: 9:30 to 24:00!");// on working days
+            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+            logger.error("提现失败，未到提现时间，playerId：{}, time:{}", withdrawals.getPlayerId(), ydTime.getHour());
+            return;
+        }
 
         if (StringUtils.isBlank(withdrawals.getPassword())) {
             withdrawalSuccess.setSuccess(false);
