@@ -529,4 +529,4 @@ alter table player_withdrawal add index `status_idx` (`status`);
 --
 ALTER TABLE lottery_config ADD COLUMN probability int(10) DEFAULT 0;
 ALTER TABLE player ADD COLUMN isVir int(10) DEFAULT 1;
-ALTER TABLE player_lottery ADD COLUMN isVir int(10) DEFAULT 1;
+ALTER TABLE player_lottery ADD COLUMN isVir int(10) DEFAULT 0;

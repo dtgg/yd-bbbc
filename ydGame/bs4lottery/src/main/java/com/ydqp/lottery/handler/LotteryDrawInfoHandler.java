@@ -1,5 +1,6 @@
 package com.ydqp.lottery.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
 import com.cfq.handler.IServerHandler;
@@ -40,16 +41,19 @@ public class LotteryDrawInfoHandler implements IServerHandler {
 
         Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryDrawInfo.getType());
         LotteryDrawNum lotteryDrawNum = LotteryCache.getInstance().getDrawInfo(LotteryCache.DRAW_INFO_KEY + roomId);
+        logger.info(JSON.toJSONString(lotteryDrawNum));
         if (lotteryDrawNum == null) {
             logger.info("客户端请求开奖数据为空，playerId:{}", playerData.getPlayerId());
             return;
         }
 
-        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
         //判断时间
-        Lottery nowLottery = LotteryDao.getInstance().getNowLottery(nowTime);
-        if (nowLottery == null) {
-            logger.info("未到开奖时间，playerId:{}", playerData.getPlayerId());
+        int lotteryId = lotteryDrawNum.getDrawNumInfos().get(0).getLotteryId();
+        Lottery lottery = LotteryDao.getInstance().findById(lotteryId);
+
+        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+        if (lottery.getOpenTime() - nowTime > 2) {
+            logger.info("未到开奖时间，playerId:{}, nowTime:{}", playerData.getPlayerId(), nowTime);
             return;
         }
 
