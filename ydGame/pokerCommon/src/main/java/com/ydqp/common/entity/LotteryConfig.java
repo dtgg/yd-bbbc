@@ -21,6 +21,7 @@ public class LotteryConfig implements Serializable {
 	public static final String ENABLED_NAME = "enabled";
 	public static final String BALANCE_NAME = "balance";
 	public static final String FREQUENCY_NAME = "frequency";
+	public static final String PROBABILITY_NAME = "probability";
 
 
     	private int id;
@@ -87,10 +88,16 @@ public class LotteryConfig implements Serializable {
 	 this.frequency = frequency;
 	 entityMap.put(FREQUENCY_NAME, frequency);
 	}
+	private int probability;
+	public int getProbability() {
+		return probability;
+	}
+	public void setProbability(int probability) {
+		this.probability = probability;
+		entityMap.put(PROBABILITY_NAME, probability);
+	}
 
-
-
-    public Object getValueByFieldName(String fieldName) {
+	public Object getValueByFieldName(String fieldName) {
         return this.entityMap.get(fieldName);
     }
 

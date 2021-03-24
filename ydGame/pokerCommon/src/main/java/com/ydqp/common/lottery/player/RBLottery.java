@@ -34,8 +34,13 @@ public class RBLottery extends AbstractLottery {
 
         LotteryConfig config = ManageLottery.getInstance().getConfig(lottery.getType());
 
+        //下注总金额
+        BigDecimal amount = BigDecimal.ONE;
+        for (PlayerLottery playerLottery : playerLotteries) {
+            amount = amount.add(playerLottery.getPay());
+        }
         //判断开奖数字
-        Integer drawNum = getDrawNum(numList, config, drawNumMap, lottery.getPeriod());
+        Integer drawNum = getDrawNum(numList, config, amount, lottery.getPeriod());
 
         String period = DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod());
         logger.info("{}期开奖{}号码为：{}", period, lottery.getType(), drawNum);

@@ -211,21 +211,30 @@ public abstract class AbstractLottery implements ILottery {
                 .collect(Collectors.toList());
     }
 
-    public Integer getDrawNum(List<Integer> numList, LotteryConfig config, Map<Integer, BigDecimal> drawNumMap, int period) {
-        //下注总金额
-        BigDecimal sum = BigDecimal.ZERO;
-        for (Map.Entry<Integer, BigDecimal> entry : drawNumMap.entrySet()) {
-            sum = sum.add(entry.getValue());
-        }
+    public Integer getDrawNum(List<Integer> numList, LotteryConfig config, BigDecimal sum, int period) {
         if (sum.compareTo(BigDecimal.ZERO) == 0) {
             return randomDrawNum(numList);
         }
 
-        if (config.getEnabled() == 1 || (sum.intValue() > config.getBalance()) || period % config.getFrequency() == 0) {
-            String[] range = config.getDrawRange().split("-");
+        Random random = new Random();
+        int nextInt = random.nextInt(10);
+
+        String[] range = config.getDrawRange().split("-");
+        if (config.getEnabled() == 1) {
+            logger.info("enabled开启");
+            numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+        } else if (sum.intValue() > config.getBalance()) {
+            logger.info("达到指定阈值");
+            numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+        } else if (nextInt < config.getProbability()) {
+            logger.info("达到指定概率");
+            numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+        } else if (period % config.getFrequency() == 0) {
+            logger.info("达到指定频率");
             numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
         }
 
+        logger.info("随机开奖, 期号：{}", period);
         return randomDrawNum(numList);
     }
 

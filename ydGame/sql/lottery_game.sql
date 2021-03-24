@@ -526,3 +526,6 @@ alter table player_reward_history add index `ti_idx` (`taskId`);
 alter table player_withdrawal add index `pi_idx` (`playerId`);
 alter table player_withdrawal add index `status_idx` (`status`);
 
+--
+ALTER TABLE lottery_config ADD COLUMN probability int(10) DEFAULT 0;
+
