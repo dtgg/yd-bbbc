@@ -1,3 +1,3 @@
 #!/bin/bash
-redis-cli  -h r-a2d1b79d2uu0078flb.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 keys lottery:playerDataByConnId:* | xargs redis-cli -h r-a2d1b79d2uu0078flb.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 del
-redis-cli  -h r-a2d1b79d2uu0078flb.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 keys lottery:playerDataByPlayerId:* | xargs redis-cli -h r-a2d1b79d2uu0078flb.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 del
+redis-cli  -h r-a2dhzn68dk5sqefuhu.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 keys lottery:playerDataByConnId:* | xargs redis-cli -h r-a2dhzn68dk5sqefuhu.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 del
+redis-cli  -h r-a2dhzn68dk5sqefuhu.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 keys lottery:playerDataByPlayerId:* | xargs redis-cli -h r-a2dhzn68dk5sqefuhu.redis.ap-south-1.rds.aliyuncs.com -a Game666@@ -p 6379 del
