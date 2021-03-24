@@ -82,7 +82,7 @@ public class LotteryDao {
     }
 
     public Lottery findNowLottery() {
-        String sql = "select * from lottery where type = 1 and (status = 1 or status = 2) order by createTime desc limit 1;";
+        String sql = "select * from lottery where type = 1 and status != 0 order by createTime desc limit 1;";
         return (Lottery) JdbcOrm.getInstance().getBean(sql, Lottery.class);
     }
 
@@ -99,5 +99,10 @@ public class LotteryDao {
     public List<Map<String, Object>> getHotNum() {
         String sql = "SELECT type, number, COUNT(number) AS count FROM lottery WHERE number IS NOT NULL GROUP BY type,number ORDER BY count desc;";
         return JdbcOrm.getInstance().getListBean(sql, List.class);
+    }
+
+    public Lottery getNowLottery(int nowTime) {
+        String sql = "select * from lottery where type = 1 and createTime < "+nowTime+" and openTime > "+nowTime+";";
+        return (Lottery) JdbcOrm.getInstance().getBean(sql, Lottery.class);
     }
 }

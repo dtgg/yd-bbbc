@@ -111,6 +111,13 @@ public class PlayerWithdrawalHandler implements IServerHandler {
         }
 
         Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerData.getPlayerId()));
+        if (player.getIsVir() == 1 || player.getOrderAmount() == 0) {
+            withdrawalSuccess.setSuccess(false);
+            withdrawalSuccess.setMessage("Insufficient account balance");
+            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+            logger.error("提现失败，账户余额不足，playerId：{}，amount:{}, balance:{}", player.getId(), amount, player.getZjPoint());
+            return;
+        }
         if (player.getZjPoint() < amount) {
             withdrawalSuccess.setSuccess(false);
             withdrawalSuccess.setMessage("Insufficient account balance");

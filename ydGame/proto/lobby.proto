@@ -22,6 +22,8 @@ message LoginSuccess {
 // 用户id
  int64 playerId=6;
  string openGames=7;
+ //是否虚拟号
+ int32 isVir=8;
 }
 
 message LobbyError {

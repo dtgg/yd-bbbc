@@ -36,9 +36,13 @@ public class RBLottery extends AbstractLottery {
 
         //下注总金额
         BigDecimal amount = BigDecimal.ONE;
-        for (PlayerLottery playerLottery : playerLotteries) {
-            amount = amount.add(playerLottery.getPay());
+        if (CollectionUtils.isNotEmpty(playerLotteries)) {
+            for (PlayerLottery playerLottery : playerLotteries) {
+                if (playerLottery.getIsVir() == 1) continue;
+                amount = amount.add(playerLottery.getPay());
+            }
         }
+
         //判断开奖数字
         Integer drawNum = getDrawNum(numList, config, amount, lottery.getPeriod());
 

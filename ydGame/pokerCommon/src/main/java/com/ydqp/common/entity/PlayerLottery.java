@@ -29,6 +29,7 @@ public class PlayerLottery implements Serializable {
 	public static final String RESULT_NAME = "result";
 	public static final String APPID_NAME = "appId";
 	public static final String KFID_NAME = "kfId";
+	public static final String ISVIR_NAME = "isVir";
 
 
 
@@ -159,6 +160,14 @@ public class PlayerLottery implements Serializable {
 	public void setKfId(long kfId) {
 		this.kfId = kfId;
 		entityMap.put(KFID_NAME, kfId);
+	}
+	private int isVir;
+	public int getIsVir() {
+		return isVir;
+	}
+	public void setIsVir(int isVir) {
+		this.isVir = isVir;
+		entityMap.put(ISVIR_NAME, isVir);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

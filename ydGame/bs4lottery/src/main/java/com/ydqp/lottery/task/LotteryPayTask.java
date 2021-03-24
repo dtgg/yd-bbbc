@@ -75,7 +75,7 @@ public class LotteryPayTask implements Runnable {
         //更新lottery集合
         List<Object[]> updateLotteryList = new ArrayList<>();
         //开奖通知的map
-        Map<Long, LotteryDrawNotificationSuc> notificationMap = new HashMap<>();
+//        Map<Long, LotteryDrawNotificationSuc> notificationMap = new HashMap<>();
         //更新用户的集合
         Map<Long, BigDecimal> updatePlayerMap = new HashMap<>();
         //更新缓存的集合
@@ -99,7 +99,7 @@ public class LotteryPayTask implements Runnable {
                     LotteryDrawNotificationSuc suc = new LotteryDrawNotificationSuc();
                     suc.setPlayerId(playerLottery.getPlayerId());
                     suc.setWin(playerLottery.getStatus() == 1);
-                    notificationMap.put(playerId, suc);
+//                    notificationMap.put(playerId, suc);
                     //是否是本期
                     if (nowLottery.getCreateTime() == lottery.getCreateTime()) {
                         if (playerNotificationMap.get(playerId) == null) {
@@ -188,29 +188,29 @@ public class LotteryPayTask implements Runnable {
             logger.warn("redis更新慢日志，执行时间：{}", rdUpdateEndTime - rdUpdateStartTime);
         }
 
-        notificationMap.forEach((id, lotteryDrawNotificationSuc) -> {
-            playerNotificationMap.forEach((playerId, map) -> {
-                if (id.equals(playerId)) {
-                    List<LotteryTypeListInfo> infos = new ArrayList<>();
-                    map.forEach((key, value) -> {
-                        LotteryTypeListInfo info = new LotteryTypeListInfo();
-                        info.setType(key);
-                        info.setPlayerLotteryInfos(value);
-                        infos.add(info);
-                    });
-                    lotteryDrawNotificationSuc.setLotteryTypeListInfos(infos);
-                }
-            });
-        });
+//        notificationMap.forEach((id, lotteryDrawNotificationSuc) -> {
+//            playerNotificationMap.forEach((playerId, map) -> {
+//                if (id.equals(playerId)) {
+//                    List<LotteryTypeListInfo> infos = new ArrayList<>();
+//                    map.forEach((key, value) -> {
+//                        LotteryTypeListInfo info = new LotteryTypeListInfo();
+//                        info.setType(key);
+//                        info.setPlayerLotteryInfos(value);
+//                        infos.add(info);
+//                    });
+//                    lotteryDrawNotificationSuc.setLotteryTypeListInfos(infos);
+//                }
+//            });
+//        });
 
         //通知客户端
         ILottery iLottery = ManageLottery.getInstance().getLotteryByRoomIdAndType(5000001, 1);
         ManageLottery.getLotteryBattleRoleMap().forEach((connId, role) -> {
-            notificationMap.forEach((playerId, lotteryDrawNotificationSuc) -> {
-                if (playerId.equals(role.getPlayerId())) {
-                    iLottery.sendMessageToBattle(lotteryDrawNotificationSuc, role);
-                }
-            });
+//            notificationMap.forEach((playerId, lotteryDrawNotificationSuc) -> {
+//                if (playerId.equals(role.getPlayerId())) {
+//                    iLottery.sendMessageToBattle(lotteryDrawNotificationSuc, role);
+//                }
+//            });
 
             if (coinPointSuccessMap.get(role.getConnId()) != null) {
                 iLottery.sendMessageToBattle(coinPointSuccessMap.get(role.getConnId()), role);

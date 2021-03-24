@@ -48,6 +48,10 @@ public class LoginSuccess extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.STRING, order = 7, description = "开启的游戏")
     private String openGames;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32, order = 8, description = "是否模拟号")
+    private int isVir;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

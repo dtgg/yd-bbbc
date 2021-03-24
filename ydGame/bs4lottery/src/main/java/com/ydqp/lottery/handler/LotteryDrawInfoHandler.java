@@ -41,17 +41,15 @@ public class LotteryDrawInfoHandler implements IServerHandler {
         Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryDrawInfo.getType());
         LotteryDrawNum lotteryDrawNum = LotteryCache.getInstance().getDrawInfo(LotteryCache.DRAW_INFO_KEY + roomId);
         if (lotteryDrawNum == null) {
-            logger.info("客户端请求开奖数据为空");
+            logger.info("客户端请求开奖数据为空，playerId:{}", playerData.getPlayerId());
             return;
         }
 
-        //判断时间
-        int lotteryId = lotteryDrawNum.getDrawNumInfos().get(0).getLotteryId();
-        Lottery lottery = LotteryDao.getInstance().findById(lotteryId);
-
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
-        if (lottery.getOpenTime() - nowTime > 2) {
-            logger.info("未到开奖时间");
+        //判断时间
+        Lottery nowLottery = LotteryDao.getInstance().getNowLottery(nowTime);
+        if (nowLottery == null) {
+            logger.info("未到开奖时间，playerId:{}", playerData.getPlayerId());
             return;
         }
 
@@ -60,7 +58,7 @@ public class LotteryDrawInfoHandler implements IServerHandler {
         List<PlayerLottery> playerLotteries = PlayerLotteryDao.getInstance().findPlayerLotteries(CommonUtils.inString(collect), playerData.getPlayerId());
 
         if (CollectionUtils.isEmpty(playerLotteries)) {
-            logger.info("未购买彩票");
+            logger.info("未购买彩票，playerId:{}", playerData.getPlayerId());
             lotteryDrawNum.setLotteryTypeListInfos(new ArrayList<>());
             iSession.sendMessageByID(lotteryDrawNum, abstartParaseMessage.getConnId());
             return;
@@ -82,5 +80,11 @@ public class LotteryDrawInfoHandler implements IServerHandler {
 
         lotteryDrawNum.setLotteryTypeListInfos(lotteryTypeListInfos);
         iSession.sendMessageByID(lotteryDrawNum, abstartParaseMessage.getConnId());
+    }
+
+    public static void main(String[] args) {
+        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+        Lottery nowLottery = LotteryDao.getInstance().getNowLottery(nowTime);
+        System.out.println(nowLottery);
     }
 }

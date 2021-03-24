@@ -119,6 +119,7 @@ public class PlayerService {
         loginSuccess.setPlayerZJPoint(playerData.getZjPoint());
         loginSuccess.setRoomId(player.getRoomId());
         loginSuccess.setPlayerUrl(playerData.getHeadUrl());
+        loginSuccess.setIsVir(player.getIsVir());
 
         //获取开关游戏
         String serverCodes = getGameSwitch();
@@ -228,10 +229,12 @@ public class PlayerService {
         player.setNickname(nickname);
         player.setHeadUrl(GuestRegisterConstant.HEAD_URL);
         player.setRoomId(GuestRegisterConstant.ROOM_ID);
-        player.setZjPoint(0);
+        player.setZjPoint(5000);
         player.setCreateTime(createTime);
         player.setAppId(appId);
         player.setKfId(kfId);
+        player.setIsVir(1);
+
 
         long playerId = PlayerLoginDao.getInstance().insertPlayer(player.getParameterMap());
         //referral code
