@@ -130,8 +130,8 @@ public class PlayerService {
         PlayerLoginDao.getInstance().updateOnLineTime(playerData.getPlayerId(), 0);
     }
 
-    public Player queryByCondition(String queryCondition) {
-        return PlayerLoginDao.getInstance().queryByCondition(queryCondition);
+    public Player queryByPlayerId(Long playerId) {
+        return PlayerLoginDao.getInstance().queryByCondition(playerId);
     }
 
     public List<Player> findAllByIds(Set<String> playIds) {
@@ -207,7 +207,7 @@ public class PlayerService {
         if (StringUtils.isNotBlank(mobileRegister.getReferralCode())) {
             String s = ShortCodeKit.convertBase62ToDecimal(mobileRegister.getReferralCode());
             Long permutedId = ShortCodeKit.permutedId(Long.parseLong(s));
-            Player referralPlayer = PlayerService.getInstance().queryByCondition(String.valueOf(permutedId));
+            Player referralPlayer = PlayerService.getInstance().queryByPlayerId(permutedId);
             if (referralPlayer == null) {
                 suc.setSuccess(false);
                 suc.setMessage("Referral code does not exist");

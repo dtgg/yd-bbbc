@@ -1,6 +1,5 @@
 package com.ydqp.lottery.handler;
 
-import com.alibaba.fastjson.JSON;
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
 import com.cfq.handler.IServerHandler;
@@ -15,16 +14,15 @@ import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.entity.PlayerLottery;
 import com.ydqp.common.lottery.player.ManageLotteryRoom;
 import com.ydqp.common.receiveProtoMsg.lottery.LotteryDrawInfo;
-import com.ydqp.common.sendProtoMsg.lottery.*;
+import com.ydqp.common.sendProtoMsg.lottery.LotteryDrawNum;
+import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeListInfo;
+import com.ydqp.common.sendProtoMsg.lottery.PlayerLotteryInfo;
 import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.lottery.Cache.LotteryCache;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @ServerHandler(module = "lottery", command = 5000008)
 public class LotteryDrawInfoHandler implements IServerHandler {
@@ -41,7 +39,6 @@ public class LotteryDrawInfoHandler implements IServerHandler {
 
         Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryDrawInfo.getType());
         LotteryDrawNum lotteryDrawNum = LotteryCache.getInstance().getDrawInfo(LotteryCache.DRAW_INFO_KEY + roomId);
-        logger.info(JSON.toJSONString(lotteryDrawNum));
         if (lotteryDrawNum == null) {
             logger.info("客户端请求开奖数据为空，playerId:{}", playerData.getPlayerId());
             return;
@@ -50,11 +47,20 @@ public class LotteryDrawInfoHandler implements IServerHandler {
         //判断时间
         int lotteryId = lotteryDrawNum.getDrawNumInfos().get(0).getLotteryId();
         Lottery lottery = LotteryDao.getInstance().findById(lotteryId);
-
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
-        if (lottery.getOpenTime() - nowTime > 2) {
-            logger.info("未到开奖时间，playerId:{}, nowTime:{}", playerData.getPlayerId(), nowTime);
-            return;
+        Lottery currentLottery = LotteryDao.getInstance().findCurrentLottery("(1)", nowTime, 1).get(0);
+        if (currentLottery.getId() == lotteryId) {
+            //同一期
+            if (lottery.getOpenTime() - nowTime > 2) {
+                logger.info("未到开奖时间，playerId:{}, nowTime:{}, openTime:{}", playerData.getPlayerId(), nowTime, lottery.getOpenTime());
+                return;
+            }
+        } else {
+            //上一期
+            if (nowTime - lottery.getOpenTime() > 120) {
+                logger.info("已过开奖时间，playerId:{}, nowTime:{}, , openTime:{}", playerData.getPlayerId(), nowTime);
+                return;
+            }
         }
 
         List<Integer> collect = new ArrayList<>();
@@ -84,11 +90,5 @@ public class LotteryDrawInfoHandler implements IServerHandler {
 
         lotteryDrawNum.setLotteryTypeListInfos(lotteryTypeListInfos);
         iSession.sendMessageByID(lotteryDrawNum, abstartParaseMessage.getConnId());
-    }
-
-    public static void main(String[] args) {
-        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
-        Lottery nowLottery = LotteryDao.getInstance().getNowLottery(nowTime);
-        System.out.println(nowLottery);
     }
 }

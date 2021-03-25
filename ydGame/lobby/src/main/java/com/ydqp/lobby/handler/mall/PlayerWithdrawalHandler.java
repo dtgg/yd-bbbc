@@ -110,10 +110,10 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             return;
         }
 
-        Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerData.getPlayerId()));
+        Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
         if (player.getIsVir() == 1 || player.getOrderAmount() <= 0) {
             withdrawalSuccess.setSuccess(false);
-            withdrawalSuccess.setMessage("Virtual account cannot be withdrawn");
+            withdrawalSuccess.setMessage("Virtual account cannot be withdraw");
             iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
             logger.error("提现失败，虚拟账户无法提现，playerId：{}，amount:{}, balance:{}", player.getId(), amount, player.getZjPoint());
             return;
@@ -169,7 +169,7 @@ public class PlayerWithdrawalHandler implements IServerHandler {
         withdrawal.setKfId(player.getKfId());
 
         //二次校验
-        Player checkPlayer = PlayerService.getInstance().queryByCondition(String.valueOf(playerData.getPlayerId()));
+        Player checkPlayer = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
         if (checkPlayer.getZjPoint() < 0) {
             withdrawal.setStatus(2);
             withdrawal.setErrorMsg("Account amount is abnormal");

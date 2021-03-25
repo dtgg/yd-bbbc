@@ -34,10 +34,9 @@ public class PlayerLoginDao {
         return id;
     }
 
-    private static final String query_player = "select * from player where playerName = ";
-
-    public Player queryByCondition(String queryCondition) {
-        String sql = query_player + "'" + queryCondition + "' or id = '" + queryCondition + "'" + ";";
+    private static final String query_player = "select * from player where id = ";
+    public Player queryByCondition(Long playerId) {
+        String sql = query_player + playerId + ";";
         return (Player) JdbcOrm.getInstance().getBean(sql, Player.class);
     }
 

@@ -84,7 +84,7 @@ public class LotteryPayTask implements Runnable {
         Map<Long, CoinPointSuccess> coinPointSuccessMap = new HashMap<>();
 
         //本期lottery
-        Lottery nowLottery = LotteryDao.getInstance().findNowLottery();
+//        Lottery nowLottery = LotteryDao.getInstance().findNowLottery();
         //本期下注集合
         Map<Long, Map<Integer, List<PlayerLotteryInfo>>> playerNotificationMap = new HashMap<>();
         for (Lottery lottery : lotteries) {
@@ -95,31 +95,31 @@ public class LotteryPayTask implements Runnable {
                 if (playerLottery.getLotteryId() != lottery.getId()) continue;
                 long playerId = playerLottery.getPlayerId();
 
-                if (nowLottery.getPeriod() == lottery.getPeriod()) {
-                    LotteryDrawNotificationSuc suc = new LotteryDrawNotificationSuc();
-                    suc.setPlayerId(playerLottery.getPlayerId());
-                    suc.setWin(playerLottery.getStatus() == 1);
+//                if (nowLottery.getPeriod() == lottery.getPeriod()) {
+                LotteryDrawNotificationSuc suc = new LotteryDrawNotificationSuc();
+                suc.setPlayerId(playerLottery.getPlayerId());
+                suc.setWin(playerLottery.getStatus() == 1);
 //                    notificationMap.put(playerId, suc);
-                    //是否是本期
-                    if (nowLottery.getCreateTime() == lottery.getCreateTime()) {
-                        if (playerNotificationMap.get(playerId) == null) {
-                            List<PlayerLotteryInfo> list = new ArrayList<>();
-                            list.add(new PlayerLotteryInfo(playerLottery));
-                            playerNotificationMap.put(playerId, new HashMap<Integer, List<PlayerLotteryInfo>>() {{
-                                put(lottery.getType(), list);
-                            }});
-                        } else {
-                            List<PlayerLotteryInfo> playerLotteryInfo = playerNotificationMap.get(playerId).get(lottery.getType());
-                            if (playerLotteryInfo == null) {
-                                playerNotificationMap.get(playerId).put(lottery.getType(), new ArrayList<PlayerLotteryInfo>() {{
-                                    add(new PlayerLotteryInfo(playerLottery));
-                                }});
-                            } else {
-                                playerNotificationMap.get(playerId).get(lottery.getType()).add(new PlayerLotteryInfo(playerLottery));
-                            }
-                        }
+                //是否是本期
+//                    if (nowLottery.getCreateTime() == lottery.getCreateTime()) {
+                if (playerNotificationMap.get(playerId) == null) {
+                    List<PlayerLotteryInfo> list = new ArrayList<>();
+                    list.add(new PlayerLotteryInfo(playerLottery));
+                    playerNotificationMap.put(playerId, new HashMap<Integer, List<PlayerLotteryInfo>>() {{
+                        put(lottery.getType(), list);
+                    }});
+                } else {
+                    List<PlayerLotteryInfo> playerLotteryInfo = playerNotificationMap.get(playerId).get(lottery.getType());
+                    if (playerLotteryInfo == null) {
+                        playerNotificationMap.get(playerId).put(lottery.getType(), new ArrayList<PlayerLotteryInfo>() {{
+                            add(new PlayerLotteryInfo(playerLottery));
+                        }});
+                    } else {
+                        playerNotificationMap.get(playerId).get(lottery.getType()).add(new PlayerLotteryInfo(playerLottery));
                     }
                 }
+//                    }
+//                }
 
                 if (playerLottery.getStatus() == 1) {
                     BigDecimal award = playerLottery.getAward();

@@ -10,10 +10,12 @@ import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PlayerBonusDrawDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.PlayerBonusDraw;
 import com.ydqp.common.entity.PlayerPromote;
 import com.ydqp.common.receiveProtoMsg.mission.ParityBonusAmountDraw;
 import com.ydqp.common.sendProtoMsg.mission.ParityBonusAmountDrawSuc;
+import com.ydqp.lobby.service.PlayerService;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -42,6 +44,15 @@ public class ParityBonusAmountDrawHandler implements IServerHandler {
             logger.error("player is not ture");
             suc.setSuccess(false);
             suc.setMessage("player is not ture");
+            iSession.sendMessageByID(suc, abstartParaseMessage.getConnId());
+            return;
+        }
+
+        Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
+        if (player.getIsVir() == 1 || player.getOrderAmount() <= 0) {
+            logger.error("Virtual account cannot be collect");
+            suc.setSuccess(false);
+            suc.setMessage("Virtual account cannot be collect");
             iSession.sendMessageByID(suc, abstartParaseMessage.getConnId());
             return;
         }

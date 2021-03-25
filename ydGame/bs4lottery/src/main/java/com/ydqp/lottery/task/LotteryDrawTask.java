@@ -84,15 +84,16 @@ public class LotteryDrawTask implements Runnable {
                 List<PlayerLottery> playerLotteries = playerLotteriesMap.get(lottery.getId());
                 //计算开奖号码
                 //各个号码开奖金额
-//                Map<Integer, BigDecimal> drawNumMap = iLottery.settleAwardPrice(playerLotteries);
-                LotteryDrawData drawData = iLottery.lotteryDraw(lottery, playerLotteries);
+                LotteryDrawData drawData = new LotteryDrawData();
                 if (!StringUtils.isBlank(lottery.getNumber())) {
                     drawData.setDrawNum(lottery.getNumber());
+                } else {
+                    drawData = iLottery.lotteryDraw(lottery, playerLotteries);
                 }
                 //更新lottery数据，已计算
                 lottery.setNumber(drawData.getDrawNum());
                 lottery.setStatus(1);
-                lottery.setOpenTime(time + 10);
+                lottery.setOpenTime(lottery.getCreateTime() + 180);
                 lottery.setPrice(LotteryUtil.getPrice() + lottery.getPeriod());
 
                 int drawNum = Integer.parseInt(drawData.getDrawNum());
@@ -162,7 +163,7 @@ public class LotteryDrawTask implements Runnable {
         String rbTypes = CommonUtils.inString(rbRoomLotteryTypes);
 
         Map<Integer, List<LotteryTypeInfo>> lotteryTypeInfoMap = new HashMap<>(16);
-        List<Lottery> nextLotteries = LotteryDao.getInstance().findNextLottery(rbTypes, rbRoomLotteryTypes.size());
+        List<Lottery> nextLotteries = LotteryDao.getInstance().findNextLottery(rbTypes, time, rbRoomLotteryTypes.size());
         nextLotteries.forEach(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();
             info.setLotteryId(lottery.getId());

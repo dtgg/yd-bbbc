@@ -30,7 +30,8 @@ public class LotteryMaintainTask implements Runnable {
             int maintainTime = 0;
             if (StringUtils.isBlank(maintainTimeStr)) {
                 //下一期
-                List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery("(1)", 1);
+                int nowTime = new Long(System.currentTimeMillis() / 1000).intValue();
+                List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery("(1)", nowTime, 1);
                 if (CollectionUtils.isNotEmpty(lotteries)) {
                     maintainTime = lotteries.get(0).getCreateTime();
                     LotteryCache.getInstance().setMaintainTime(String.valueOf(maintainTime));

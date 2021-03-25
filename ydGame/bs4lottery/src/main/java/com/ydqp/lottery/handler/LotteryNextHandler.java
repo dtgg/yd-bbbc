@@ -40,7 +40,8 @@ public class LotteryNextHandler implements IServerHandler {
         Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryNext.getType());
         List<Integer> roomLotteryTypes = ManageLotteryRoom.getInstance().getType(roomId);
         String types = CommonUtils.inString(roomLotteryTypes);
-        List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery(types, roomLotteryTypes.size());
+        int nowTime = new Long(System.currentTimeMillis() / 1000).intValue();
+        List<Lottery> lotteries = LotteryDao.getInstance().findNextLottery(types, nowTime, roomLotteryTypes.size());
 
         List<LotteryTypeInfo> infos = lotteries.stream().map(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();

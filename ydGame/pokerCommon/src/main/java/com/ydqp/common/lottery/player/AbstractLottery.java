@@ -6,9 +6,11 @@ import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartCreateMessage;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PlayerDao;
+import com.ydqp.common.dao.lottery.DrawMethodDao;
 import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.dao.lottery.PlayerLotteryDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.DrawMethod;
 import com.ydqp.common.entity.Lottery;
 import com.ydqp.common.entity.LotteryConfig;
 import com.ydqp.common.entity.PlayerLottery;
@@ -78,9 +80,10 @@ public abstract class AbstractLottery implements ILottery {
         List<Integer> roomLotteryTypes = ManageLotteryRoom.getInstance().getType(this.roomId);
         String types = CommonUtils.inString(roomLotteryTypes);
         //不同彩种当前期数
-        List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery(types, roomLotteryTypes.size());
+        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+        List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery(types, nowTime, roomLotteryTypes.size());
         //不同彩种上一期
-        List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery(types, roomLotteryTypes.size());
+        List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery(types, nowTime, roomLotteryTypes.size());
         Map<Integer, Lottery> lastLotteryMap = lotteries.stream().collect(Collectors.toMap(Lottery::getType, Function.identity()));
         //玩家不同彩种购买过的最后一期
         List<PlayerLottery> newestPlayerLottery = PlayerLotteryDao.getInstance().findNewestLottery(playerData.getPlayerId());
@@ -133,9 +136,9 @@ public abstract class AbstractLottery implements ILottery {
             List<Integer> roomLotteryTypes = ManageLotteryRoom.getInstance().getType(this.roomId);
             String types = CommonUtils.inString(roomLotteryTypes);
             //不同彩种当前期数
-            List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery(types, roomLotteryTypes.size());
+            List<Lottery> newestLottery = LotteryDao.getInstance().findCurrentLottery(types, nowTime, roomLotteryTypes.size());
             //不同彩种上一期
-            List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery(types, roomLotteryTypes.size());
+            List<Lottery> lotteries = LotteryDao.getInstance().findLastLottery(types, nowTime, roomLotteryTypes.size());
             Map<Integer, Lottery> lastLotteryMap = lotteries.stream().collect(Collectors.toMap(Lottery::getType, Function.identity()));
             //玩家不同彩种购买过的最后一期
             List<PlayerLottery> newestPlayerLottery = PlayerLotteryDao.getInstance().findNewestLottery(nowTime);
@@ -211,30 +214,43 @@ public abstract class AbstractLottery implements ILottery {
                 .collect(Collectors.toList());
     }
 
-    public Integer getDrawNum(List<Integer> numList, LotteryConfig config, BigDecimal sum, int period) {
+    public Integer getDrawNum(List<Integer> numList, LotteryConfig config, BigDecimal sum, int period, int lotteryId) {
         if (sum.compareTo(BigDecimal.ZERO) == 0) {
+            logger.info("随机开奖, 期号：{}", period);
             return randomDrawNum(numList);
         }
 
         Random random = new Random();
         int nextInt = random.nextInt(10);
 
+        int method = 0;
         String[] range = config.getDrawRange().split("-");
         if (config.getEnabled() == 1) {
             logger.info("enabled开启");
             numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+            method = 1;
         } else if (sum.intValue() > config.getBalance()) {
             logger.info("达到指定阈值");
             numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+            method = 2;
         } else if (nextInt < config.getProbability()) {
             logger.info("达到指定概率");
             numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+            method = 3;
         } else if (period % config.getFrequency() == 0) {
             logger.info("达到指定频率");
             numList = numList.subList(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+            method = 4;
+        } else {
+            logger.info("随机开奖, 期号：{}", period);
         }
 
-        logger.info("随机开奖, 期号：{}", period);
+        DrawMethod drawMethod = new DrawMethod();
+        drawMethod.setMethod(method);
+        drawMethod.setLotteryId(lotteryId);
+        drawMethod.setCreateTime(new Long(System.currentTimeMillis() / 1000L).intValue());
+        DrawMethodDao.getInstance().insert(drawMethod.getParameterMap());
+
         return randomDrawNum(numList);
     }
 

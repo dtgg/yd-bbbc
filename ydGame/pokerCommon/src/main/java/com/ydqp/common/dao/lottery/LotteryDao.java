@@ -20,18 +20,25 @@ public class LotteryDao {
         return instance;
     }
 
-    public List<Lottery> findLastLottery(String types, int limit) {
-        String sql = "select * from lottery where status = 2 and type in " + types + " order by createTime desc limit " + limit + ";";
+    public List<Lottery> findLastLottery(String types, int nowTime, int limit) {
+//        String sql = "select * from lottery where status = 2 and type in " + types + " order by createTime desc limit " + limit + ";";
+        int time1 = nowTime - 180;
+        int time2 = nowTime - 360;
+        String sql = "select * from lottery where type in "+types+" and "+time1+" >= createTime and createTime > "+time2+" order by createTime asc limit "+limit+";";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 
-    public List<Lottery> findCurrentLottery(String types, int limit) {
-        String sql = "select * from lottery where status != 2 and type in " + types + " order by createTime asc limit " + limit + ";";
+    public List<Lottery> findCurrentLottery(String types, int nowTime, int limit) {
+//        String sql = "select * from lottery where status != 2 and type in " + types + " order by createTime asc limit " + limit + ";";
+        int time = nowTime - 180;
+        String sql = "select * from lottery where type in "+types+" and "+nowTime+" >= createTime and createTime > "+time+" order by createTime asc limit "+limit+";";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 
-    public List<Lottery> findNextLottery(String types, int limit) {
-        String sql = "select * from lottery where status = 0 and type in " + types + "order by createTime asc limit " + limit + ";";
+    public List<Lottery> findNextLottery(String types, int nowTime, int limit) {
+//        String sql = "select * from lottery where status = 0 and type in " + types + " order by createTime asc limit " + limit + ";";
+        int time = nowTime + 180;
+        String sql = "select * from lottery where type in "+types+" and "+time+" >= createTime and createTime > "+nowTime+" order by createTime asc limit "+limit+";";
         return JdbcOrm.getInstance().getListBean(sql, Lottery.class);
     }
 
@@ -82,7 +89,7 @@ public class LotteryDao {
     }
 
     public Lottery findNowLottery() {
-        String sql = "select * from lottery where type = 1 and status != 0 order by createTime desc limit 1;";
+        String sql = "select * from lottery where type = 1 and status = 1 order by createTime desc limit 1;";
         return (Lottery) JdbcOrm.getInstance().getBean(sql, Lottery.class);
     }
 
@@ -99,10 +106,5 @@ public class LotteryDao {
     public List<Map<String, Object>> getHotNum() {
         String sql = "SELECT type, number, COUNT(number) AS count FROM lottery WHERE number IS NOT NULL GROUP BY type,number ORDER BY count desc;";
         return JdbcOrm.getInstance().getListBean(sql, List.class);
-    }
-
-    public Lottery getNowLottery(int nowTime) {
-        String sql = "select * from lottery where type = 1 and createTime < "+nowTime+" and openTime > "+nowTime+";";
-        return (Lottery) JdbcOrm.getInstance().getBean(sql, Lottery.class);
     }
 }

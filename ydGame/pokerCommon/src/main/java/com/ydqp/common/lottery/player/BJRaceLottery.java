@@ -35,16 +35,16 @@ public class BJRaceLottery extends AbstractLottery {
         LotteryConfig config = ManageLottery.getInstance().getConfig(lottery.getType());
 
         //下注总金额
-        BigDecimal amount = BigDecimal.ONE;
+        BigDecimal amount = BigDecimal.ZERO;
         if (CollectionUtils.isNotEmpty(playerLotteries)) {
             for (PlayerLottery playerLottery : playerLotteries) {
                 if (playerLottery.getIsVir() == 1) continue;
                 amount = amount.add(playerLottery.getPay());
             }
         }
+        logger.info("下注总额：{}", amount);
         //判断开奖数字
-        Integer drawNum = getDrawNum(numList, config, amount, lottery.getPeriod());
-
+        Integer drawNum = getDrawNum(numList, config, amount, lottery.getPeriod(), lottery.getId());
 
         String period = DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod());
         logger.info("{}期开奖{}号码为：{}", period, lottery.getType(), drawNum);

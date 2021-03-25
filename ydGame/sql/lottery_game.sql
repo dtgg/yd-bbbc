@@ -530,3 +530,11 @@ alter table player_withdrawal add index `status_idx` (`status`);
 ALTER TABLE lottery_config ADD COLUMN probability int(10) DEFAULT 0;
 ALTER TABLE player ADD COLUMN isVir int(10) DEFAULT 1;
 ALTER TABLE player_lottery ADD COLUMN isVir int(10) DEFAULT 0;
+
+CREATE TABLE `draw_method` (
+   `id` int(10) NOT NULL AUTO_INCREMENT,
+   `lotteryId` int(10) NOT NULL,
+   `method` int(10) NOT NULL COMMENT '1:enabled;2:阈值;3:概率;4:频率',
+   `createTime` int(10) DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

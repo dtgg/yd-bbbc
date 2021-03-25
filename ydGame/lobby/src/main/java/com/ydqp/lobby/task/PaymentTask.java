@@ -11,6 +11,7 @@ import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.PaySuccessDeal;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
+import com.ydqp.common.sendProtoMsg.Refresh;
 import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.lobby.service.PlayerService;
 import org.apache.commons.collections.CollectionUtils;
@@ -47,7 +48,7 @@ public class PaymentTask implements Runnable {
                     PlayerData playerData = PlayerCache.getInstance().getPlayerByPlayerID(playerId);
                     //不在线
                     if (playerData == null || playerData.getPlayerId() == 0) {
-                        Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerId));
+                        Player player = PlayerService.getInstance().queryByPlayerId(playerId);
                         if (player == null) return;
 //                        PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
                         if (playerZjMap.get(playerId) == null) {
@@ -58,7 +59,7 @@ public class PaymentTask implements Runnable {
                     } else {
                         PlayerData playerData1 = PlayerCache.getInstance().getPlayer(playerData.getSessionId());
                         if (playerData1 == null || playerData1.getPlayerId() == 0) {
-                            Player player = PlayerService.getInstance().queryByCondition(String.valueOf(playerId));
+                            Player player = PlayerService.getInstance().queryByPlayerId(playerId);
                             if (player == null) return;
 //                            PlayerService.getInstance().updatePlayerZjPoint(point, playerId);
                             if (playerZjMap.get(playerId) == null) {
@@ -75,7 +76,8 @@ public class PaymentTask implements Runnable {
                                 playerZjMap.put(playerId, playerZjMap.get(playerId) + point);
                             }
 
-                            point = point + playerData1.getZjPoint();
+                            Player player = PlayerService.getInstance().queryByPlayerId(playerId);
+                            point = point + player.getZjPoint();
                             playerData1.setZjPoint(point);
                             PlayerCache.getInstance().addPlayer(sessionId, playerData1);
 
@@ -86,6 +88,12 @@ public class PaymentTask implements Runnable {
                             Map<Long, ISession> sessionMap = ManagerSession.getInstance().getSessionMap();
                             NettySession iSession = (NettySession) sessionMap.get(new ArrayList<>(sessionMap.keySet()).get(0));
                             iSession.sendMessageByID(coinPointSuccess, sessionId);
+
+                            if (paySuccessDeal.getPayType() == 1) {
+                                Refresh refresh = new Refresh();
+                                refresh.setType(1);
+                                iSession.sendMessageByID(refresh, sessionId);
+                            }
                         }
                     }
 

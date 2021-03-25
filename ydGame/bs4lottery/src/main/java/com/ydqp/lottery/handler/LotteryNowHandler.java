@@ -38,7 +38,8 @@ public class LotteryNowHandler implements IServerHandler {
         Integer roomId = ManageLotteryRoom.getInstance().getRoomId(lotteryNow.getType());
         List<Integer> roomLotteryTypes = ManageLotteryRoom.getInstance().getType(roomId);
         String types = CommonUtils.inString(roomLotteryTypes);
-        List<Lottery> lotteries = LotteryDao.getInstance().findCurrentLottery(types, roomLotteryTypes.size());
+        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+        List<Lottery> lotteries = LotteryDao.getInstance().findCurrentLottery(types, nowTime, roomLotteryTypes.size());
 
         List<LotteryTypeInfo> infos = lotteries.stream().map(lottery -> {
             LotteryTypeInfo info = new LotteryTypeInfo();

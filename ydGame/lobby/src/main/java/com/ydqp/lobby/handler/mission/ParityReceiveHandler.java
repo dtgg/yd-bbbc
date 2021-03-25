@@ -12,6 +12,7 @@ import com.ydqp.common.constant.TaskRewardSource;
 import com.ydqp.common.dao.PlayerRewardHistoryDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.PlayerPromote;
 import com.ydqp.common.entity.PlayerRewardHistory;
 import com.ydqp.common.entity.TaskConfig;
@@ -36,6 +37,15 @@ public class ParityReceiveHandler implements IServerHandler {
 
         ParityReceiveSuc suc = new ParityReceiveSuc();
 
+        Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
+        if (player.getIsVir() == 1 || player.getOrderAmount() <= 0) {
+            suc.setSuccess(false);
+            suc.setMessage("Virtual account cannot be receive");
+            iSession.sendMessageByID(suc, parityReceive.getConnId());
+            logger.error("Virtual account cannot be receive");
+            return;
+        }
+
         PlayerRewardHistory taskRewardHistory = PlayerRewardHistoryDao.getInstance().findByTaskIdAndPlayerId(parityReceive.getTaskId(), parityReceive.getPlayerId());
         if (taskRewardHistory != null) {
             suc.setSuccess(false);
@@ -45,7 +55,7 @@ public class ParityReceiveHandler implements IServerHandler {
             return;
         }
 
-            TaskConfig taskConfig = ManagePlayerPromote.getInstance().getTaskConfig(parityReceive.getTaskId());
+        TaskConfig taskConfig = ManagePlayerPromote.getInstance().getTaskConfig(parityReceive.getTaskId());
         if (taskConfig == null) {
             suc.setSuccess(false);
             suc.setMessage("Invalid task ID");
