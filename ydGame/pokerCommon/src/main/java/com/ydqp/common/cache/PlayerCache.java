@@ -1,9 +1,12 @@
 package com.ydqp.common.cache;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cfq.redis.JedisUtil;
 import com.ydqp.common.data.PlayerData;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -13,6 +16,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PlayerCache {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlayerCache.class);
 
     private final String playerKey = "lottery:playerDataByConnId:";
     private final String playerKeyByPlayerId = "lottery:playerDataByPlayerId:";
@@ -112,10 +117,12 @@ public class PlayerCache {
                 pipeline.get(playerKey + key);
             }
             List<Object> objects = pipeline.syncAndReturnAll();
+            logger.info("获取到缓存中的用户数据：{}", JSON.toJSONString(objects));
             if (CollectionUtils.isNotEmpty(objects)) {
                 playerDataList = objects.stream()
                         .map(o -> JSONObject.parseObject(String.valueOf(o), PlayerData.class))
                         .collect(Collectors.toList());
+                logger.info("获取到{}条数据", playerDataList == null ? 0 : playerDataList.size());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -58,6 +58,7 @@ public class Pay777 extends OrderPay {
 
             playerOrderSuccess.setSuccess(false);
             playerOrderSuccess.setMessage("Recharge failed!");
+            return playerOrderSuccess;
         }
 
         order.setTxnOrderId(response.getString("ticket"));
@@ -115,6 +116,7 @@ public class Pay777 extends OrderPay {
 
             playerWithdrawalSuccess.setSuccess(false);
             playerWithdrawalSuccess.setMessage("Withdrawal failed!");
+            return playerWithdrawalSuccess;
         }
 
         withdrawal.setReferenceId(response.getString("ticket"));

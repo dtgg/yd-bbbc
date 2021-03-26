@@ -65,7 +65,18 @@ public class LotteryPayTask implements Runnable {
         Map<Long, PlayerData> playerDataMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(connIds)) {
             List<PlayerData> playerDataList = PlayerCache.getInstance().getPlayers(new ArrayList<>(connIds));
-            playerDataMap = playerDataList.stream().collect(Collectors.toMap(PlayerData::getPlayerId, Function.identity()));
+            if (CollectionUtils.isNotEmpty(playerDataList)) {
+                for (PlayerData playerData : playerDataList) {
+                    try {
+                        playerDataMap.put(playerData.getPlayerId(), playerData);
+                    } catch (Exception e) {
+                        logger.error("用户缓存数据转map报错，playerData:{}", JSON.toJSONString(playerData));
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                logger.info("未获取到用户缓存数据，连接ID：{}，", JSON.toJSONString(connIds));
+            }
         }
         long rdQueryEndTime = System.currentTimeMillis();
         if (rdQueryEndTime - rdQueryStartTime > 500) {
