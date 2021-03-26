@@ -114,7 +114,7 @@ public class RBLottery extends AbstractLottery {
         if ((playerLottery.getSelected() != null && !colorList.contains(playerLottery.getSelected())) ||
                 (StringUtils.isNotBlank(playerLottery.getNumber()) && !playerLottery.getNumber().equals(lottery.getNumber()))) {
             playerLottery.setStatus(2);
-            playerLottery.setOpenTime(calculateTime + 20);
+            playerLottery.setOpenTime(calculateTime + 10);
             playerLottery.setAward(BigDecimal.ZERO.subtract(playerLottery.getPay()));
         } else {
             BigDecimal effectiveBet = playerLottery.getPay().subtract(playerLottery.getFee());
@@ -134,7 +134,7 @@ public class RBLottery extends AbstractLottery {
                 award = effectiveBet.multiply(new BigDecimal("9"));
             }
             playerLottery.setStatus(1);
-            playerLottery.setOpenTime(calculateTime + 20);
+            playerLottery.setOpenTime(calculateTime + 10);
             playerLottery.setAward(award);
             playerLottery.setResult(lottery.getNumber());
         }
