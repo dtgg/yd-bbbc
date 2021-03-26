@@ -49,7 +49,10 @@ public class LotteryDrawTask implements Runnable {
         if (time - lotteries.get(0).getCreateTime() < 170) return;
         logger.info("到达开奖时间：nowTime:{}, createTime:{}", time, lotteries.get(0).getCreateTime());
 
-        List<Integer> lotteryIds = lotteries.stream().map(Lottery::getId).collect(Collectors.toList());
+        List<Integer> lotteryIds = new ArrayList<>();
+        for (Lottery lottery : lotteries) {
+            lotteryIds.add(lottery.getId());
+        }
         //未开奖的下注
         List<PlayerLottery> playerLotteryList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(lotteryIds)) {
@@ -190,16 +193,6 @@ public class LotteryDrawTask implements Runnable {
             }
         });
 
-        //发送开奖号码
-//        lotteryBattleRoleMap.forEach((key, value) -> {
-//            LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();
-//            lotteryDrawNum.setDrawNumInfos(lotteryDrawInfoMap.get(value.getRoomId()));
-//            lotteryDrawNum.setLotteryTypeInfos(lotteryTypeInfoMap.get(value.getRoomId()));
-//            if (value.getRoomId() == 6000001) {
-//                lotteryDrawNum.setSeed(RandomUtils.nextInt(10));
-//            }
-//            value.getISession().sendMessageByID(lotteryDrawNum, value.getConnId());
-//        });
         //缓存开奖结果
         lotteryDrawInfoMap.forEach((roomId, lotteryDrawInfo) -> {
             LotteryDrawNum lotteryDrawNum = new LotteryDrawNum();

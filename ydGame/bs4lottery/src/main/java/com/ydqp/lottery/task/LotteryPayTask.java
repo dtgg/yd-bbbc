@@ -14,8 +14,6 @@ import com.ydqp.common.lottery.player.ManageLottery;
 import com.ydqp.common.lottery.role.LotteryBattleRole;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.lottery.LotteryDrawNotificationSuc;
-import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeInfo;
-import com.ydqp.common.sendProtoMsg.lottery.LotteryTypeListInfo;
 import com.ydqp.common.sendProtoMsg.lottery.PlayerLotteryInfo;
 import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.CommonUtils;
@@ -24,7 +22,6 @@ import org.apache.commons.collections.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +41,10 @@ public class LotteryPayTask implements Runnable {
         if (CollectionUtils.isEmpty(lotteries)) return;
 
         //彩票对应的下注
-        List<Integer> lotteryIds = lotteries.stream().map(Lottery::getId).collect(Collectors.toList());
+        List<Integer> lotteryIds = new ArrayList<>();
+        for (Lottery lottery : lotteries) {
+            lotteryIds.add(lottery.getId());
+        }
         logger.info("查询已计算的彩票期数:{}", JSON.toJSONString(lotteryIds));
         List<PlayerLottery> playerLotteries = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(lotteryIds)) {
@@ -54,12 +54,15 @@ public class LotteryPayTask implements Runnable {
 
         //房间中的用户连接ID
         Set<Long> connIds = new HashSet<>();
-        for (PlayerLottery playerLottery : playerLotteries) {
-            LotteryBattleRole lotteryBattleRole = ManageLottery.getLotteryBattleRoleMap().get(playerLottery.getPlayerId());
-            if (lotteryBattleRole != null) {
-                connIds.add(lotteryBattleRole.getConnId());
+        if (CollectionUtils.isNotEmpty(playerLotteries)) {
+            for (PlayerLottery playerLottery : playerLotteries) {
+                LotteryBattleRole lotteryBattleRole = ManageLottery.getLotteryBattleRoleMap().get(playerLottery.getPlayerId());
+                if (lotteryBattleRole != null) {
+                    connIds.add(lotteryBattleRole.getConnId());
+                }
             }
         }
+
         //批量获取中奖用户缓存数据
         long rdQueryStartTime = System.currentTimeMillis();
         Map<Long, PlayerData> playerDataMap = new HashMap<>();
@@ -85,8 +88,6 @@ public class LotteryPayTask implements Runnable {
 
         //更新lottery集合
         List<Object[]> updateLotteryList = new ArrayList<>();
-        //开奖通知的map
-//        Map<Long, LotteryDrawNotificationSuc> notificationMap = new HashMap<>();
         //更新用户的集合
         Map<Long, BigDecimal> updatePlayerMap = new HashMap<>();
         //更新缓存的集合
@@ -94,72 +95,65 @@ public class LotteryPayTask implements Runnable {
         //通知金币变化的map
         Map<Long, CoinPointSuccess> coinPointSuccessMap = new HashMap<>();
 
-        //本期lottery
-//        Lottery nowLottery = LotteryDao.getInstance().findNowLottery();
         //本期下注集合
         Map<Long, Map<Integer, List<PlayerLotteryInfo>>> playerNotificationMap = new HashMap<>();
         for (Lottery lottery : lotteries) {
             Object[] object = new Object[]{2, lottery.getId()};
             updateLotteryList.add(object);
 
+            if (CollectionUtils.isEmpty(playerLotteries)) continue;
             for (PlayerLottery playerLottery : playerLotteries) {
-                if (playerLottery.getLotteryId() != lottery.getId()) continue;
-                long playerId = playerLottery.getPlayerId();
+                try {
+                    if (playerLottery.getLotteryId() != lottery.getId()) continue;
+                    long playerId = playerLottery.getPlayerId();
 
-//                if (nowLottery.getPeriod() == lottery.getPeriod()) {
-                LotteryDrawNotificationSuc suc = new LotteryDrawNotificationSuc();
-                suc.setPlayerId(playerLottery.getPlayerId());
-                suc.setWin(playerLottery.getStatus() == 1);
-//                    notificationMap.put(playerId, suc);
-                //是否是本期
-//                    if (nowLottery.getCreateTime() == lottery.getCreateTime()) {
-                if (playerNotificationMap.get(playerId) == null) {
-                    List<PlayerLotteryInfo> list = new ArrayList<>();
-                    list.add(new PlayerLotteryInfo(playerLottery));
-                    playerNotificationMap.put(playerId, new HashMap<Integer, List<PlayerLotteryInfo>>() {{
-                        put(lottery.getType(), list);
-                    }});
-                } else {
-                    List<PlayerLotteryInfo> playerLotteryInfo = playerNotificationMap.get(playerId).get(lottery.getType());
-                    if (playerLotteryInfo == null) {
-                        playerNotificationMap.get(playerId).put(lottery.getType(), new ArrayList<PlayerLotteryInfo>() {{
-                            add(new PlayerLotteryInfo(playerLottery));
+                    LotteryDrawNotificationSuc suc = new LotteryDrawNotificationSuc();
+                    suc.setPlayerId(playerLottery.getPlayerId());
+                    suc.setWin(playerLottery.getStatus() == 1);
+
+                    if (playerNotificationMap.get(playerId) == null) {
+                        List<PlayerLotteryInfo> list = new ArrayList<>();
+                        list.add(new PlayerLotteryInfo(playerLottery));
+                        playerNotificationMap.put(playerId, new HashMap<Integer, List<PlayerLotteryInfo>>() {{
+                            put(lottery.getType(), list);
                         }});
                     } else {
-                        playerNotificationMap.get(playerId).get(lottery.getType()).add(new PlayerLotteryInfo(playerLottery));
-                    }
-                }
-//                    }
-//                }
-
-                if (playerLottery.getStatus() == 1) {
-                    BigDecimal award = playerLottery.getAward();
-                    //player
-//                    if (updatePlayerMap.get(playerId) == null) {
-//                        updatePlayerMap.put(playerId, award);
-//                    } else {
-//                        updatePlayerMap.put(playerId, updatePlayerMap.get(playerId).add(award));
-//                    }
-                    updatePlayerMap.merge(playerId, award, BigDecimal::add);
-                    logger.info("玩家{}第{}期下注中奖,下注ID:{},获得奖励:{},", playerId, playerLottery.getPeriod(), playerLottery.getId(), award);
-                    //playerData
-                    PlayerData playerData = playerDataMap.get(playerId);
-                    //在线
-                    if (playerData != null) {
-                        if (connPlayerDataMap.get(playerData.getSessionId()) == null) {
-                            playerData.setZjPoint(playerData.getZjPoint() + award.doubleValue());
-                            connPlayerDataMap.put(playerData.getSessionId(), playerData);
+                        List<PlayerLotteryInfo> playerLotteryInfo = playerNotificationMap.get(playerId).get(lottery.getType());
+                        if (playerLotteryInfo == null) {
+                            playerNotificationMap.get(playerId).put(lottery.getType(), new ArrayList<PlayerLotteryInfo>() {{
+                                add(new PlayerLotteryInfo(playerLottery));
+                            }});
                         } else {
-                            PlayerData data = connPlayerDataMap.get(playerData.getSessionId());
-                            data.setZjPoint(data.getZjPoint() + award.doubleValue());
-                            connPlayerDataMap.put(playerData.getSessionId(), data);
+                            playerNotificationMap.get(playerId).get(lottery.getType()).add(new PlayerLotteryInfo(playerLottery));
                         }
-
-                        CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
-                        coinPointSuccess.setCoinPoint(connPlayerDataMap.get(playerData.getSessionId()).getZjPoint());
-                        coinPointSuccess.setPlayerId(playerLottery.getPlayerId());
-                        coinPointSuccessMap.put(playerData.getSessionId(), coinPointSuccess);
                     }
+
+                    if (playerLottery.getStatus() == 1) {
+                        BigDecimal award = playerLottery.getAward();
+                        updatePlayerMap.merge(playerId, award, BigDecimal::add);
+                        logger.info("玩家{}第{}期下注中奖,下注ID:{},获得奖励:{},", playerId, playerLottery.getPeriod(), playerLottery.getId(), award);
+                        //playerData
+                        PlayerData playerData = playerDataMap.get(playerId);
+                        //在线
+                        if (playerData != null) {
+                            if (connPlayerDataMap.get(playerData.getSessionId()) == null) {
+                                playerData.setZjPoint(playerData.getZjPoint() + award.doubleValue());
+                                connPlayerDataMap.put(playerData.getSessionId(), playerData);
+                            } else {
+                                PlayerData data = connPlayerDataMap.get(playerData.getSessionId());
+                                data.setZjPoint(data.getZjPoint() + award.doubleValue());
+                                connPlayerDataMap.put(playerData.getSessionId(), data);
+                            }
+
+                            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+                            coinPointSuccess.setCoinPoint(connPlayerDataMap.get(playerData.getSessionId()).getZjPoint());
+                            coinPointSuccess.setPlayerId(playerLottery.getPlayerId());
+                            coinPointSuccessMap.put(playerData.getSessionId(), coinPointSuccess);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("用户派奖错误：playerLottery:{}", JSON.toJSONString(playerLottery));
+                    e.printStackTrace();
                 }
             }
         }
@@ -167,11 +161,14 @@ public class LotteryPayTask implements Runnable {
         long dbUpdateStartTime = System.currentTimeMillis();
         //更新lottery
         Object[][] params = new Object[updateLotteryList.size()][];
-        for (int i = 0; i < updateLotteryList.size(); i++) {
-            params[i] = updateLotteryList.get(i);
+        if (CollectionUtils.isNotEmpty(updateLotteryList)) {
+            for (int i = 0; i < updateLotteryList.size(); i++) {
+                params[i] = updateLotteryList.get(i);
+            }
         }
-        if (params.length > 0)
+        if (params.length > 0) {
             LotteryDao.getInstance().batchUpdateStatus(params);
+        }
 
         //更新player
         Object[][] playerParams = new Object[updatePlayerMap.size()][];
@@ -199,30 +196,9 @@ public class LotteryPayTask implements Runnable {
             logger.warn("redis更新慢日志，执行时间：{}", rdUpdateEndTime - rdUpdateStartTime);
         }
 
-//        notificationMap.forEach((id, lotteryDrawNotificationSuc) -> {
-//            playerNotificationMap.forEach((playerId, map) -> {
-//                if (id.equals(playerId)) {
-//                    List<LotteryTypeListInfo> infos = new ArrayList<>();
-//                    map.forEach((key, value) -> {
-//                        LotteryTypeListInfo info = new LotteryTypeListInfo();
-//                        info.setType(key);
-//                        info.setPlayerLotteryInfos(value);
-//                        infos.add(info);
-//                    });
-//                    lotteryDrawNotificationSuc.setLotteryTypeListInfos(infos);
-//                }
-//            });
-//        });
-
         //通知客户端
         ILottery iLottery = ManageLottery.getInstance().getLotteryByRoomIdAndType(5000001, 1);
         ManageLottery.getLotteryBattleRoleMap().forEach((connId, role) -> {
-//            notificationMap.forEach((playerId, lotteryDrawNotificationSuc) -> {
-//                if (playerId.equals(role.getPlayerId())) {
-//                    iLottery.sendMessageToBattle(lotteryDrawNotificationSuc, role);
-//                }
-//            });
-
             if (coinPointSuccessMap.get(role.getConnId()) != null) {
                 iLottery.sendMessageToBattle(coinPointSuccessMap.get(role.getConnId()), role);
             }
