@@ -38,4 +38,9 @@ public class PlayerWithdrawalDao {
         List<PlayerWithdrawal> page = JdbcOrm.getInstance().getListBean(sql, PlayerWithdrawal.class);
         return page;
     }
+
+    public void updateWithdrawAmount(double withdrawAmount, long id) {
+        String sql = "update player set withdrawAmount = withdrawAmount + "+withdrawAmount+" where id = "+id+";";
+        JdbcOrm.getInstance().update(sql);
+    }
 }

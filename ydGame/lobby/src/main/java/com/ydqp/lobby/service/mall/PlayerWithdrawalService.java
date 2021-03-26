@@ -36,4 +36,8 @@ public class PlayerWithdrawalService {
         }
         return PlayerWithdrawalDao.getInstance().page(playerId, offset, limit);
     }
+
+    public void updateWithdrawAmount(double withdrawAmount, long id) {
+        PlayerWithdrawalDao.getInstance().updateWithdrawAmount(withdrawAmount, id);
+    }
 }

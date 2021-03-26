@@ -87,6 +87,8 @@ public class LotteryDrawTask implements Runnable {
                 LotteryDrawData drawData = new LotteryDrawData();
                 if (!StringUtils.isBlank(lottery.getNumber())) {
                     drawData.setDrawNum(lottery.getNumber());
+                    Map<Integer, BigDecimal> integerBigDecimalMap = iLottery.settleAwardPrice(playerLotteries);
+                    drawData.setDrawNumMap(integerBigDecimalMap);
                 } else {
                     drawData = iLottery.lotteryDraw(lottery, playerLotteries);
                 }

@@ -193,11 +193,8 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             PayWithdrawalConfig config = PayUtil.getInstance().getWithdrawalConfig(configs, playerData.getPlayerId());
             withdrawal.setPayChannel(config.getAliasName());
 
-            boolean success = true;
             String message = "Withdrawal application has been submitted, awaiting review";
-            boolean requireStatus = false;
             if (config.getWithdrawalAudit() == 0) {
-                requireStatus = true;
                 OrderPay orderPay = new CommonPay().getOrderPay(config.getName());
                 if (orderPay == null) {
                     withdrawal.setStatus(2);
@@ -224,8 +221,9 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             }
 
             //提现次数加一
-            if (requireStatus) {
+            if (withdrawal.getStatus() == 1) {
                 MallCache.getInstance().incrWithdrawalCount(key);
+                PlayerWithdrawalService.getInstance().updateWithdrawAmount(withdrawals.getAmount(), player.getId());
             }
             //通知客户端
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();

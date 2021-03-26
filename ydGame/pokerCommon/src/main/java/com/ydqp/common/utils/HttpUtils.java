@@ -11,15 +11,24 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -207,6 +216,74 @@ public class HttpUtils {
             e.printStackTrace();
         } finally {
 
+        }
+        return content;
+    }
+
+    public String sendPostNoSsl(String url, Map<String, String> headParams, JSONObject params, boolean isProxy) {
+        // 创建httpClient对象
+//        CloseableHttpClient httpClient = HttpClients.createDefault();
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                    return true;
+                }
+            }).build();
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+        CloseableHttpClient httpClient = HttpClients.custom().setSSLContext(sslContext).
+                setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+
+        // 创建http对象
+        HttpPost httpPost = new HttpPost(url);
+        RequestConfig requestConfig;
+        if (isProxy) {
+            HttpHost proxy = new HttpHost("127.0.0.1", 10809, "http");
+            requestConfig = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).setProxy(proxy).build();
+        } else {
+            requestConfig = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).build();
+        }
+        httpPost.setConfig(requestConfig);
+        if (headParams != null) {
+            headParams.forEach(httpPost::setHeader);
+        }
+        // 封装请求参数
+//        packageParam(params, httpPost);
+        if (params != null) httpPost.setEntity(new StringEntity(params.toString(), ENCODING));
+
+        // 创建httpResponse对象
+        CloseableHttpResponse httpResponse = null;
+
+        String content = "";
+        try {
+            // 执行请求
+            httpResponse = httpClient.execute(httpPost);
+            // 获取返回结果
+            if (httpResponse != null && httpResponse.getStatusLine() != null) {
+                if (httpResponse.getEntity() != null) {
+                    content = EntityUtils.toString(httpResponse.getEntity(), ENCODING);
+                }
+            } else {
+                throw new Exception("Error when accessing cashfree");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 释放资源
+            try {
+                if (httpResponse != null) {
+                    httpResponse.close();
+                }
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return content;
     }
