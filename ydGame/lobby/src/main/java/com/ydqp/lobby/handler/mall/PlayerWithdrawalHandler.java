@@ -221,7 +221,7 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             }
 
             //提现次数加一
-            if (withdrawal.getStatus() == 1) {
+            if (withdrawal.getStatus() != 2) {
                 MallCache.getInstance().incrWithdrawalCount(key);
                 PlayerWithdrawalService.getInstance().updateWithdrawAmount(withdrawals.getAmount(), player.getId());
             }

@@ -538,3 +538,8 @@ CREATE TABLE `draw_method` (
    `createTime` int(10) DEFAULT NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+ALTER TABLE player MODIFY COLUMN orderAmount double(15,2) DEFAULT 0.00;
+ALTER TABLE `player_account`
+    MODIFY COLUMN `bankName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' AFTER `password`
