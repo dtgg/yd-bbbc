@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 public class LotteryListHandler implements IServerHandler {
     private static final Logger logger = LoggerFactory.getLogger(LotteryListHandler.class);
 
+    private static final int ONE_DAY = 86400;
+
     @Override
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         LotteryList lotteryList = (LotteryList) abstartParaseMessage;
@@ -34,7 +36,7 @@ public class LotteryListHandler implements IServerHandler {
             return;
         }
 
-        int dateTime = DateUtil.dateToZonedDateTime(DateUtil.todayBegin()) - 180;
+        int dateTime = new Long(System.currentTimeMillis() / 1000L).intValue() - ONE_DAY;
         int offset = (lotteryList.getPage() - 1) * lotteryList.getSize();
         List<Lottery> page = LotteryDao.getInstance().page(lotteryList.getType(), offset, lotteryList.getSize(), dateTime);
         List<LotteryInfo> lotteryInfos = page.stream().map(lottery -> {
