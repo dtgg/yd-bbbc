@@ -87,9 +87,8 @@ public class LotteryGenerateTask implements Runnable {
     }
 
     public static long getZeroTimestamp() {
-        ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime ydZonedDateTime = now.withZoneSameLocal(ZoneId.of("+05:30"));
-        ZonedDateTime todayZero = ydZonedDateTime.truncatedTo(ChronoUnit.DAYS);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("+05:30"));
+        ZonedDateTime todayZero = now.truncatedTo(ChronoUnit.DAYS);
         return todayZero.toEpochSecond();
     }
 }

@@ -1,9 +1,11 @@
 package com.ydqp.common.utils;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,12 +27,6 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    public static int dateToZonedDateTime(Date date) {
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("+08:00"));
-        ZonedDateTime ydZonedDateTime = zonedDateTime.withZoneSameLocal(ZoneId.of("+05:30"));
-        return new Long(Timestamp.from(ydZonedDateTime.toInstant()).getTime() / 1000).intValue();
-    }
-
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public static String timestampToStr(int time) {
@@ -40,14 +36,14 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-//        String time = "2020-03-24 09:28:00";
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        ZonedDateTime ydTime = LocalDateTime.parse(time, formatter).atZone(ZoneId.of("+05:30"));
+        String time = "2020-03-24 01:28:00";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ZonedDateTime ydTime = LocalDateTime.parse(time, formatter).atZone(ZoneId.of("+08:00"));
 
-        ZonedDateTime ydTime = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("+05:30"));
-        if (ydTime.getHour() >= 0 && ydTime.getHour() < 9 || ydTime.getHour() == 9 && ydTime.getMinute() < 30) {
-            System.out.println(ydTime.getHour());
-            System.out.println(ydTime.getMinute());
-        }
+        ZonedDateTime zonedDateTime = ydTime.withZoneSameInstant(ZoneId.of("+05:30"));
+        System.out.println(zonedDateTime);
+
+        ZonedDateTime todayZero = zonedDateTime.truncatedTo(ChronoUnit.DAYS);
+        System.out.println(todayZero);
     }
 }

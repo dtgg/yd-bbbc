@@ -25,12 +25,6 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    public static int dateToZonedDateTime(Date date) {
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("+08:00"));
-        ZonedDateTime ydZonedDateTime = zonedDateTime.withZoneSameLocal(ZoneId.of("+05:30"));
-        return new Long(Timestamp.from(ydZonedDateTime.toInstant()).getTime() / 1000).intValue();
-    }
-
     public static String timestampToStr(int time) {
         Timestamp timestamp = new Timestamp(time * 1000L);
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(timestamp.toInstant(), ZoneId.of("+05:30"));
