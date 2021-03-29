@@ -84,7 +84,7 @@ public class LotteryDao {
     }
 
     public Lottery findLast() {
-        String sql = "select * from lottery order by createTime desc limit 1;";
+        String sql = "select * from lottery where status = 0 order by createTime desc limit 1;";
         return (Lottery) JdbcOrm.getInstance().getBean(sql, Lottery.class);
     }
 
