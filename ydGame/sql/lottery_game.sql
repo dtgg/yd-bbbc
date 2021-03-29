@@ -543,3 +543,6 @@ CREATE TABLE `draw_method` (
 ALTER TABLE player MODIFY COLUMN orderAmount double(15,2) DEFAULT 0.00;
 ALTER TABLE `player_account`
     MODIFY COLUMN `bankName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' AFTER `password`
+
+--
+ALTER TABLE player_lottery ADD COLUMN registerTime int(10) DEFAULT 0 COMMENT '用户注册时间';

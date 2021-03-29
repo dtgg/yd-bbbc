@@ -30,6 +30,7 @@ public class PlayerLottery implements Serializable {
 	public static final String APPID_NAME = "appId";
 	public static final String KFID_NAME = "kfId";
 	public static final String ISVIR_NAME = "isVir";
+	public static final String REGISTERTIME_NAME = "registerTime";
 
 
 
@@ -168,6 +169,14 @@ public class PlayerLottery implements Serializable {
 	public void setIsVir(int isVir) {
 		this.isVir = isVir;
 		entityMap.put(ISVIR_NAME, isVir);
+	}
+	private int registerTime;
+	public int getRegisterTime() {
+		return registerTime;
+	}
+	public void setRegisterTime(int registerTime) {
+		this.registerTime = registerTime;
+		entityMap.put(REGISTERTIME_NAME, registerTime);
 	}
 
 	public Object getValueByFieldName(String fieldName) {
