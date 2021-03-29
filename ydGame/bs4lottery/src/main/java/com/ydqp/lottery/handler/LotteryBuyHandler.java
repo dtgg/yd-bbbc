@@ -139,7 +139,13 @@ public class LotteryBuyHandler implements IServerHandler {
             playerLottery.setPay(new BigDecimal(lotteryBuy.getPay()));
             playerLottery.setAppId(player.getAppId());
             playerLottery.setKfId(player.getKfId());
-            playerLottery.setIsVir(player.getIsVir());
+
+            if (player.getId() == player.getKfId()) {
+                playerLottery.setIsVir(1);
+            } else {
+                playerLottery.setIsVir(player.getIsVir());
+            }
+
             playerLottery.setRegisterTime(player.getCreateTime());
 
             playerLottery.setPeriod(DateUtil.timestampToStr(lottery.getCreateTime()) + LotteryUtil.intToPeriod(lottery.getPeriod()));
