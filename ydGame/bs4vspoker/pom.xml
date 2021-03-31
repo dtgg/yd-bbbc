@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ydGame</artifactId>
+        <groupId>org.example</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>bs4vspoker</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.cfq</groupId>
+            <artifactId>action</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>pokerCommon</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>pokerCommon</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jdbc.url>jdbc:mysql://localhost:3306/lottery_game?characterEncoding=utf-8</jdbc.url>
+                <username>root</username>
+                <password></password>
+
+                <redis.host>127.0.0.1</redis.host>
+                <redis.auth>123456</redis.auth>
+
+                <statupload.url>http://192.168.10.28:80/statistics/collect</statupload.url>
+            </properties>
+
+            <build>
+                <resources>
+                    <!-- 先指定 src/main/resources下所有文件及文件夹为资源文件 -->
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                        <includes>
+                            <include>**/*</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>com.baidu</groupId>
+                        <artifactId>jprotobuf-precompile-plugin</artifactId>
+                        <version>2.2.2</version>
+                        <configuration>
+                            <!--            <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>-->
+                            <filterClassPackage>com.baidu</filterClassPackage>
+                            <generateProtoFile>true</generateProtoFile>
+                            <compileDependencies>true</compileDependencies>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>precompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>com.ydqp.vspoker.VspokerMain</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                            <compilerVersion>1.8</compilerVersion>
+                            <skip>true</skip>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+        <profile>
+            <id>product</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <properties>
+                <jdbc.url>jdbc:mysql://rm-a2d058tq7m03sy1u6.mysql.ap-south-1.rds.aliyuncs.com/lottery_game?characterEncoding=utf-8</jdbc.url>
+                <username>game_root</username>
+                <password>Game666@@</password>
+
+                <redis.host>r-a2dhzn68dk5sqefuhu.redis.ap-south-1.rds.aliyuncs.com</redis.host>
+                <redis.auth>Game666@@</redis.auth>
+
+                <statupload.url>http://luckyunion-admin.alcs8.com/statistics/collect</statupload.url>
+            </properties>
+            <build>
+                <resources>
+                    <!-- 先指定 src/main/resources下所有文件及文件夹为资源文件 -->
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                        <includes>
+                            <include>**/*</include>
+                        </includes>
+                    </resource>
+                </resources>
+
+                <plugins>
+                    <plugin>
+                        <groupId>com.baidu</groupId>
+                        <artifactId>jprotobuf-precompile-plugin</artifactId>
+                        <version>2.2.2</version>
+                        <configuration>
+                            <!--            <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>-->
+                            <filterClassPackage>com.baidu</filterClassPackage>
+                            <generateProtoFile>true</generateProtoFile>
+                            <compileDependencies>true</compileDependencies>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>precompile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>com.ydqp.vspoker.VspokerMain</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                            <compilerVersion>1.8</compilerVersion>
+                            <skip>true</skip>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
