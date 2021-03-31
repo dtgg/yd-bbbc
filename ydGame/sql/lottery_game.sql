@@ -546,3 +546,9 @@ ALTER TABLE `player_account`
 
 --
 ALTER TABLE player_lottery ADD COLUMN registerTime int(10) DEFAULT 0 COMMENT '用户注册时间';
+
+--
+ALTER TABLE player ADD COLUMN lotteryPay decimal(15,2) DEFAULT 0.00;
+ALTER TABLE player ADD COLUMN lotteryFee decimal(15,2) DEFAULT 0.00;
+ALTER TABLE player ADD COLUMN lotteryAward decimal(15,2) DEFAULT 0.00;
+ALTER TABLE player ADD COLUMN lotteryProfit decimal(15,2) DEFAULT 0.00;
