@@ -573,3 +573,15 @@ CREATE TABLE `player_lottery_stat` (
    KEY `app_idx` (`appId`),
    KEY `kf_idx` (`kfId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7353 DEFAULT CHARSET=utf8;
+
+-- WhatsApp手机号、首充记录
+ALTER TABLE url_config ADD COLUMN mobile VARCHAR(20) NOT NULL;
+
+CREATE TABLE `first_charge_record` (
+   `id` int(10) NOT NULL AUTO_INCREMENT,
+   `playerId` bigint(20) NOT NULL,
+   `kfId` bigint(20) NOT NULL DEFAULT 0,
+   `appId` int(10) NOT NULL DEFAULT 1000001,
+   `createTime` int(10) NOT NULL DEFAULT 0,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
