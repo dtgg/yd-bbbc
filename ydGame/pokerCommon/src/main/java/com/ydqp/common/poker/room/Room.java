@@ -4,6 +4,7 @@ import com.cfq.connection.ISession;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartCreateMessage;
+import com.ydqp.common.poker.ICardPoker;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,6 +34,10 @@ public abstract class Room implements IRoom{
     @Setter
     @Getter
     private int curWaitTime;
+
+    @Getter
+    @Setter
+    private ICardPoker iCardPoker;
 
     /**
      * 发送 消息给房间的所有用户

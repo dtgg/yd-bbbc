@@ -23,6 +23,23 @@ public class VsPokerRoom extends Room {
     @Getter
     private Map<Integer, Poker> pokerMap = new ConcurrentHashMap<>(5);
 
+    @Setter
+    @Getter
+    private int round = 0; //当前局数
+
+    @Setter
+    @Getter
+    private double aBetPool;
+    @Setter
+    @Getter
+    private double bBetPool;
+    @Setter
+    @Getter
+    private double cBetPool;
+    @Setter
+    @Getter
+    private double dBetPool;
+
 
     @Override
     public void monitor() {

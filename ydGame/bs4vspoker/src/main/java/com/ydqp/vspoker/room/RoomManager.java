@@ -1,6 +1,7 @@
 package com.ydqp.vspoker.room;
 
 import com.ydqp.common.poker.room.Room;
+import com.ydqp.common.poker.vspoker.VsPokerCard;
 import com.ydqp.vspoker.NumberPool;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,6 +49,7 @@ public class RoomManager {
             vsPokerRoom.setRoomId(7000000 + NumberPool.getInstance().pop());
             vsPokerRoom.setStatus(0);
             vsPokerRoom.setRoomType(roomType);
+            vsPokerRoom.setICardPoker(new VsPokerCard());
 
 
         } catch (Exception e) {

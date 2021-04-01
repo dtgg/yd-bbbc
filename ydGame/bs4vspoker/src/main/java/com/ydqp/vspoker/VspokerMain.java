@@ -4,7 +4,6 @@ import com.cfq.boostStrap.IServer;
 import com.cfq.boostStrap.Server;
 import com.cfq.dispatch.DispatchMessage;
 import com.cfq.net.websocket.ServerWebSocketChannelInitializer;
-import com.ydqp.vspoker.room.BattleTask;
 
 import java.util.Timer;
 

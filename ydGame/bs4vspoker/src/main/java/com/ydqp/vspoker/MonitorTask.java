@@ -1,4 +1,4 @@
-package com.ydqp.vspoker.room;
+package com.ydqp.vspoker;
 
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
@@ -9,7 +9,7 @@ public class MonitorTask implements Runnable{
 
     private static final Logger logger = LoggerFactory.getLogger(MonitorTask.class);
 
-    private Room room;
+    private final Room room;
 
     public MonitorTask(Room room) {
         this.room = room;

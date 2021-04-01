@@ -1,7 +1,8 @@
-package com.ydqp.vspoker.room;
+package com.ydqp.vspoker;
 
 
 import com.ydqp.common.poker.room.Room;
+import com.ydqp.vspoker.room.RoomManager;
 
 import java.util.Map;
 import java.util.TimerTask;
