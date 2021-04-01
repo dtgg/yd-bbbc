@@ -70,7 +70,7 @@ public class SmsService {
      */
     private String sendSmsByChuanglan(String phone, int areaCode) {
         int smsCode = (int) ((Math.random() * 9 + 1) * 1000);
-        String msg = SMS_CHUANG_LAN_MSG + smsCode;
+        String msg = "[coco] SMS verification code is {"+smsCode+"}, valid for 5 minutes, please don't tell others.";
         //组装请求参数
         JSONObject map = new JSONObject();
         map.put("account", SMS_CHUANG_LAN_ACCOUNT);
@@ -112,7 +112,7 @@ public class SmsService {
         param.setNumbers(areaCode + phone);
         param.setSenderid("");
         int smsCode = (int) ((Math.random() * 9 + 1) * 1000);
-        param.setContent("[COCO] Your Verification Code is : " + smsCode);
+        param.setContent("[coco] SMS verification code is {"+smsCode+"}, valid for 5 minutes, please don't tell others.");
         logger.info("请求地址为: {};请求参数为: {}", requestUrl, JSON.toJSONString(param));
         try {
             String result = HttpSmsUtil.post(requestUrl, JSON.toJSONString(param));
