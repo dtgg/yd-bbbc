@@ -225,6 +225,7 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             if (withdrawal.getStatus() != 2) {
                 MallCache.getInstance().incrWithdrawalCount(key);
                 PlayerWithdrawalService.getInstance().updateWithdrawAmount(withdrawals.getAmount(), player.getId());
+                logger.info("提现成功, playerId：{}, status:{}", player.getId(), withdrawal.getStatus());
             }
             //通知客户端
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();

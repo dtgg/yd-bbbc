@@ -1,14 +1,17 @@
 package com.ydqp.lobby.dao.mall;
 
 import com.cfq.jdbc.JdbcOrm;
+import com.cfq.log.Logger;
+import com.cfq.log.LoggerFactory;
 import com.ydqp.common.data.Total;
 import com.ydqp.common.entity.PlayerWithdrawal;
-import com.ydqp.lobby.constant.WithdrawalStatus;
 
 import java.util.List;
 import java.util.Map;
 
 public class PlayerWithdrawalDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlayerWithdrawalDao.class);
 
     private PlayerWithdrawalDao() {}
 
@@ -41,6 +44,7 @@ public class PlayerWithdrawalDao {
 
     public void updateWithdrawAmount(double withdrawAmount, long id) {
         String sql = "update player set withdrawAmount = withdrawAmount + "+withdrawAmount+" where id = "+id+";";
+        logger.info("更新withdrawAmount，sql:{}", sql);
         JdbcOrm.getInstance().update(sql);
     }
 }

@@ -552,3 +552,24 @@ ALTER TABLE player ADD COLUMN lotteryPay decimal(15,2) DEFAULT 0.00;
 ALTER TABLE player ADD COLUMN lotteryFee decimal(15,2) DEFAULT 0.00;
 ALTER TABLE player ADD COLUMN lotteryAward decimal(15,2) DEFAULT 0.00;
 ALTER TABLE player ADD COLUMN lotteryProfit decimal(15,2) DEFAULT 0.00;
+
+CREATE TABLE `player_lottery_stat` (
+   `id` int(10) NOT NULL AUTO_INCREMENT,
+   `lotteryId` int(10) DEFAULT NULL,
+   `orders` int(10) DEFAULT '0',
+   `members` int(10) DEFAULT '0',
+   `pay` decimal(15,2) DEFAULT '0.00',
+   `award` decimal(15,2) DEFAULT '0.00',
+   `fee` decimal(15,2) DEFAULT '0.00',
+   `profit` decimal(15,2) DEFAULT '0.00',
+   `newPlayerBets` int(10) DEFAULT '0',
+   `newVirBets` int(10) DEFAULT '0',
+   `createTime` int(10) DEFAULT '0',
+   `kfId` int(10) DEFAULT '0',
+   `appId` int(10) DEFAULT '0',
+   `newPlayerBetAmount` decimal(15,2) DEFAULT '0.00',
+   PRIMARY KEY (`id`),
+   KEY `ct_idx` (`createTime`),
+   KEY `app_idx` (`appId`),
+   KEY `kf_idx` (`kfId`)
+) ENGINE=InnoDB AUTO_INCREMENT=7353 DEFAULT CHARSET=utf8;
