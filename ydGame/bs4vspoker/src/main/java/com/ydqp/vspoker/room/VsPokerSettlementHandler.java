@@ -15,43 +15,30 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         paiFu(vsPokerRoom);
         //重置数据，房间状态
         vsPokerRoom.setRound(vsPokerRoom.getRound() + 1);
-        vsPokerRoom.setAWin(1);
-        vsPokerRoom.setBWin(1);
-        vsPokerRoom.setCWin(1);
-        vsPokerRoom.setDWin(1);
 
+        for (int i = 1; i <= 4; i++) {
+            PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
+            playerObject.setWin(1);
+            playerObject.getBetBattleRoleId().clear();
+            playerObject.setBetPool(0);
+        }
         vsPokerRoom.getPokerMap().clear();
-        vsPokerRoom.getABetBattleRoleId().clear();
-        vsPokerRoom.getBBetBattleRoleId().clear();
-        vsPokerRoom.getCBetBattleRoleId().clear();
-        vsPokerRoom.getDBetBattleRoleId().clear();
-
-        vsPokerRoom.setABetPool(0);
-        vsPokerRoom.setBBetPool(0);
-        vsPokerRoom.setCBetPool(0);
-        vsPokerRoom.setDBetPool(0);
 
         vsPokerRoom.setStatus(0);
         logger.info("VsPokerSettlementHandler end");
     }
 
+    /**
+     * 对赢的玩家进行赔付
+     * @param vsPokerRoom
+     */
     private void paiFu (VsPokerRoom vsPokerRoom) {
-        Map<Long, Double> betBattleRoleId;
-        if (vsPokerRoom.getAWin() == 1) {
-            betBattleRoleId = vsPokerRoom.getABetBattleRoleId();
-            sendToPlayer(vsPokerRoom, betBattleRoleId);
-        }
-        if (vsPokerRoom.getBWin() == 1) {
-            betBattleRoleId = vsPokerRoom.getBBetBattleRoleId();
-            sendToPlayer(vsPokerRoom, betBattleRoleId);
-        }
-        if (vsPokerRoom.getCWin() == 1) {
-            betBattleRoleId = vsPokerRoom.getCBetBattleRoleId();
-            sendToPlayer(vsPokerRoom, betBattleRoleId);
-        }
-        if (vsPokerRoom.getDWin() == 1) {
-            betBattleRoleId = vsPokerRoom.getDBetBattleRoleId();
-            sendToPlayer(vsPokerRoom, betBattleRoleId);
+
+        for (int i = 1; i <= 4; i++){
+            PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
+            if (playerObject.getWin() == 1) {
+                sendToPlayer(vsPokerRoom, playerObject.getBetBattleRoleId());
+            }
         }
     }
 

@@ -20,56 +20,23 @@ public class VsPokerCompareHandler implements IRoomStatusHandler{
         SVsCompareResult sVsCompareResult = new SVsCompareResult();
         sVsCompareResult.setRoomId(vsPokerRoom.getRoomId());
         Poker bankPoker = vsPokerRoom.getPokerMap().get(1);
-        Poker aPlayerPoker = vsPokerRoom.getPokerMap().get(2);
-        Poker bPlayerPoker = vsPokerRoom.getPokerMap().get(3);
-        Poker cPlayerPoker = vsPokerRoom.getPokerMap().get(4);
-        Poker dPlayerPoker = vsPokerRoom.getPokerMap().get(5);
 
-        // A
-        SPlayerInfo sPlayerInfo = new SPlayerInfo();
-        sPlayerInfo.setWin(1);
-        sPlayerInfo.setPoker(aPlayerPoker);
-        sPlayerInfo.setBetPool(vsPokerRoom.getABetPool());
+        for (int i = 1; i<= 4; i++) {
+            Poker playerPoker = vsPokerRoom.getPokerMap().get(i + 1);
+            PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
 
-        //B
-        SPlayerInfo sBPlayerInfo = new SPlayerInfo();
-        sBPlayerInfo.setWin(1);
-        sBPlayerInfo.setPoker(bPlayerPoker);
-        sBPlayerInfo.setBetPool(vsPokerRoom.getBBetPool());
+            SPlayerInfo sPlayerInfo = new SPlayerInfo();
+            sPlayerInfo.setWin(playerObject.getWin());
+            sPlayerInfo.setPoker(playerPoker);
+            sPlayerInfo.setBetPool(playerObject.getBetPool());
 
-        //C
-        SPlayerInfo sCPlayerInfo = new SPlayerInfo();
-        sCPlayerInfo.setWin(1);
-        sCPlayerInfo.setPoker(cPlayerPoker);
-        sCPlayerInfo.setBetPool(vsPokerRoom.getCBetPool());
-
-        //D
-        SPlayerInfo sDPlayerInfo = new SPlayerInfo();
-        sDPlayerInfo.setWin(1);
-        sDPlayerInfo.setPoker(dPlayerPoker);
-        sDPlayerInfo.setBetPool(vsPokerRoom.getDBetPool());
-
-        if (isBankWin(bankPoker, aPlayerPoker)) {
-            sPlayerInfo.setWin(0);
-            vsPokerRoom.setAWin(0);
-        }
-        if (isBankWin(bankPoker, bPlayerPoker)) {
-            sBPlayerInfo.setWin(0);
-            vsPokerRoom.setBWin(0);
-        }
-        if (isBankWin(bankPoker, cPlayerPoker)) {
-            sCPlayerInfo.setWin(0);
-            vsPokerRoom.setCWin(0);
-        }
-        if (isBankWin(bankPoker, dPlayerPoker)) {
-            sDPlayerInfo.setWin(0);
-            vsPokerRoom.setDWin(0);
+            if (isBankWin(bankPoker, playerPoker)) {
+                sPlayerInfo.setWin(0);
+                vsPokerRoom.getPlayerObjectMap().get(i).setWin(0);
+            }
+            sVsCompareResult.getSPlayerInfoMap().put(i, sPlayerInfo);
         }
 
-        sVsCompareResult.setAPlayer(sPlayerInfo);
-        sVsCompareResult.setBPlayer(sBPlayerInfo);
-        sVsCompareResult.setCPlayer(sCPlayerInfo);
-        sVsCompareResult.setDPlayer(sDPlayerInfo);
         sVsCompareResult.setBankPoker(bankPoker);
 
         //发送大小结果

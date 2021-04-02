@@ -12,6 +12,9 @@ import com.ydqp.common.poker.Poker;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @SendCommandAnnotation(command = 7000006)
 @GenProto(modulePro = "vsPoker")
 public class SVsPokerRoomInfo extends AbstartCreateMessage {
@@ -32,25 +35,15 @@ public class SVsPokerRoomInfo extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.DOUBLE , order = 4, description = "roomId")
     private double battleRoleMoney;
+
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 5, description = "roomId")
-    private SPlayerInfo aPlayer;
+    @Protobuf(fieldType = FieldType.INT32 , order = 5, description = "4个下注区域 1 = A")
+    private Map<Integer, SPlayerInfo> sPlayerInfoMap = new HashMap<>(4);
+
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 6, description = "roomId")
-    private SPlayerInfo bPlayer;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 7, description = "roomId")
-    private SPlayerInfo cPlayer;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 8, description = "roomId")
-    private SPlayerInfo dPlayer;
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 9, description = "庄家的牌")
+    @Protobuf(fieldType = FieldType.OBJECT , order = 6, description = "庄家的牌")
     private Poker bankPoker;
 
 

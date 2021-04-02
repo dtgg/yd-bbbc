@@ -51,6 +51,9 @@ public class RoomManager {
             vsPokerRoom.setRoomType(roomType);
             vsPokerRoom.setICardPoker(new VsPokerCard());
 
+            for (int i = 1; i <= 4; i++) {
+                vsPokerRoom.getPlayerObjectMap().put(i, new PlayerObject());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

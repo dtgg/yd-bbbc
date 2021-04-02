@@ -28,16 +28,10 @@ message Poker {
 message SVsCompareResult {  
 // roomId
  int32 roomId=1;
- // roomId
- SPlayerInfo aPlayer=2;
- // roomId
- SPlayerInfo bPlayer=3;
- // roomId
- SPlayerInfo cPlayer=4;
- // roomId
- SPlayerInfo dPlayer=5;
+
+ map<int32, SPlayerInfo> sPlayerInfoMap=2;
  // 庄家的牌
- Poker bankPoker=6;
+ Poker bankPoker=3;
 }
 message SVsFaPai {  
 // roomId
@@ -76,14 +70,7 @@ message SVsPokerRoomInfo {
  int32 curWaitTime=3;
 // roomId
  double battleRoleMoney=4;
-// roomId
- SPlayerInfo aPlayer=5;
-// roomId
- SPlayerInfo bPlayer=6;
-// roomId
- SPlayerInfo cPlayer=7;
-// roomId
- SPlayerInfo dPlayer=8;
+ map<int32, SPlayerInfo> sPlayerInfoMap=5;
 // 庄家的牌
- Poker bankPoker=9;
+ Poker bankPoker=6;
 }
