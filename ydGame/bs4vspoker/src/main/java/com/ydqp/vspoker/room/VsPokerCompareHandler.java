@@ -32,6 +32,7 @@ public class VsPokerCompareHandler implements IRoomStatusHandler{
 
             if (isBankWin(bankPoker, playerPoker)) {
                 sPlayerInfo.setWin(0);
+                sPlayerInfo.setWinBetPool(playerObject.getBetPool() * 1.95);
                 vsPokerRoom.getPlayerObjectMap().get(i).setWin(0);
             }
             sVsCompareResult.getSPlayerInfoMap().put(i, sPlayerInfo);

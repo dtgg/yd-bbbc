@@ -5,6 +5,7 @@ message VsPokerEnterRoom {
  int64 playerId=1;
  int32 roomId=2;
  int32 roomType=3;
+ int32 basePoint=4;
 }
 message VsPokerXiazhu {  
  int64 playerId=1;
@@ -19,6 +20,8 @@ message SPlayerInfo {
  int32 win=2;
 // 下注池子
  Poker poker=3;
+
+ double winBetPool=4;
 }
 message Poker {  
  string tag=1;
@@ -73,4 +76,7 @@ message SVsPokerRoomInfo {
  map<int32, SPlayerInfo> sPlayerInfoMap=5;
 // 庄家的牌
  Poker bankPoker=6;
+ int32 roomType=7;
+ int32 rank=8;
+ int32 round=9;
 }

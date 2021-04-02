@@ -33,6 +33,10 @@ public class RoomManager {
         return vsPokerRoomMap;
     }
 
+    @Getter
+    @Setter
+    private List<Integer> delRoomId = new CopyOnWriteArrayList<Integer>();
+
 
     public void putRoom(VsPokerRoom vsPokerRoom) {
         vsPokerRoomMap.put(vsPokerRoom.getRoomId(), vsPokerRoom);
@@ -43,12 +47,13 @@ public class RoomManager {
         return vsPokerRoom;
     }
 
-    public VsPokerRoom createVsPokerRoom(double roomPoint, int roomType) {
+    public VsPokerRoom createVsPokerRoom(int roomType, int basePoint) {
         VsPokerRoom vsPokerRoom = new VsPokerRoom();
         try {
             vsPokerRoom.setRoomId(7000000 + NumberPool.getInstance().pop());
             vsPokerRoom.setStatus(0);
             vsPokerRoom.setRoomType(roomType);
+            vsPokerRoom.setBasePoint(basePoint);
             vsPokerRoom.setICardPoker(new VsPokerCard());
 
             for (int i = 1; i <= 4; i++) {

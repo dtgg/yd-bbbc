@@ -40,6 +40,10 @@ public abstract class Room implements IRoom{
     @Setter
     private ICardPoker iCardPoker;
 
+    @Getter
+    @Setter
+    private int basePoint;
+
     /**
      * 发送 消息给房间的所有用户
      * @param abstartCreateMessage
@@ -122,6 +126,30 @@ public abstract class Room implements IRoom{
         battleRole = new BattleRole();
         battleRole.setConnId(playerData.getSessionId());
         battleRole.setPlayerZJ(playerData.getZjPoint());
+        battleRole.setPlayerId(playerData.getPlayerId());
+        battleRole.setPlayerName(playerData.getNickName());
+        battleRole.setPlayerUrl(playerData.getHeadUrl());
+        battleRole.setISession(iSession);
+
+        getBattleRoleMap().put(playerData.getPlayerId(),battleRole);
+        logger.info("enterRoom player enter room playerId = {}" , playerData.getPlayerId());
+        return battleRole;
+    }
+
+    public BattleRole enterRoomByRace (PlayerData playerData, ISession iSession){
+        logger.info("enterRoom 玩家进入房间，生成battleRole信息，roomId = {}, playerid = {} ", this.getRoomId(), playerData.getPlayerId());
+        BattleRole battleRole = getBattleRoleMap().get(playerData.getPlayerId());
+        if (battleRole != null){
+            //已经在房间了
+            battleRole.setConnId(playerData.getSessionId());
+            battleRole.setPlayerUrl(playerData.getHeadUrl());
+            battleRole.setISession(iSession);
+            return battleRole;
+        }
+        //新玩家进来
+        battleRole = new BattleRole();
+        battleRole.setConnId(playerData.getSessionId());
+        battleRole.setPlayerZJ(10000.0);
         battleRole.setPlayerId(playerData.getPlayerId());
         battleRole.setPlayerName(playerData.getNickName());
         battleRole.setPlayerUrl(playerData.getHeadUrl());

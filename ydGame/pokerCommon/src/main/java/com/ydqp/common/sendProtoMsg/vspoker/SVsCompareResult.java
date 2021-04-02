@@ -26,7 +26,7 @@ public class SVsCompareResult extends AbstartCreateMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32 , order = 2, description = "4个下注区域 1 = A")
+    @Protobuf(fieldType = FieldType.MAP , order = 2, description = "4个下注区域 1 = A")
     private Map<Integer, SPlayerInfo> sPlayerInfoMap = new HashMap<>(4);
 
     @Getter

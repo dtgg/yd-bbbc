@@ -25,10 +25,14 @@ public class BattleTask extends TimerTask {
 
         for(Map.Entry<Integer, Room> entry : RoomManager.getInstance().getVsPokerRoomMapMap().entrySet()) {
             Room room = entry.getValue();
-
-            //@TODO 判断下比赛结束后，把房间从列表删除
-            executor.execute(new MonitorTask(room));
-
+            if (room.getStatus() == -1) {
+                //房间关闭
+                RoomManager.getInstance().getDelRoomId().add(room.getRoomId());
+                delRoomExe.execute(new DelRoomTask());
+            } else {
+                //@TODO 判断下比赛结束后，把房间从列表删除
+                executor.execute(new MonitorTask(room));
+            }
         }
 
     }

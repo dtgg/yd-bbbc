@@ -51,8 +51,15 @@ public class VsPokerRoom extends Room {
     }
 
     public void vsEnterRoom (PlayerData playerData, ISession iSession) {
-        //初始化用户信息
-        BattleRole battleRole = this.enterRoom(playerData, iSession);
+        BattleRole battleRole;
+        if (this.getRoomType() == 1 || this.getRoomType() == 2) {
+            //初始化用户信息
+            battleRole = this.enterRoomByRace(playerData, iSession);
+        } else {
+            //初始化用户信息
+            battleRole = this.enterRoom(playerData, iSession);
+        }
+
         //设置房间信息
         this.getVsPokerRoomInfo(battleRole);
     }
@@ -63,7 +70,9 @@ public class VsPokerRoom extends Room {
         sVsPokerRoomInfo.setCurWaitTime(this.getCurWaitTime());
         sVsPokerRoomInfo.setRoomStatus(this.getStatus());
         sVsPokerRoomInfo.setBattleRoleMoney(battleRole.getPlayerZJ());
-
+        sVsPokerRoomInfo.setRank(1);
+        sVsPokerRoomInfo.setRoomType(this.getRoomType());
+        sVsPokerRoomInfo.setRound(this.getRound());
 
         for (int i = 1; i <= 4; i++) {
             PlayerObject playerObject = this.getPlayerObjectMap().get(i);
@@ -72,12 +81,13 @@ public class VsPokerRoom extends Room {
             if (this.getStatus() == 2 || this.getStatus() == 3) {
                 sPlayerInfo.setPoker(this.getPokerMap().get(i + 1));
                 sPlayerInfo.setWin(playerObject.getWin());
+                sPlayerInfo.setWinBetPool(playerObject.getBetPool() * 1.95);
             }
             sVsPokerRoomInfo.getSPlayerInfoMap().put(i, sPlayerInfo);
         }
         //设置庄家的牌
         if (this.getStatus() == 2 || this.getStatus() == 3) {
-            sVsPokerRoomInfo.setBankPoker(this.getPokerMap().get(0));
+            sVsPokerRoomInfo.setBankPoker(this.getPokerMap().get(1));
         }
 
         this.sendMessageToBattle(sVsPokerRoomInfo, battleRole.getPlayerId());
@@ -104,6 +114,14 @@ public class VsPokerRoom extends Room {
 
         sVsPlayerXiazhu.setBattleRoleMoney(battleRole.getPlayerZJ());
         this.sendMessageToBattle(sVsPlayerXiazhu, battleRole.getPlayerId());
+    }
+
+
+    public void vsEnterRoomByRace (PlayerData playerData, ISession iSession) {
+        //初始化用户信息
+        BattleRole battleRole = this.enterRoom(playerData, iSession);
+        //设置房间信息
+        this.getVsPokerRoomInfo(battleRole);
     }
 
 }

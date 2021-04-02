@@ -38,14 +38,25 @@ public class SVsPokerRoomInfo extends AbstartCreateMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32 , order = 5, description = "4个下注区域 1 = A")
+    @Protobuf(fieldType = FieldType.MAP ,order = 5, description = "4个下注区域 1 = A")
     private Map<Integer, SPlayerInfo> sPlayerInfoMap = new HashMap<>(4);
 
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.OBJECT , order = 6, description = "庄家的牌")
     private Poker bankPoker;
-
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 7, description = "庄家的牌")
+    private int roomType;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 8, description = "庄家的牌")
+    private int rank;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 9, description = "庄家的牌")
+    private int round;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

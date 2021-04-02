@@ -1,5 +1,6 @@
 package com.ydqp.vspoker.handler;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
 import com.cfq.handler.IServerHandler;
@@ -13,6 +14,8 @@ import com.ydqp.common.entity.Player;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerEnterRoom;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
+import com.ydqp.vspoker.room.play.PlayVsPokerManager;
+import com.ydqp.vspoker.room.play.VsPokerBasePlay;
 
 @ServerHandler(module = "vsPoker", command = 7000005)
 public class VsPokerEnterRoomHandler implements IServerHandler {
@@ -29,15 +32,21 @@ public class VsPokerEnterRoomHandler implements IServerHandler {
             return;
         }
 
-        Player player = PlayerDao.getInstance().queryById(playerData.getPlayerId());
-        if(player == null) {
-            logger.error("no player");
+        // 只有zj 句我们才去获取用户身上的钱
+        if (vsPokerEnterRoom.getRoomType() == 3) {
+            Player player = PlayerDao.getInstance().queryById(playerData.getPlayerId());
+            if(player == null) {
+                logger.error("no player");
+                return;
+            }
+            playerData.setZjPoint(player.getZjPoint());
+        }
+
+        VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(vsPokerEnterRoom.getRoomType(), 1);
+        if (vsPokerBasePlay == null) {
+            logger.error("未找到对应的玩法类型，{} ", JSONObject.toJSONString(vsPokerEnterRoom));
             return;
         }
-        playerData.setZjPoint(player.getZjPoint());
-
-        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(7000001);
-        vsPokerRoom.vsEnterRoom(playerData, iSession);
-
+        vsPokerBasePlay.enterRoom(playerData, iSession, 0);
     }
 }

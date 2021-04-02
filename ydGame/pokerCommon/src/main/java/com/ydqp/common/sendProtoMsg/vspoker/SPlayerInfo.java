@@ -22,4 +22,8 @@ public class SPlayerInfo {
     @Protobuf(fieldType = FieldType.OBJECT , order = 3, description = "下注池子")
     private Poker poker;
 
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.DOUBLE , order = 4, description = "该池赢的钱")
+    private double winBetPool = 0.0;
 }

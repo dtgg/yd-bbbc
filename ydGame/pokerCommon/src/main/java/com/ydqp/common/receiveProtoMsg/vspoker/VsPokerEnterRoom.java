@@ -28,6 +28,10 @@ public class VsPokerEnterRoom extends AbstartParaseMessage {
     @Getter
     @Protobuf(fieldType = FieldType.INT32, order = 3)
     private int roomType;
+    @Setter
+    @Getter
+    @Protobuf(fieldType = FieldType.INT32, order = 4)
+    private int basePoint;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {

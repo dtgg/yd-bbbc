@@ -37,4 +37,8 @@ public class BattleRole {
     @Setter
     private boolean haveBet;
 
+    @Getter
+    @Setter
+    private int rank;
+
 }

@@ -26,6 +26,10 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
 
         vsPokerRoom.setStatus(0);
         logger.info("VsPokerSettlementHandler end");
+
+        if (vsPokerRoom.getRound() >=  1000) {
+            vsPokerRoom.setStatus(-1);
+        }
     }
 
     /**
@@ -48,7 +52,7 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             if (battleRole != null) {
                 //赔付
                 SVsPlayerWin sVsPlayerWin = new SVsPlayerWin();
-                double peiM = entry.getValue() * 2;
+                double peiM = entry.getValue() * 1.95;
                 battleRole.setPlayerZJ(battleRole.getPlayerZJ() + peiM);
 
                 sVsPlayerWin.setRoomId(vsPokerRoom.getRoomId());
