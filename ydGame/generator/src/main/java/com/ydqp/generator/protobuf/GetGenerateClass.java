@@ -21,7 +21,7 @@ public class GetGenerateClass {
 
     public static void loadPackage (String packages) {
 
-        String path = "D:\\yanfa\\youxi\\qp\\genPro";
+        String path = "D:\\project\\gameproject\\yd-bbbc\\proto";
         String[] p = new String[]{packages};
         Map<String, String> genFile = new HashMap<>();
         try {

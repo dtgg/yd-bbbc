@@ -1,0 +1,89 @@
+syntax="proto3";
+package com.ydqp.common.receiveProtoMsg;
+option java_outer_classname = "vsPoker";
+message VsPokerEnterRoom {  
+ int64 playerId=1;
+ int32 roomId=2;
+ int32 roomType=3;
+}
+message VsPokerXiazhu {  
+ int64 playerId=1;
+ int32 roomId=2;
+ int32 playType=3;
+ int32 money=4;
+}
+message SPlayerInfo {  
+// 下注池子
+ double betPool=1;
+// 下注池子
+ int32 win=2;
+// 下注池子
+ Poker poker=3;
+}
+message Poker {  
+ string tag=1;
+ int32 num=2;
+ bool isLaizigou=3;
+}
+message SVsCompareResult {  
+// roomId
+ int32 roomId=1;
+ // roomId
+ SPlayerInfo aPlayer=2;
+ // roomId
+ SPlayerInfo bPlayer=3;
+ // roomId
+ SPlayerInfo cPlayer=4;
+ // roomId
+ SPlayerInfo dPlayer=5;
+ // 庄家的牌
+ Poker bankPoker=6;
+}
+message SVsFaPai {  
+// roomId
+ int32 roomId=1;
+}
+message SVsPlayerWin {  
+// roomId
+ int32 roomId=1;
+// 用户id
+ int32 playerId=2;
+// 总的钱
+ int32 totalMoney=3;
+// 当局赢的钱
+ int32 winMoney=4;
+}
+message SVsPlayerXiazhu {  
+// roomId
+ int32 roomId=1;
+// 用户id
+ int32 playerId=2;
+// 用户id
+ int32 playType=3;
+// 用户id
+ double betPool=4;
+// 用户id
+ double betMoney=5;
+// 用户id
+ double battleRoleMoney=6;
+}
+message SVsPokerRoomInfo {  
+// roomId
+ int32 roomId=1;
+// roomStatus
+ int32 roomStatus=2;
+// curWaitTime
+ int32 curWaitTime=3;
+// roomId
+ double battleRoleMoney=4;
+// roomId
+ SPlayerInfo aPlayer=5;
+// roomId
+ SPlayerInfo bPlayer=6;
+// roomId
+ SPlayerInfo cPlayer=7;
+// roomId
+ SPlayerInfo dPlayer=8;
+// 庄家的牌
+ Poker bankPoker=9;
+}

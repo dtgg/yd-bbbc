@@ -8,13 +8,12 @@ import com.cfq.annotation.GenProto;
 import com.cfq.annotation.SendCommandAnnotation;
 import com.cfq.message.AbstartCreateMessage;
 import com.cfq.message.NetProtoMessage;
-import com.ydqp.common.poker.Poker;
 import lombok.Getter;
 import lombok.Setter;
 
-@SendCommandAnnotation(command = 7000002)
+@SendCommandAnnotation(command = 7000008)
 @GenProto(modulePro = "vsPoker")
-public class SVsCompareResult extends AbstartCreateMessage {
+public class SVsPlayerXiazhu extends AbstartCreateMessage {
 
     @Getter
     @Setter
@@ -22,32 +21,32 @@ public class SVsCompareResult extends AbstartCreateMessage {
     private int roomId;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 2, description = "roomId")
-    private SPlayerInfo aPlayer;
+    @Protobuf(fieldType = FieldType.INT32 , order = 2, description = "用户id")
+    private long playerId;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 3, description = "roomId")
-    private SPlayerInfo bPlayer;
+    @Protobuf(fieldType = FieldType.INT32 , order = 3, description = "用户id")
+    private int playType;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 4, description = "roomId")
-    private SPlayerInfo cPlayer;
+    @Protobuf(fieldType = FieldType.DOUBLE , order = 4, description = "用户id")
+    private double betPool;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 5, description = "roomId")
-    private SPlayerInfo dPlayer;
+    @Protobuf(fieldType = FieldType.DOUBLE , order = 5, description = "用户id")
+    private double betMoney;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.OBJECT , order = 6, description = "庄家的牌")
-    private Poker bankPoker;
+    @Protobuf(fieldType = FieldType.DOUBLE , order = 6, description = "用户id")
+    private double battleRoleMoney;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<SVsCompareResult> sVsCompareResultCodec = ProtobufProxy.create(SVsCompareResult.class);
-            byte[] bytes = sVsCompareResultCodec.encode(this);
+            Codec<SVsPlayerXiazhu> sVsPlayerXiazhuCodec = ProtobufProxy.create(SVsPlayerXiazhu.class);
+            byte[] bytes = sVsPlayerXiazhuCodec.encode(this);
             netProtoMessage.getNetProtoMessageBody().setBody(bytes);
         } catch (Exception e) {
             e.printStackTrace();

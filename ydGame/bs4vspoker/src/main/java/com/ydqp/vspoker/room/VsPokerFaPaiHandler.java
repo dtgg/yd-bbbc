@@ -28,5 +28,6 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
 
         vsPokerRoom.setStatus(1);
         vsPokerRoom.setCurWaitTime(15);
+        logger.info("fapai end");
     }
 }

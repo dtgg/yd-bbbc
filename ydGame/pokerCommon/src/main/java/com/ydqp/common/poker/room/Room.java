@@ -4,6 +4,7 @@ import com.cfq.connection.ISession;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartCreateMessage;
+import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.poker.ICardPoker;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,6 +78,58 @@ public abstract class Room implements IRoom{
         }
         ISession iSession = battleRole.getISession();
         iSession.sendMessageByID(abstartCreateMessage, battleRole.getConnId());
+    }
+
+    public void sendMessageToBattlesByFilter(AbstartCreateMessage abstartCreateMessage, long playerId){
+        //现发给正在打牌的用户
+        for(Map.Entry<Long, BattleRole> entry : getBattleRoleMap().entrySet()) {
+
+            if (entry.getValue().getPlayerId() == playerId) {
+                continue;
+            }
+            if(entry.getValue().isHaveBet()) {
+                ISession iSession = entry.getValue().getISession();
+                iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+            }
+
+        }
+
+        //发送给非战斗用户
+        for(Map.Entry<Long, BattleRole> entry : getBattleRoleMap().entrySet()) {
+            if (entry.getValue().getPlayerId() == playerId) {
+                continue;
+            }
+            if(entry.getValue().isHaveBet()) {
+                continue;
+            }
+            ISession iSession = entry.getValue().getISession();
+            iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+        }
+    }
+
+    public BattleRole enterRoom (PlayerData playerData, ISession iSession){
+        logger.info("enterRoom 玩家进入房间，生成battleRole信息，roomId = {}, playerid = {} ", this.getRoomId(), playerData.getPlayerId());
+        BattleRole battleRole = getBattleRoleMap().get(playerData.getPlayerId());
+        if (battleRole != null){
+            //已经在房间了
+            battleRole.setConnId(playerData.getSessionId());
+            battleRole.setPlayerZJ(playerData.getZjPoint());
+            battleRole.setPlayerUrl(playerData.getHeadUrl());
+            battleRole.setISession(iSession);
+            return battleRole;
+        }
+        //新玩家进来
+        battleRole = new BattleRole();
+        battleRole.setConnId(playerData.getSessionId());
+        battleRole.setPlayerZJ(playerData.getZjPoint());
+        battleRole.setPlayerId(playerData.getPlayerId());
+        battleRole.setPlayerName(playerData.getNickName());
+        battleRole.setPlayerUrl(playerData.getHeadUrl());
+        battleRole.setISession(iSession);
+
+        getBattleRoleMap().put(playerData.getPlayerId(),battleRole);
+        logger.info("enterRoom player enter room playerId = {}" , playerData.getPlayerId());
+        return battleRole;
     }
 
 }

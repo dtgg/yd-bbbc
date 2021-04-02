@@ -10,4 +10,9 @@
     <port>8895</port>
     <serverCode>50</serverCode>
   </bs_5>
+  <bs_7>
+    <addr>ws://127.0.0.1</addr>
+    <port>8897</port>
+    <serverCode>70</serverCode>
+  </bs_7>
 </connectInfo>
