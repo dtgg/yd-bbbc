@@ -73,4 +73,9 @@ public class PlayerDao {
         String sql = "select * from player where " + "id = '" + queryCondition + "';";
         return (Player) JdbcOrm.getInstance().getBean(sql, Player.class);
     }
+
+    public List<Player> queryByPlayerIds(String idsStr) {
+        String sql = "select * from player where id in "+idsStr+";";
+        return JdbcOrm.getInstance().getListBean(sql, Player.class);
+    }
 }

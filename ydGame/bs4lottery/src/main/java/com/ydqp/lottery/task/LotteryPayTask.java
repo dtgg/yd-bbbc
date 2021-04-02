@@ -8,6 +8,7 @@ import com.ydqp.common.dao.lottery.LotteryDao;
 import com.ydqp.common.dao.lottery.PlayerLotteryDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Lottery;
+import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.PlayerLottery;
 import com.ydqp.common.lottery.player.ILottery;
 import com.ydqp.common.lottery.player.ManageLottery;
@@ -22,7 +23,6 @@ import org.apache.commons.collections.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * 赔付
@@ -52,13 +52,26 @@ public class LotteryPayTask implements Runnable {
             playerLotteries = PlayerLotteryDao.getInstance().findByLotteryIds(lotteryIdsStr);
         }
 
+        Set<Long> playerIds = new HashSet<>();
         //房间中的用户连接ID
         Set<Long> connIds = new HashSet<>();
         if (CollectionUtils.isNotEmpty(playerLotteries)) {
             for (PlayerLottery playerLottery : playerLotteries) {
+                playerIds.add(playerLottery.getPlayerId());
                 LotteryBattleRole lotteryBattleRole = ManageLottery.getLotteryBattleRoleMap().get(playerLottery.getPlayerId());
                 if (lotteryBattleRole != null) {
                     connIds.add(lotteryBattleRole.getConnId());
+                }
+            }
+        }
+
+        //批量获取用户信息
+        Map<Long, Player> playerMap = new HashMap<>();
+        if (CollectionUtils.isNotEmpty(playerIds)) {
+            List<Player> players = PlayerService.getInstance().queryByPlayerIds(CommonUtils.longString(new ArrayList<>(playerIds)));
+            if (CollectionUtils.isNotEmpty(players)) {
+                for (Player player : players) {
+                    playerMap.put(player.getId(), player);
                 }
             }
         }
@@ -105,6 +118,13 @@ public class LotteryPayTask implements Runnable {
             for (PlayerLottery playerLottery : playerLotteries) {
                 try {
                     if (playerLottery.getLotteryId() != lottery.getId()) continue;
+                    if (playerMap.get(playerLottery.getPlayerId()) == null ||
+                            playerMap.get(playerLottery.getPlayerId()).getIsVir() != playerLottery.getIsVir()) {
+                        logger.info("用户已充值，虚拟下注不赔付，playerId:{}, playerLotteryId:{}",
+                                playerLottery.getPlayerId(), playerLottery.getId());
+                        continue;
+                    }
+
                     long playerId = playerLottery.getPlayerId();
 
                     LotteryDrawNotificationSuc suc = new LotteryDrawNotificationSuc();
