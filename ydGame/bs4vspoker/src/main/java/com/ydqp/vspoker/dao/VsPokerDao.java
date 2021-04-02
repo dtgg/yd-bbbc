@@ -22,8 +22,8 @@ public class VsPokerDao {
         return raceList;
     }
 
-    public void updateRaceStatus(int id) {
-        String  sql = "update vs_race set status = 1 where id = " + id +";";
+    public void updateRaceStatus(int id, int status) {
+        String  sql = "update vs_race set status = " + status + " where id = " + id +";";
         JdbcOrm.getInstance().update(sql);
     }
 }

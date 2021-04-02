@@ -32,7 +32,7 @@ public class VsPokerXiazhu extends AbstartParaseMessage {
     @Setter
     @Getter
     @Protobuf(fieldType = FieldType.INT32, order = 4)
-    private double money;
+    private int money;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {

@@ -21,7 +21,7 @@ public class SVsPlayerXiazhu extends AbstartCreateMessage {
     private int roomId;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT32 , order = 2, description = "用户id")
+    @Protobuf(fieldType = FieldType.INT64 , order = 2, description = "用户id")
     private long playerId;
     @Getter
     @Setter

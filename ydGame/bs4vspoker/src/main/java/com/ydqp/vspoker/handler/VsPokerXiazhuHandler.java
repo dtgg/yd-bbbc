@@ -30,28 +30,40 @@ public class VsPokerXiazhuHandler implements IServerHandler {
             return;
         }
 
-        Player player = PlayerDao.getInstance().queryById(playerData.getPlayerId());
-        if(player == null) {
-            logger.error("no player");
-            return;
-        }
-        playerData.setZjPoint(player.getZjPoint());
-
-        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(7000001);
+        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
         if (vsPokerRoom.getStatus() != 1) {
             logger.error("玩家下注，房间不在下注时间内");
             return;
         }
-        if(vsPokerXiazhu.getMoney() > player.getZjPoint()) {
-            logger.error("玩家下注，身上钱不够，playerId = {}， money = {} playerMoney= {}", player.getId(), vsPokerXiazhu.getMoney(),
-                    player.getZjPoint());
-            return;
+
+        if (vsPokerRoom.getRoomType() == 3) {
+            Player player = PlayerDao.getInstance().queryById(playerData.getPlayerId());
+            if(player == null) {
+                logger.error("no player");
+                return;
+            }
+            playerData.setZjPoint(player.getZjPoint());
+
+            if(vsPokerXiazhu.getMoney() > player.getZjPoint()) {
+                logger.error("玩家下注，身上钱不够，playerId = {}， money = {} playerMoney= {}", player.getId(), vsPokerXiazhu.getMoney(),
+                        player.getZjPoint());
+                return;
+            }
         }
-        BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(player.getId());
+
+        BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(playerData.getPlayerId());
         if (battleRole == null) {
-            logger.error("玩家下注，获取不到玩家，playerId = {}， money = {} playerMoney= {}", player.getId());
+            logger.error("玩家下注，获取不到玩家，playerId = {}， money = {} playerMoney= {}", playerData.getPlayerId());
             return;
         }
-        vsPokerRoom.playerXiazhu(player, battleRole, vsPokerXiazhu);
+        if (vsPokerRoom.getRoomType() == 1 ||vsPokerRoom.getRoomType() == 2) {
+            if(vsPokerXiazhu.getMoney() > battleRole.getPlayerZJ()) {
+                logger.error("玩家下注，身上钱不够，playerId = {}， money = {} playerMoney= {}", battleRole.getPlayerId(), vsPokerXiazhu.getMoney(),
+                        battleRole.getPlayerZJ());
+                return;
+            }
+        }
+
+        vsPokerRoom.playerXiazhu(null, battleRole, vsPokerXiazhu);
     }
 }

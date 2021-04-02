@@ -24,17 +24,17 @@ public class PlayVsPokerManager {
     private final List<VsPokerBasePlay> zjRacePlayObjects = new ArrayList<>();
 
 
-    public void generaPlayObject(int roomType, int basePoint) {
+    public void generaPlayObject(int roomType, int basePoint, int raceId) {
         if (roomType == 1) {
             //生成免费赛
-            RaceVsPokerPlayObject freeRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType);
+            RaceVsPokerPlayObject freeRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId);
             freeRacePlayObjects.add(freeRaceVsPokerPlayObject);
             freeRaceVsPokerPlayObject.generatorRoom();
         }
 
         if (roomType == 2) {
             //包名赛
-            RaceVsPokerPlayObject zjRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType);
+            RaceVsPokerPlayObject zjRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId);
             zjRacePlayObjects.add(zjRaceVsPokerPlayObject);
             zjRaceVsPokerPlayObject.generatorRoom();
         }
@@ -42,18 +42,18 @@ public class PlayVsPokerManager {
 
     }
 
-    public VsPokerBasePlay getPlayObject(int roomType, int basePoint) {
+    public VsPokerBasePlay getPlayObject(int roomType, int basePoint, int raceId) {
 
         if (roomType == 1) {
             //目前免费赛只有一个
             for(VsPokerBasePlay vsPokerBasePlay : freeRacePlayObjects) {
-                if (vsPokerBasePlay.checkTheRoomType(roomType, basePoint)) {
+                if (vsPokerBasePlay.checkTheRoomType(roomType, basePoint, raceId)) {
                     return vsPokerBasePlay;
                 }
             }
         } else if (roomType == 2) {
             for(VsPokerBasePlay vsPokerBasePlay : zjRacePlayObjects) {
-                if (vsPokerBasePlay.checkTheRoomType(roomType, basePoint)) {
+                if (vsPokerBasePlay.checkTheRoomType(roomType, basePoint, raceId)) {
                     return vsPokerBasePlay;
                 }
             }

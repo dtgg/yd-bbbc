@@ -10,6 +10,6 @@ public interface VsPokerBasePlay {
 
     void enterRoom(PlayerData playerData, ISession iSession, int roomId);
 
-    boolean checkTheRoomType(int roomType, int basePoint);
+    boolean checkTheRoomType(int roomType, int basePoint, int raceId);
 
 }

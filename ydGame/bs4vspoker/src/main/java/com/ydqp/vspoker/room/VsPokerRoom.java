@@ -117,11 +117,4 @@ public class VsPokerRoom extends Room {
     }
 
 
-    public void vsEnterRoomByRace (PlayerData playerData, ISession iSession) {
-        //初始化用户信息
-        BattleRole battleRole = this.enterRoom(playerData, iSession);
-        //设置房间信息
-        this.getVsPokerRoomInfo(battleRole);
-    }
-
 }

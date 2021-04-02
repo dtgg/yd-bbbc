@@ -20,17 +20,22 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
     @Getter
     @Setter
     private int roomType; // 1 免费赛  2 报名赛  3 zj
+    @Getter
+    @Setter
+    private int raceId;
 
     private List<Integer> roomIdList = new ArrayList<>();
 
-    public AbstractVsPokerPlay(int basePoint, int roomType){
+    public AbstractVsPokerPlay(int basePoint, int roomType, int raceId){
         this.basePoint = basePoint;
         this.roomType = roomType;
+        this.raceId = raceId;
     }
 
     @Override
     public VsPokerRoom generatorRoom() {
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().createVsPokerRoom(roomType,basePoint);
+        vsPokerRoom.setRaceId(this.raceId);
         RoomManager.getInstance().putRoom(vsPokerRoom);
 
         roomIdList.add(vsPokerRoom.getRoomId());
@@ -48,10 +53,17 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
     }
 
     @Override
-    public boolean checkTheRoomType(int roomType, int basePoint) {
-        if (this.roomType == roomType && this.basePoint == basePoint){
-            return true;
+    public boolean checkTheRoomType(int roomType, int basePoint, int raceId) {
+        if (roomType == 1 || roomType == 2) {
+            if (this.raceId == raceId){
+                return true;
+            }
+        } else {
+            if (this.roomType == roomType && this.basePoint == basePoint){
+                return true;
+            }
         }
+
         return false;
     }
 }

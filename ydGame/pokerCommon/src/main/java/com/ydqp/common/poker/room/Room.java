@@ -44,6 +44,10 @@ public abstract class Room implements IRoom{
     @Setter
     private int basePoint;
 
+    @Getter
+    @Setter
+    private int raceId;
+
     /**
      * 发送 消息给房间的所有用户
      * @param abstartCreateMessage

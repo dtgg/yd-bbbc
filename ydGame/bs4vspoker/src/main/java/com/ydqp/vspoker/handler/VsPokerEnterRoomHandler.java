@@ -12,8 +12,6 @@ import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerEnterRoom;
-import com.ydqp.vspoker.room.RoomManager;
-import com.ydqp.vspoker.room.VsPokerRoom;
 import com.ydqp.vspoker.room.play.PlayVsPokerManager;
 import com.ydqp.vspoker.room.play.VsPokerBasePlay;
 
@@ -42,7 +40,8 @@ public class VsPokerEnterRoomHandler implements IServerHandler {
             playerData.setZjPoint(player.getZjPoint());
         }
 
-        VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(vsPokerEnterRoom.getRoomType(), 1);
+        VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(vsPokerEnterRoom.getRoomType(), 1,
+                vsPokerEnterRoom.getRaceId());
         if (vsPokerBasePlay == null) {
             logger.error("未找到对应的玩法类型，{} ", JSONObject.toJSONString(vsPokerEnterRoom));
             return;

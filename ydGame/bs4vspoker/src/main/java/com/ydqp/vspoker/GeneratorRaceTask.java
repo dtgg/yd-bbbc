@@ -27,10 +27,10 @@ public class GeneratorRaceTask extends TimerTask {
             List<VsRace> vsRaceList = VsPokerDao.getInstance().getVsRaceByCreateTime(beginTime);
             logger.info("获取赛事信息， {}", JSONObject.toJSONString(vsRaceList));
             for (VsRace vsRace : vsRaceList) {
-                PlayVsPokerManager.getInstance().generaPlayObject(vsRace.getRaceType(), vsRace.getBasePoint());
+                PlayVsPokerManager.getInstance().generaPlayObject(vsRace.getRaceType(), vsRace.getBasePoint(), vsRace.getId());
 
                 //更新状态
-                VsPokerDao.getInstance().updateRaceStatus(vsRace.getId());
+                VsPokerDao.getInstance().updateRaceStatus(vsRace.getId(), 1);
             }
         }
 

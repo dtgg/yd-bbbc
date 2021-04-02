@@ -6,6 +6,7 @@ message VsPokerEnterRoom {
  int32 roomId=2;
  int32 roomType=3;
  int32 basePoint=4;
+ int32 raceId=5;
 }
 message VsPokerXiazhu {  
  int64 playerId=1;
