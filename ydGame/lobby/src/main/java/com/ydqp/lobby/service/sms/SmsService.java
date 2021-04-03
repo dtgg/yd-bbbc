@@ -36,6 +36,13 @@ public class SmsService {
     private static final String SMS_CHUANG_LAN_URL = "http://intapi.253.com/send/json";
     private static final String SMS_CHUANG_LAN_MSG = "【LuckyTime】Your Verification Code is :";
 
+    public static void main(String[] args) {
+        SmsSend smsSend = new SmsSend();
+        smsSend.setMobile("1357924680");
+        smsSend.setAreaCode(91);
+        SmsService.getInstance().sendVerifyCode(smsSend);
+    }
+
     public boolean sendVerifyCode(SmsSend smsSend) {
         String mobile = smsSend.getMobile();
         int areaCode = smsSend.getAreaCode();
@@ -52,8 +59,11 @@ public class SmsService {
             return false;
         }
         // 发送短信验证码
-        String code = sendSmsByTianYiHong(mobile, areaCode);
+//        String code = sendSmsByTianYiHong(mobile, areaCode);
 //        String code = "1234";
+        //手机号后四位
+        String code = mobile.substring(mobile.length() - 4);
+        logger.info("手机号:{}, 验证码：{}", mobile, code);
         if (code != null) {
             // 保存验证码至redis
             PlayerCache.getInstance().addVerificationCode(mobile, code);
