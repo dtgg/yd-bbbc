@@ -92,6 +92,7 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         SVsPlayerRace sVsPlayerRace = new SVsPlayerRace();
         sVsPlayerRace.setPlayerId(vsPokerRaceJoin.getPlayerId());
         sVsPlayerRace.setRaceId(vsPokerRaceJoin.getRaceId());
+        sVsPlayerRace.setCurPlayerNum(race.getCurPlayerNum() + 1);
 
         sVsPokerRaceJoin.setSuccess(true);
         sVsPokerRaceJoin.setSVsPlayerRace(sVsPlayerRace);

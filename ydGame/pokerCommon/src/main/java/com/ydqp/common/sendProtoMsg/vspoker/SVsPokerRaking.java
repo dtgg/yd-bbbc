@@ -20,7 +20,12 @@ public class SVsPokerRaking extends AbstartCreateMessage {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.OBJECT, order = 1)
-    private List<SVsPlayerRankData> SPlayerRankData;
+    private List<SVsPlayerRankData> sPlayerRankData;
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.OBJECT, order = 2)
+    private SVsPlayerRankData playerRankData;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

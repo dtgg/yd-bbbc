@@ -1,7 +1,6 @@
 package com.ydqp.vspoker.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cfq.annotation.GenProto;
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
 import com.cfq.handler.IServerHandler;
@@ -35,17 +34,25 @@ public class VsPokerRankingHandler implements IServerHandler {
         }
 
         Set<String> rankInfo = RankingCache.getInstance().getRankInfo(rank.getRaceId());
+        List<String> rankInfoList = new ArrayList<>(rankInfo);
         List<SVsPlayerRankData> list = new ArrayList<>();
-
+        SVsPlayerRankData playerRankData = new SVsPlayerRankData();
         if (CollectionUtils.isNotEmpty(rankInfo)) {
-            for (String data : rankInfo) {
+            for (int i = 0; i < rankInfoList.size(); i++) {
+                String data = rankInfoList.get(i);
                 SVsPlayerRankData SPlayerRankData = JSONObject.parseObject(data, SVsPlayerRankData.class);
+                SPlayerRankData.setRank(i + 1);
                 list.add(SPlayerRankData);
+
+                if (SPlayerRankData.getPlayerId() == playerData.getPlayerId()) {
+                    playerRankData = SPlayerRankData;
+                }
             }
         }
 
         SVsPokerRaking sVsPokerRaking = new SVsPokerRaking();
         sVsPokerRaking.setSPlayerRankData(list);
+        sVsPokerRaking.setPlayerRankData(playerRankData);
         iSession.sendMessageByID(sVsPokerRaking, rank.getConnId());
     }
 }

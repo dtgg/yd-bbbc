@@ -18,4 +18,9 @@ public class SVsPlayerRace {
     @Setter
     @Protobuf(fieldType = FieldType.INT32 , order = 2, description = "赛事ID")
     private int raceId;
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 3, description = "用户ID")
+    private int curPlayerNum;
 }

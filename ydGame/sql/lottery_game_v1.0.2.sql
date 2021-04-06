@@ -1,4 +1,5 @@
 -- 赛事
+
 CREATE TABLE `vs_race` (
   `id` int(10) NOT NULL,
   `raceType` int(10) DEFAULT 1 COMMENT '1 免费、2 报名 3 zj',
@@ -11,3 +12,15 @@ CREATE TABLE `vs_race` (
   `createTime` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 报名记录
+CREATE TABLE `vs_player_race`(
+    `id`         int(10) NOT NULL AUTO_INCREMENT,
+    `playerId`   bigint(20) DEFAULT NULL,
+    `raceId`     int(10) DEFAULT NULL,
+    `raceType`   int(10) DEFAULT 1,
+    `basePoint`  int(10) DEFAULT 1,
+    `rank`       int(10) DEFAULT 0,
+    `createTime` int(10) DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
