@@ -107,6 +107,14 @@ public class VsPokerRoom extends Room {
             return;
         }
         playerObject.setBetPool(playerObject.getBetPool() + vsPokerXiazhu.getMoney());
+
+        Double betMoney = playerObject.getBetBattleRoleId().get(battleRole.getPlayerId());
+        if (betMoney!= null) {
+            playerObject.getBetBattleRoleId().put(battleRole.getPlayerId(), betMoney + vsPokerXiazhu.getMoney());
+        } else {
+            playerObject.getBetBattleRoleId().put(battleRole.getPlayerId(), (double)vsPokerXiazhu.getMoney());
+        }
+
         sVsPlayerXiazhu.setBetPool(playerObject.getBetPool());
         sVsPlayerXiazhu.setPlayType(vsPokerXiazhu.getPlayType());
 

@@ -48,6 +48,9 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
 
         for (int rid : roomIdList) {
             VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(rid);
+            if (vsPokerRoom == null) {
+                continue;
+            }
             vsPokerRoom.vsEnterRoom(playerData, iSession);
         }
     }

@@ -45,11 +45,11 @@ message SVsPlayerWin {
 // roomId
  int32 roomId=1;
 // 用户id
- int32 playerId=2;
+ int64 playerId=2;
 // 总的钱
- int32 totalMoney=3;
+ double totalMoney=3;
 // 当局赢的钱
- int32 winMoney=4;
+ double winMoney=4;
 }
 message SVsPlayerXiazhu {  
 // roomId

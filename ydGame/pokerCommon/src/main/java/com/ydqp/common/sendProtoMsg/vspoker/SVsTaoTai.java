@@ -11,9 +11,9 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@SendCommandAnnotation(command = 7000003)
+@SendCommandAnnotation(command = 7000009)
 @GenProto(modulePro = "vsPoker")
-public class SVsPlayerWin extends AbstartCreateMessage {
+public class SVsTaoTai extends AbstartCreateMessage {
 
     @Getter
     @Setter
@@ -25,20 +25,20 @@ public class SVsPlayerWin extends AbstartCreateMessage {
     private long playerId;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.DOUBLE , order = 3, description = "总的钱")
-    private double totalMoney;
+    @Protobuf(fieldType = FieldType.INT32 , order = 3, description = "roomId")
+    private int rank;
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.DOUBLE , order = 4, description = "当局赢的钱")
-    private double winMoney;
+    @Protobuf(fieldType = FieldType.DOUBLE , order = 4, description = "roomId")
+    private double points;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
         NetProtoMessage netProtoMessage = new NetProtoMessage();
         netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
         try {
-            Codec<SVsPlayerWin> sVsPlayerWinCodec = ProtobufProxy.create(SVsPlayerWin.class);
-            byte[] bytes = sVsPlayerWinCodec.encode(this);
+            Codec<SVsTaoTai> sVsTaoTaiCodec = ProtobufProxy.create(SVsTaoTai.class);
+            byte[] bytes = sVsTaoTaiCodec.encode(this);
             netProtoMessage.getNetProtoMessageBody().setBody(bytes);
         } catch (Exception e) {
             e.printStackTrace();
