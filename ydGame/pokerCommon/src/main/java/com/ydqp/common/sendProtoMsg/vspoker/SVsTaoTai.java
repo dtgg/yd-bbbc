@@ -30,7 +30,7 @@ public class SVsTaoTai extends AbstartCreateMessage {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.DOUBLE , order = 4, description = "roomId")
-    private double points;
+    private double bonus;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

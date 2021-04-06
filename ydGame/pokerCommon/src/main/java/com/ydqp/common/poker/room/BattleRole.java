@@ -41,4 +41,8 @@ public class BattleRole {
     @Setter
     private int rank;
 
+    @Setter
+    @Getter
+    private int isOut;
+
 }

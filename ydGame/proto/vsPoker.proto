@@ -50,6 +50,7 @@ message SVsPlayerWin {
  double totalMoney=3;
 // 当局赢的钱
  double winMoney=4;
+ repeated int32 winTypes=5;
 }
 message SVsPlayerXiazhu {  
 // roomId
@@ -80,4 +81,29 @@ message SVsPokerRoomInfo {
  int32 roomType=7;
  int32 rank=8;
  int32 round=9;
+}
+message SVsTaoTai {
+ // roomId
+ int32 roomId=1;
+ // 用户id
+ int32 playerId=2;
+ int32 rank=3;
+ double bonus=4;
+}
+
+message SVsBonusRank {
+ string playerName=1;
+ double bonus=2;
+ double points=3;
+}
+
+message SVsRaceEnd {
+ // roomId
+ int32 roomId=1;
+
+ map<int32, SVsBonusRank> bonusRankMap=2;
+
+ int64 playerId = 3;
+ int32 rank=4;
+ double bonus=5;
 }

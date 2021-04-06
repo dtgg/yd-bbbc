@@ -145,6 +145,9 @@ public abstract class Room implements IRoom{
         BattleRole battleRole = getBattleRoleMap().get(playerData.getPlayerId());
         if (battleRole != null){
             //已经在房间了
+            if (battleRole.getIsOut() == 1) {
+                return null;
+            }
             battleRole.setConnId(playerData.getSessionId());
             battleRole.setPlayerUrl(playerData.getHeadUrl());
             battleRole.setISession(iSession);

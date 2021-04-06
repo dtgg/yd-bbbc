@@ -8,3 +8,5 @@ s->c
 7000003 = SVsPlayerWin //输赢情况
 7000006 = SVsPokerRoomInfo // 房间信息
 7000008 = SVsPlayerXiazhu// 用户下注
+7000009 = SVsTaoTai//用户淘汰
+7000010 = SVsRaceEnd//比赛结束

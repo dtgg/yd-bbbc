@@ -24,18 +24,24 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
     @Setter
     private int raceId;
 
+    @Setter
+    @Getter
+    private int totalRound;
+
     private List<Integer> roomIdList = new ArrayList<>();
 
-    public AbstractVsPokerPlay(int basePoint, int roomType, int raceId){
+    public AbstractVsPokerPlay(int basePoint, int roomType, int raceId, int totalRound){
         this.basePoint = basePoint;
         this.roomType = roomType;
         this.raceId = raceId;
+        this.totalRound = totalRound;
     }
 
     @Override
     public VsPokerRoom generatorRoom() {
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().createVsPokerRoom(roomType,basePoint);
         vsPokerRoom.setRaceId(this.raceId);
+        vsPokerRoom.setTotalRounds(this.totalRound);
         RoomManager.getInstance().putRoom(vsPokerRoom);
 
         roomIdList.add(vsPokerRoom.getRoomId());

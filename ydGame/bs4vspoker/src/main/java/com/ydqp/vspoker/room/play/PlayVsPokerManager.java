@@ -24,17 +24,17 @@ public class PlayVsPokerManager {
     private final List<VsPokerBasePlay> zjRacePlayObjects = new ArrayList<>();
 
 
-    public void generaPlayObject(int roomType, int basePoint, int raceId) {
+    public void generaPlayObject(int roomType, int basePoint, int raceId, int totalRound) {
         if (roomType == 1) {
             //生成免费赛
-            RaceVsPokerPlayObject freeRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId);
+            RaceVsPokerPlayObject freeRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId, totalRound);
             freeRacePlayObjects.add(freeRaceVsPokerPlayObject);
             freeRaceVsPokerPlayObject.generatorRoom();
         }
 
         if (roomType == 2) {
             //包名赛
-            RaceVsPokerPlayObject zjRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId);
+            RaceVsPokerPlayObject zjRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId, totalRound);
             zjRacePlayObjects.add(zjRaceVsPokerPlayObject);
             zjRaceVsPokerPlayObject.generatorRoom();
         }

@@ -17,6 +17,7 @@ public class VsRace implements Serializable {
 	public static final String BASEPOINT_NAME = "basePoint";
 	public static final String MAXPLAYERNUM_NAME = "maxPlayerNum";
 	public static final String CURPLAYERNUM_NAME = "curPlayerNum";
+	public static final String TOTALROUND_NAME = "totalRound";
 	public static final String STATUS_NAME = "status";
 	public static final String BEGINTIME_NAME = "beginTime";
 	public static final String CREATETIME_NAME = "createTime";
@@ -62,6 +63,16 @@ public class VsRace implements Serializable {
 	 this.curPlayerNum = curPlayerNum;
 	 entityMap.put(CURPLAYERNUM_NAME, curPlayerNum);
 	}
+
+	private int totalRound;
+	public int getTotalRound() {
+		return totalRound;
+	}
+	public void setTotalRound(int totalRound){
+		this.totalRound = totalRound;
+		entityMap.put(TOTALROUND_NAME, totalRound);
+	}
+
 	private int status;
 	public int getStatus() {
 	return status;

@@ -39,6 +39,10 @@ public class VsPokerRoom extends Room {
     @Getter
     private Map<Integer, PlayerObject> playerObjectMap = new ConcurrentHashMap<>(4); //下注玩家
 
+    @Getter
+    @Setter
+    private int totalRounds = 15;
+
     @Override
     public void monitor() {
         try {
@@ -58,6 +62,9 @@ public class VsPokerRoom extends Room {
         } else {
             //初始化用户信息
             battleRole = this.enterRoom(playerData, iSession);
+        }
+        if (battleRole == null) {
+            return;
         }
 
         //设置房间信息

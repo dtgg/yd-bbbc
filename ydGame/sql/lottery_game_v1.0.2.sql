@@ -5,6 +5,7 @@ CREATE TABLE `vs_race` (
   `basePoint` int(10) DEFAULT 1,
   `maxPlayerNum` int(10) DEFAULT 1 COMMENT '最大人数',
   `curPlayerNum` int(10) DEFAULT 0 COMMENT '当前人数',
+  `totalRound` int(10) DEFAULT 15 COMMENT '本次比赛最多的局数',
   `status` int(10) DEFAULT 0 COMMENT '0 未开始 1 正在比赛 2 比赛结束',
   `beginTime` int(10) DEFAULT NULL,
   `createTime` int(10) DEFAULT NULL,

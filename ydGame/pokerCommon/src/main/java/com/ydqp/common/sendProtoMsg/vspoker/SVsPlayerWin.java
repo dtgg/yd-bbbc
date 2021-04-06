@@ -11,6 +11,8 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @SendCommandAnnotation(command = 7000003)
 @GenProto(modulePro = "vsPoker")
 public class SVsPlayerWin extends AbstartCreateMessage {
@@ -31,6 +33,10 @@ public class SVsPlayerWin extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.DOUBLE , order = 4, description = "当局赢的钱")
     private double winMoney;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 5, description = "当局赢的区域")
+    private List<Integer> winTypes;
 
     @Override
     public NetProtoMessage encodeSendMessage() {
