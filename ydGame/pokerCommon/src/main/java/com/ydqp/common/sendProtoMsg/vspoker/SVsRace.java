@@ -45,6 +45,11 @@ public class SVsRace {
     @Protobuf(fieldType = FieldType.INT32 , order = 7, description = "报名状态")
     private int joinStatus;
 
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 8, description = "基础分")
+    private int basePoint;
+
     public SVsRace() {
 
     }
@@ -56,5 +61,6 @@ public class SVsRace {
         this.curPlayerNum = vsRace.getCurPlayerNum();
         this.maxPlayerNum = vsRace.getMaxPlayerNum();
         this.status = vsRace.getStatus();
+        this.basePoint = vsRace.getBasePoint();
     }
 }

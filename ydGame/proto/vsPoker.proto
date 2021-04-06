@@ -103,16 +103,19 @@ message SVsRace {
  int32 maxPlayerNum = 5;
  int32 status = 6;
  int32 joinStatus = 7;
+ int32 basePoint = 8;
 }
 message SVsPlayerRace {
  int64 playerId = 1;
  int32 raceId = 2;
+ int32 curPlayerNum = 3;
 }
 message SVsPlayerRankData {
  int64 playerId = 1;
  string playerName = 2;
  double bonus = 3;
  int32 point = 4;
+ int32 rank = 5;
 }
 message SVsPokerRaces {
  repeated SVsRace sVsRaces = 1;
@@ -121,7 +124,8 @@ message SVsPokerRaceHistory {
  repeated SVsRace sVsRaces = 1;
 }
 message SVsPokerRanking {
- repeated SVsPlayerRankData SPlayerRankData = 1;
+ repeated SVsPlayerRankData sPlayerRankData = 1;
+ SVsPlayerRankData playerRankData = 2;
 }
 message SVsPokerRaceJoin {
  bool success = 1;

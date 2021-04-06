@@ -19,10 +19,10 @@ public class RankingCache {
 
     private static final String RANKING_KEY = "RANKING:";
 
-    public void addRank(int raceId, Double point, SVsPlayerRankData data) {
+    public void addRank(int raceId, SVsPlayerRankData data) {
         long currentTimeMillis = System.currentTimeMillis();
         double decimal = currentTimeMillis / 10e12;
-        point += decimal;
+        double point = data.getPoint() + decimal;
 
         Jedis jedis = JedisUtil.getInstance().getJedis();
         try {
@@ -45,5 +45,17 @@ public class RankingCache {
             JedisUtil.getInstance().closeJedis(jedis);
         }
         return data;
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 100; i++) {
+            SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData();
+            sVsPlayerRankData.setPlayerId((long) i);
+            String format = String.format("%03d", i);
+            sVsPlayerRankData.setPlayerName("0000000" + format);
+            sVsPlayerRankData.setBonus((double) i);
+            sVsPlayerRankData.setPoint(i);
+            RankingCache.getInstance().addRank(4, sVsPlayerRankData);
+        }
     }
 }

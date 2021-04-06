@@ -11,7 +11,7 @@ public class SVsPlayerRankData {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.INT64 , order = 1, description = "赛事ID")
-    private Long playerId;
+    private long playerId;
 
     @Getter
     @Setter
@@ -21,10 +21,15 @@ public class SVsPlayerRankData {
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.DOUBLE , order = 3, description = "赛事ID")
-    private Double bonus;
+    private double bonus;
 
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.INT32 , order = 4, description = "赛事ID")
-    private Integer point;
+    private int point;
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 5, description = "排序")
+    private int rank;
 }
