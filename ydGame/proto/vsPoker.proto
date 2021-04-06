@@ -81,3 +81,50 @@ message SVsPokerRoomInfo {
  int32 rank=8;
  int32 round=9;
 }
+
+message VsPokerRaces {
+ int64 playerId = 1;
+}
+message VsPokerRaceHistory {
+ int64 playerId = 1;
+}
+message VsPokerRanking {
+ int32 raceId = 1;
+}
+message VsPokerRaceJoin {
+ int64 playerId = 1;
+ int32 raceId = 2;
+}
+message SVsRace {
+ int32 id = 1;
+ int32 raceType = 2;
+ int32 beginTime = 3;
+ int32 curPlayerNum = 4;
+ int32 maxPlayerNum = 5;
+ int32 status = 6;
+ int32 joinStatus = 7;
+}
+message SVsPlayerRace {
+ int64 playerId = 1;
+ int32 raceId = 2;
+}
+message SVsPlayerRankData {
+ int64 playerId = 1;
+ string playerName = 2;
+ double bonus = 3;
+ int32 point = 4;
+}
+message SVsPokerRaces {
+ repeated SVsRace sVsRaces = 1;
+}
+message SVsPokerRaceHistory {
+ repeated SVsRace sVsRaces = 1;
+}
+message SVsPokerRanking {
+ repeated SVsPlayerRankData SPlayerRankData = 1;
+}
+message SVsPokerRaceJoin {
+ bool success = 1;
+ string message = 2;
+ SVsPlayerRace sVsPlayerRace = 3;
+}
