@@ -13,6 +13,7 @@ import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerXiazhu;
 import com.ydqp.common.sendProtoMsg.vspoker.SPlayerInfo;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerXiazhu;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRoomInfo;
+import com.ydqp.vspoker.cache.RankingCache;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -77,9 +78,11 @@ public class VsPokerRoom extends Room {
         sVsPokerRoomInfo.setCurWaitTime(this.getCurWaitTime());
         sVsPokerRoomInfo.setRoomStatus(this.getStatus());
         sVsPokerRoomInfo.setBattleRoleMoney(battleRole.getPlayerZJ());
-        sVsPokerRoomInfo.setRank(1);
+        Long rankNo = RankingCache.getInstance().getRankNo(this.getRaceId(), battleRole.getPlayerId());
+        sVsPokerRoomInfo.setRank(rankNo.intValue() + 1);
         sVsPokerRoomInfo.setRoomType(this.getRoomType());
         sVsPokerRoomInfo.setRound(this.getRound());
+        sVsPokerRoomInfo.setRaceId(this.getRaceId());
 
         for (int i = 1; i <= 4; i++) {
             PlayerObject playerObject = this.getPlayerObjectMap().get(i);

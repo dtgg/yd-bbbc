@@ -81,6 +81,7 @@ message SVsPokerRoomInfo {
  int32 roomType=7;
  int32 rank=8;
  int32 round=9;
+ int32 raceId=10;
 }
 message SVsTaoTai {
  // roomId
@@ -169,4 +170,16 @@ message SVsPokerGameRank {
 message SVsPokerPerRanking {
  int64 playerId = 1;
  int32 rank = 2;
+}
+
+message VsPokerCheckPlayerOut {
+ int64 playerId=1;
+ int32 roomId=2;
+ int32 roomType=3;
+ int32 basePoint=4;
+ int32 raceId=5;
+}
+message SVsPokerCheckPlayerOut {
+ bool enterEnabled = 1;
+ int32 status = 2;          //1:比赛未开始; 2:被淘汰; 3:比赛已结束; 4:无效的玩法类型
 }

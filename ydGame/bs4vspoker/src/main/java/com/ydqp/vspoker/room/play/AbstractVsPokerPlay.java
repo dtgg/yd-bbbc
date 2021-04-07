@@ -85,4 +85,20 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
 
         return false;
     }
+
+    @Override
+    public boolean checkPlayerOut(PlayerData playerData) {
+        for (int rid : roomIdList) {
+            VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(rid);
+            if (vsPokerRoom == null) {
+                continue;
+            }
+            for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
+                if (entry.getValue().getPlayerId() == playerData.getPlayerId() && entry.getValue().getIsOut() == 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

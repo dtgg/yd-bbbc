@@ -48,7 +48,7 @@ public class DelRoomTask implements Runnable{
                     RoomManager.getInstance().getVsPokerRoomMapMap().remove(roomId);
                     NumberPool.getInstance().push(roomId);
 
-//                    RankingCache.getInstance().delRankInfo(room.getRaceId());
+                    RankingCache.getInstance().delRankInfo(room.getRaceId());
 
                     logger.info("删除房间结束，roomId = {}", roomId);
                 }

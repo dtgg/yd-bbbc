@@ -9,6 +9,7 @@ import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.VsPlayerRace;
 import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.CommonUtils;
+import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.room.VsPokerRoom;
 import lombok.Getter;
@@ -96,6 +97,8 @@ public class PlayVsPokerManager {
             for (Player player : players) {
                 PlayerData playerData = new PlayerData(player);
                 vsPokerRoom.enterRoomByRace(playerData, null);
+
+                RankingCache.getInstance().addRank(raceId, 0D, player.getId());
             }
         }
     }
