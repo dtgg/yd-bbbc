@@ -7,12 +7,15 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.VsPlayerRace;
 import com.ydqp.common.entity.VsRace;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerRaceJoin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerRace;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRaceJoin;
+import com.ydqp.common.service.PlayerService;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
 import org.apache.commons.collections.CollectionUtils;
@@ -71,13 +74,16 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
             return;
         }
 
-        int row = VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRaceJoin.getRaceId());
-        if (row <= 0) {
-            logger.error("The number of joined has reached the limit, playerId:{}, raceId:{}", vsPokerRaceJoin.getPlayerId(), vsPokerRaceJoin.getRaceId());
+        Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
+        if (player.getZjPoint() < race.getBasePoint()) {
+            logger.error("Insufficient balance, playerId:{}, raceId:{}", vsPokerRaceJoin.getPlayerId(), vsPokerRaceJoin.getRaceId());
             sVsPokerRaceJoin.setSuccess(false);
-            sVsPokerRaceJoin.setMessage("The number of joined has reached the limit");
+            sVsPokerRaceJoin.setMessage("Insufficient balance");
             iSession.sendMessageByID(sVsPokerRaceJoin, vsPokerRaceJoin.getConnId());
             return;
+        }
+        if (race.getBasePoint() > 0) {
+            PlayerDao.getInstance().updatePlayerZjPoint(-race.getBasePoint(), playerData.getPlayerId());
         }
 
         VsPlayerRace vsPlayerRace = new VsPlayerRace();
@@ -88,6 +94,8 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         vsPlayerRace.setRank(0);
         vsPlayerRace.setCreateTime(nowTime);
         VsPlayerRaceDao.getInstance().insert(vsPlayerRace.getParameterMap());
+
+        VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRaceJoin.getRaceId());
 
         SVsPlayerRace sVsPlayerRace = new SVsPlayerRace();
         sVsPlayerRace.setPlayerId(vsPokerRaceJoin.getPlayerId());

@@ -15,6 +15,8 @@ public class VsPlayerRace implements Serializable {
 	public static final String BASEPOINT_NAME = "basePoint";
 	public static final String RANK_NAME = "rank";
 	public static final String CREATETIM_NAME = "createTime";
+	public static final String BONUS_NAME = "bonus";
+	public static final String POINT_NAME = "point";
 
 
 	private int id;
@@ -72,6 +74,22 @@ public class VsPlayerRace implements Serializable {
 	public void setCreateTime(int createTime) {
 		this.createTime = createTime;
 		entityMap.put(CREATETIM_NAME, createTime);
+	}
+	private double bonus;
+	public double getBonus() {
+		return bonus;
+	}
+	public void setBonus(double bonus) {
+		this.bonus = bonus;
+		entityMap.put(BONUS_NAME, bonus);
+	}
+	private double point;
+	public double getPoint() {
+		return point;
+	}
+	public void setPoint(double point) {
+		this.point = point;
+		entityMap.put(POINT_NAME, point);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

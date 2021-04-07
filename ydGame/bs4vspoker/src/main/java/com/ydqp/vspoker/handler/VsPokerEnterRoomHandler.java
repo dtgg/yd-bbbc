@@ -11,9 +11,14 @@ import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
+import com.ydqp.common.entity.VsPlayerRace;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerEnterRoom;
+import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.room.play.PlayVsPokerManager;
 import com.ydqp.vspoker.room.play.VsPokerBasePlay;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.List;
 
 @ServerHandler(module = "vsPoker", command = 7000005)
 public class VsPokerEnterRoomHandler implements IServerHandler {
@@ -27,6 +32,13 @@ public class VsPokerEnterRoomHandler implements IServerHandler {
         PlayerData playerData = PlayerCache.getInstance().getPlayer(vsPokerEnterRoom.getConnId());
         if (playerData == null) {
             logger.error("player is not true");
+            return;
+        }
+
+        List<VsPlayerRace> playerRaces = VsPlayerRaceDao.getInstance().getPlayerRaceByPlayerIdAndRaceId(
+                vsPokerEnterRoom.getPlayerId(), vsPokerEnterRoom.getRaceId());
+        if (CollectionUtils.isEmpty(playerRaces)) {
+            logger.error("用户未报名, playerId:{}, raceId:{}", vsPokerEnterRoom.getPlayerId(), vsPokerEnterRoom.getRaceId());
             return;
         }
 

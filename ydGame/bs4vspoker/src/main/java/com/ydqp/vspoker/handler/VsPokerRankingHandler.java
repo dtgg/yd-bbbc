@@ -1,6 +1,5 @@
 package com.ydqp.vspoker.handler;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
 import com.cfq.handler.IServerHandler;
@@ -9,15 +8,20 @@ import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.Player;
+import com.ydqp.common.entity.VsPlayerRace;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerRanking;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerRankData;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRaking;
-import com.ydqp.vspoker.cache.RankingCache;
+import com.ydqp.common.service.PlayerService;
+import com.ydqp.common.utils.CommonUtils;
+import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @ServerHandler(command = 7000013, module = "vsPoker")
 public class VsPokerRankingHandler implements IServerHandler {
@@ -33,19 +37,31 @@ public class VsPokerRankingHandler implements IServerHandler {
             return;
         }
 
-        Set<String> rankInfo = RankingCache.getInstance().getRankInfo(rank.getRaceId());
-        List<String> rankInfoList = new ArrayList<>(rankInfo);
+        List<VsPlayerRace> vsPlayerRaces = VsPlayerRaceDao.getInstance().getPlayerRaceByRaceId(rank.getRaceId());
         List<SVsPlayerRankData> list = new ArrayList<>();
         SVsPlayerRankData playerRankData = new SVsPlayerRankData();
-        if (CollectionUtils.isNotEmpty(rankInfo)) {
-            for (int i = 0; i < rankInfoList.size(); i++) {
-                String data = rankInfoList.get(i);
-                SVsPlayerRankData SPlayerRankData = JSONObject.parseObject(data, SVsPlayerRankData.class);
-                SPlayerRankData.setRank(i + 1);
-                list.add(SPlayerRankData);
 
-                if (SPlayerRankData.getPlayerId() == playerData.getPlayerId()) {
-                    playerRankData = SPlayerRankData;
+        if (CollectionUtils.isNotEmpty(vsPlayerRaces)) {
+            List<Long> playerIds = new ArrayList<>();
+            for (VsPlayerRace vsPlayerRace : vsPlayerRaces) {
+                playerIds.add(vsPlayerRace.getPlayerId());
+            }
+
+            List<Player> players = PlayerService.getInstance().getPlayerByPlayerIds(CommonUtils.longString(playerIds));
+            Map<Long, Player> playerMap = new HashMap<>();
+            if (CollectionUtils.isNotEmpty(players)) {
+                for (Player player : players) {
+                    playerMap.put(player.getId(), player);
+                }
+            }
+
+            for (VsPlayerRace vsPlayerRace : vsPlayerRaces) {
+                Player player = playerMap.get(vsPlayerRace.getPlayerId());
+                SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData(vsPlayerRace, player == null ? "" : player.getPlayerName());
+                list.add(sVsPlayerRankData);
+
+                if (vsPlayerRace.getPlayerId() == playerData.getPlayerId()) {
+                    playerRankData = sVsPlayerRankData;
                 }
             }
         }

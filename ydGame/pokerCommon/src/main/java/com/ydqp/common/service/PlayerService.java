@@ -48,4 +48,8 @@ public class PlayerService {
     public Player queryByPlayerId (long playerId) {
         return PlayerDao.getInstance().queryById(playerId);
     }
+
+    public List<Player> getPlayerByPlayerIds(String longString) {
+        return PlayerDao.getInstance().getPlayerByPlayerIds(longString);
+    }
 }

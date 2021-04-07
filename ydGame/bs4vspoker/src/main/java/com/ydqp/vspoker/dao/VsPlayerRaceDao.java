@@ -30,4 +30,14 @@ public class VsPlayerRaceDao {
         String sql = "select * from vs_player_race where playerId = " + playerId + " and raceId = " + raceId + ";";
         return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
     }
+
+    public List<VsPlayerRace> getPlayerRaceByRaceId(int raceId) {
+        String sql = "select * from vs_player_race where raceId = " + raceId + ";";
+        return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
+    }
+
+    public void updatePlayerRace(Object[][] params) {
+        String sql = "update vs_player_race set rank = ?, bonus = ?, point = ? where raceId = ? and playerId = ?;";
+        JdbcOrm.getInstance().batchUpdate(sql, params);
+    }
 }

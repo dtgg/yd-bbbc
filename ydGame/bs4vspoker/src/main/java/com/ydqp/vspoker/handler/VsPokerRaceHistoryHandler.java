@@ -9,6 +9,7 @@ import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.VsRace;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRaceHistory;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRaces;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsRace;
 import com.ydqp.vspoker.dao.VsPokerDao;
@@ -37,8 +38,8 @@ public class VsPokerRaceHistoryHandler implements IServerHandler {
                 sVsRaces.add(sVsRace);
             }
         }
-        SVsPokerRaces sVsPokerRaces = new SVsPokerRaces();
-        sVsPokerRaces.setSVsRaces(sVsRaces);
-        iSession.sendMessageByID(sVsPokerRaces, abstartParaseMessage.getConnId());
+        SVsPokerRaceHistory sVsPokerRaceHistory = new SVsPokerRaceHistory();
+        sVsPokerRaceHistory.setSVsRaces(sVsRaces);
+        iSession.sendMessageByID(sVsPokerRaceHistory, abstartParaseMessage.getConnId());
     }
 }

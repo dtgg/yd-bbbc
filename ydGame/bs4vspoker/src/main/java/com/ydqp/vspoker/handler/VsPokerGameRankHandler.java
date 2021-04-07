@@ -1,0 +1,94 @@
+package com.ydqp.vspoker.handler;
+
+import com.cfq.annotation.ServerHandler;
+import com.cfq.connection.ISession;
+import com.cfq.handler.IServerHandler;
+import com.cfq.log.Logger;
+import com.cfq.log.LoggerFactory;
+import com.cfq.message.AbstartParaseMessage;
+import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.Player;
+import com.ydqp.common.poker.room.BattleRole;
+import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerGameRank;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerRankData;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerGameRank;
+import com.ydqp.common.service.PlayerService;
+import com.ydqp.common.utils.CommonUtils;
+import com.ydqp.vspoker.cache.RankingCache;
+import com.ydqp.vspoker.room.RoomManager;
+import com.ydqp.vspoker.room.VsPokerRoom;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.*;
+
+@ServerHandler(module = "vsPoker", command = 7000015)
+public class VsPokerGameRankHandler implements IServerHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(VsPokerGameRankHandler.class);
+
+    @Override
+    public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
+        VsPokerGameRank rank = (VsPokerGameRank) abstartParaseMessage;
+
+        PlayerData playerData = PlayerCache.getInstance().getPlayer(rank.getConnId());
+        if (playerData == null) {
+            logger.error("player is not true");
+            return;
+        }
+
+        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(rank.getRoomId());
+
+        Set<String> rankInfo = null;
+        try {
+            rankInfo = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, -1);
+        } catch (NullPointerException e) {
+            logger.error("no player join, redis data is null");
+        }
+
+        if (CollectionUtils.isEmpty(rankInfo)) {
+            logger.error("no player join");
+            return;
+        }
+
+        List<Long> playerIds = new ArrayList<>();
+        for (String s : rankInfo) {
+            playerIds.add(Long.parseLong(s));
+        }
+
+        List<Player> players = PlayerService.getInstance().getPlayerByPlayerIds(CommonUtils.longString(playerIds));
+        Map<Long, String> playerMap = new HashMap<>();
+        if (CollectionUtils.isNotEmpty(players)) {
+            for (Player player : players) {
+                playerMap.put(player.getId(), player.getPlayerName());
+            }
+        }
+
+        List<SVsPlayerRankData> list = new ArrayList<>();
+        SVsPlayerRankData playerRankData = new SVsPlayerRankData();
+        if (vsPokerRoom.getBattleRoleMap() != null) {
+            for (int i = 0; i < playerIds.size(); i++) {
+                for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
+                    if (entry.getKey().equals(playerIds.get(i))) {
+                        SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData();
+                        sVsPlayerRankData.setPlayerId(entry.getKey());
+                        sVsPlayerRankData.setPlayerName(playerMap.get(entry.getKey()));
+                        sVsPlayerRankData.setRank(i + 1);
+                        sVsPlayerRankData.setPoint(entry.getValue().getPlayerZJ());
+                        sVsPlayerRankData.setBonus(0);
+                        list.add(sVsPlayerRankData);
+
+                        if (entry.getKey() == playerData.getPlayerId()) {
+                            playerRankData = sVsPlayerRankData;
+                        }
+                    }
+                }
+            }
+        }
+
+        SVsPokerGameRank sVsPokerGameRank = new SVsPokerGameRank();
+        sVsPokerGameRank.setSPlayerRankData(list);
+        sVsPokerGameRank.setPlayerRankData(playerRankData);
+        iSession.sendMessageByID(sVsPokerGameRank, rank.getConnId());
+    }
+}

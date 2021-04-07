@@ -57,6 +57,10 @@ public class SVsPokerRoomInfo extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.INT32 , order = 9, description = "庄家的牌")
     private int round;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 10, description = "赛事ID")
+    private int raceId;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

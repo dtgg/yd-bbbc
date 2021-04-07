@@ -48,10 +48,13 @@ public class VsPokerRacesHandler implements IServerHandler {
             List<VsPlayerRace> playerRaces = VsPlayerRaceDao.getInstance().getPlayerRaceByPlayerIdAndRaceIds(
                     vsPokerRaces.getPlayerId(), CommonUtils.inString(raceIds));
             if (CollectionUtils.isNotEmpty(playerRaces)) {
+                List<Integer> raceIdList = new ArrayList<>();
+                for (VsPlayerRace playerRace : playerRaces) {
+                    raceIdList.add(playerRace.getRaceId());
+                }
+
                 for (SVsRace sVsRace : sVsRaces) {
-                    for (VsPlayerRace playerRace : playerRaces) {
-                        sVsRace.setJoinStatus(playerRace.getRaceId() == sVsRace.getId() ? 1 : 0);
-                    }
+                    sVsRace.setJoinStatus(raceIdList.contains(sVsRace.getId()) ? 1 : 0);
                 }
             }
         }

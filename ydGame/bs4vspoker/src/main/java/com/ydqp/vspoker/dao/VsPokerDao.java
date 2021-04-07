@@ -29,12 +29,12 @@ public class VsPokerDao {
     }
 
     public List<VsRace> getVsRaces(int status) {
-        String sql = "select * from vs_race where status != " + status + ";";
+        String sql = "select * from vs_race where status != " + status + " order by beginTime asc;";
         return JdbcOrm.getInstance().getListBean(sql, VsRace.class);
     }
 
     public List<VsRace> getVsRaceHistory(int status) {
-        String sql = "select * from vs_race where status = " + status + ";";
+        String sql = "select * from vs_race where status = " + status + " order by beginTime desc;";
         return JdbcOrm.getInstance().getListBean(sql, VsRace.class);
     }
 

@@ -58,7 +58,9 @@ public abstract class Room implements IRoom{
 
             if(entry.getValue().isHaveBet()) {
                 ISession iSession = entry.getValue().getISession();
-                iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+                if (iSession != null) {
+                    iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+                }
             }
 
         }
@@ -69,7 +71,9 @@ public abstract class Room implements IRoom{
                 continue;
             }
             ISession iSession = entry.getValue().getISession();
-            iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+            if (iSession != null) {
+                iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+            }
         }
     }
 
@@ -85,7 +89,9 @@ public abstract class Room implements IRoom{
             return;
         }
         ISession iSession = battleRole.getISession();
-        iSession.sendMessageByID(abstartCreateMessage, battleRole.getConnId());
+        if (iSession != null) {
+            iSession.sendMessageByID(abstartCreateMessage, battleRole.getConnId());
+        }
     }
 
     public void sendMessageToBattlesByFilter(AbstartCreateMessage abstartCreateMessage, long playerId){
@@ -97,7 +103,9 @@ public abstract class Room implements IRoom{
             }
             if(entry.getValue().isHaveBet()) {
                 ISession iSession = entry.getValue().getISession();
-                iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+                if (iSession != null) {
+                    iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+                }
             }
 
         }
@@ -111,7 +119,9 @@ public abstract class Room implements IRoom{
                 continue;
             }
             ISession iSession = entry.getValue().getISession();
-            iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+            if (iSession != null) {
+                iSession.sendMessageByID(abstartCreateMessage, entry.getValue().getConnId());
+            }
         }
     }
 

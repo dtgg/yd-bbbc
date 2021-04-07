@@ -7,6 +7,8 @@ c->s
 7000013 = VsPokerRanking        //赛事排名
 7000014 = VsPokerRaceJoin       //赛事报名
 
+7000015 = VsPokerGameRank       //游戏中赛事排名
+
 s->c
 7000001 = SVsFaPai //发牌
 7000002 = SVsCompareResult // 比牌结果
@@ -22,3 +24,6 @@ s->c
 7001012 = SVsPokerRaceHistory    //历史比赛列表
 7001013 = SVsPokerRanking        //赛事排名
 7001014 = SVsPokerRaceJoin       //赛事报名
+
+7001015 = SVsPokerGameRank       //游戏中赛事排名
+7001016 = SVsPokerPerRanking       //游戏中个人排名

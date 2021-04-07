@@ -3,14 +3,15 @@ package com.ydqp.vspoker.room;
 import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
+import com.ydqp.common.ThreadManager;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerWin;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerPerRanking;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsTaoTai;
+import com.ydqp.vspoker.cache.RankingCache;
+import org.apache.commons.collections.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class VsPokerSettlementHandler implements IRoomStatusHandler{
 
@@ -42,9 +43,10 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             }
         }
 
+        ThreadManager.getInstance().getExecutor().execute(() ->
+                updateRank(vsPokerRoom));
+
         logger.info("VsPokerSettlementHandler end");
-
-
     }
 
     /**
@@ -113,8 +115,15 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             if (entry.getValue().getPlayerZJ() < 10) {
                 SVsTaoTai sVsTaoTai = new SVsTaoTai();
                 sVsTaoTai.setPlayerId(entry.getKey());
-                sVsTaoTai.setBonus(0.0);
-                sVsTaoTai.setRank(10);
+
+                Long rankNo = RankingCache.getInstance().getRankNo(vsPokerRoom.getRaceId(), entry.getKey());
+                if (rankNo <= 3) {
+                    sVsTaoTai.setBonus(1000);
+                } else {
+                    sVsTaoTai.setBonus(0.0);
+                }
+                sVsTaoTai.setRank(rankNo.intValue() + 1);
+
                 sVsTaoTai.setRoomId(vsPokerRoom.getRoomId());
                 vsPokerRoom.sendMessageToBattle(sVsTaoTai, entry.getKey());
                 entry.getValue().setIsOut(1);
@@ -123,5 +132,35 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             }
         }
         return otherPlayer;
+    }
+
+    private void updateRank(VsPokerRoom vsPokerRoom) {
+        int raceId = vsPokerRoom.getRaceId();
+        Map<Long, BattleRole> battleRoleMap = vsPokerRoom.getBattleRoleMap();
+        for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
+            RankingCache.getInstance().addRank(raceId, entry.getValue().getPlayerZJ(), entry.getKey());
+//            Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
+//            logger.info("更新排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), rankNo + 1);
+//            entry.getValue().setRank(rankNo.intValue());
+        }
+
+        Set<String> rankInfo = RankingCache.getInstance().getRankInfo(raceId, 0, -1);
+        if (CollectionUtils.isEmpty(rankInfo)) return;
+
+        List<Long> playerIds = new ArrayList<>();
+        for (String s : rankInfo) {
+            playerIds.add(Long.parseLong(s));
+        }
+
+        for (int i = 0; i < playerIds.size(); i++) {
+            for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
+                if (entry.getKey().equals(playerIds.get(i))) {
+                    SVsPokerPerRanking sVsPokerPerRanking = new SVsPokerPerRanking();
+                    sVsPokerPerRanking.setPlayerId(playerIds.get(i));
+                    sVsPokerPerRanking.setRank(i + 1);
+                    vsPokerRoom.sendMessageToBattle(sVsPokerPerRanking, entry.getKey());
+                }
+            }
+        }
     }
 }

@@ -17,4 +17,13 @@ public class CommonUtils {
         builder.append(")");
         return builder.toString();
     }
+
+    public static String longString(List<Long> list) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(");
+        list.forEach(aLong -> builder.append(aLong).append(","));
+        builder.deleteCharAt(builder.length() - 1);
+        builder.append(")");
+        return builder.toString();
+    }
 }

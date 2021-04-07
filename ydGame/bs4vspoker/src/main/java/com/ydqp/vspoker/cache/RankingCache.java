@@ -1,8 +1,6 @@
 package com.ydqp.vspoker.cache;
 
-import com.alibaba.fastjson.JSON;
 import com.cfq.redis.JedisUtil;
-import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerRankData;
 import redis.clients.jedis.Jedis;
 
 import java.util.Set;
@@ -19,14 +17,14 @@ public class RankingCache {
 
     private static final String RANKING_KEY = "RANKING:";
 
-    public void addRank(int raceId, SVsPlayerRankData data) {
+    public void addRank(int raceId, Double point, long playerId) {
         long currentTimeMillis = System.currentTimeMillis();
-        double decimal = currentTimeMillis / 10e12;
-        double point = data.getPoint() + decimal;
+        double decimal = currentTimeMillis / 10e13;
+        point += decimal;
 
         Jedis jedis = JedisUtil.getInstance().getJedis();
         try {
-            jedis.zadd(RANKING_KEY + raceId, point, JSON.toJSONString(data));
+            jedis.zadd(RANKING_KEY + raceId, point, String.valueOf(playerId));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -34,11 +32,11 @@ public class RankingCache {
         }
     }
 
-    public Set<String> getRankInfo(int raceId) {
+    public Set<String> getRankInfo(int raceId, int start, int stop) {
         Jedis jedis = JedisUtil.getInstance().getJedis();
         Set<String> data = null;
         try {
-            data = jedis.zrange(RANKING_KEY + raceId, 0, -1);
+            data = jedis.zrevrange(RANKING_KEY + raceId, start, stop);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -47,15 +45,31 @@ public class RankingCache {
         return data;
     }
 
-    public static void main(String[] args) {
-        for (int i = 0; i < 100; i++) {
-            SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData();
-            sVsPlayerRankData.setPlayerId((long) i);
-            String format = String.format("%03d", i);
-            sVsPlayerRankData.setPlayerName("0000000" + format);
-            sVsPlayerRankData.setBonus((double) i);
-            sVsPlayerRankData.setPoint(i);
-            RankingCache.getInstance().addRank(4, sVsPlayerRankData);
+    public Long getRankNo(int raceId, long playerId) {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        Long zrank = null;
+        try {
+            zrank = jedis.zrevrank(RANKING_KEY + raceId, String.valueOf(playerId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
         }
+        return zrank;
+    }
+
+    public void delRankInfo(Integer raceId) {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        try {
+            jedis.del(RANKING_KEY + raceId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(RankingCache.getInstance().getRankNo(12, 6));
     }
 }

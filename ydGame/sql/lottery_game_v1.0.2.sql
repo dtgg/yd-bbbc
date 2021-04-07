@@ -24,3 +24,6 @@ CREATE TABLE `vs_player_race`(
     `createTime` int(10) DEFAULT 0,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE vs_player_race ADD COLUMN bonus double(15,2) DEFAULT 0.00 COMMENT '奖励';
+ALTER TABLE vs_player_race ADD COLUMN point double(15,2) DEFAULT 0.00 COMMENT '赛事分数';

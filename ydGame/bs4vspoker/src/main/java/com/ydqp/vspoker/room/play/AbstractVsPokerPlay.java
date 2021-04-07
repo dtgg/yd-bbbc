@@ -2,6 +2,7 @@ package com.ydqp.vspoker.room.play;
 
 import com.cfq.connection.ISession;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.poker.room.Room;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
@@ -10,6 +11,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
 
@@ -57,6 +59,14 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
             if (vsPokerRoom == null) {
                 continue;
             }
+            boolean isOut = false;
+            for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
+                if (entry.getValue().getPlayerId() == playerData.getPlayerId() && entry.getValue().getIsOut() == 1) {
+                    isOut = true;
+                    break;
+                }
+            }
+            if (isOut) continue;
             vsPokerRoom.vsEnterRoom(playerData, iSession);
         }
     }
