@@ -140,8 +140,10 @@ public abstract class Room implements IRoom{
         battleRole = new BattleRole();
         battleRole.setConnId(playerData.getSessionId());
         battleRole.setPlayerZJ(playerData.getZjPoint());
+        battleRole.setRankZJ(playerData.getZjPoint());
         battleRole.setPlayerId(playerData.getPlayerId());
         battleRole.setPlayerName(playerData.getNickName());
+        battleRole.setNickname(playerData.getNickName());
         battleRole.setPlayerUrl(playerData.getHeadUrl());
         battleRole.setISession(iSession);
 
@@ -167,8 +169,10 @@ public abstract class Room implements IRoom{
         battleRole = new BattleRole();
         battleRole.setConnId(playerData.getSessionId());
         battleRole.setPlayerZJ(10000.0);
+        battleRole.setRankZJ(10000.0);
         battleRole.setPlayerId(playerData.getPlayerId());
         battleRole.setPlayerName(playerData.getNickName());
+        battleRole.setNickname(playerData.getNickName());
         battleRole.setPlayerUrl(playerData.getHeadUrl());
         battleRole.setISession(iSession);
 

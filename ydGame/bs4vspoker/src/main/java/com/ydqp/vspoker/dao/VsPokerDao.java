@@ -47,4 +47,20 @@ public class VsPokerDao {
         String sql = "update vs_race set curPlayerNum = curPlayerNum + 1 where id = " + raceId + " and curPlayerNum < maxPlayerNum";
         return JdbcOrm.getInstance().updateByRow(sql);
     }
+
+    public static void main(String[] args) {
+        int startTime = 1617845400;
+        for (int i = 0; i < 60; i++) {
+            VsRace vsRace = new VsRace();
+            vsRace.setRaceType(1);
+            vsRace.setBasePoint(1);
+            vsRace.setMaxPlayerNum(1000);
+            vsRace.setCurPlayerNum(0);
+            vsRace.setStatus(0);
+            vsRace.setBeginTime(startTime + 600 * i);
+            vsRace.setCreateTime(startTime);
+            vsRace.setTotalRound(15);
+            JdbcOrm.getInstance().insert("vs_race", vsRace.getParameterMap());
+        }
+    }
 }

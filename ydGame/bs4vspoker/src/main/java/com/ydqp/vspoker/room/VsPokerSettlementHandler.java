@@ -139,6 +139,7 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         Map<Long, BattleRole> battleRoleMap = vsPokerRoom.getBattleRoleMap();
         for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
             RankingCache.getInstance().addRank(raceId, entry.getValue().getPlayerZJ(), entry.getKey());
+            entry.getValue().setRankZJ(entry.getValue().getPlayerZJ());
 //            Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
 //            logger.info("更新排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), rankNo + 1);
 //            entry.getValue().setRank(rankNo.intValue());

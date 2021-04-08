@@ -57,7 +57,7 @@ public class VsPokerRankingHandler implements IServerHandler {
 
             for (VsPlayerRace vsPlayerRace : vsPlayerRaces) {
                 Player player = playerMap.get(vsPlayerRace.getPlayerId());
-                SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData(vsPlayerRace, player == null ? "" : player.getPlayerName());
+                SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData(vsPlayerRace, player == null ? "" : player.getNickname());
                 list.add(sVsPlayerRankData);
 
                 if (vsPlayerRace.getPlayerId() == playerData.getPlayerId()) {

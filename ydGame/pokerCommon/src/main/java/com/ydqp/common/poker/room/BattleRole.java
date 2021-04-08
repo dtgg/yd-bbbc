@@ -14,7 +14,6 @@ public class BattleRole {
     @Setter
     @Getter
     private long connId;
-
     @Getter
     @Setter
     private long playerId;
@@ -23,26 +22,26 @@ public class BattleRole {
     private String playerName;
     @Getter
     @Setter
+    private String nickname;
+    @Getter
+    @Setter
     private String playerUrl;
-
     @Setter
     @Getter
     private Double playerZJ;
-
     @Getter
     @Setter
     private ISession iSession;
-
     @Getter
     @Setter
     private boolean haveBet;
-
     @Getter
     @Setter
     private int rank;
-
     @Setter
     @Getter
     private int isOut;
-
+    @Setter
+    @Getter
+    private Double rankZJ;
 }

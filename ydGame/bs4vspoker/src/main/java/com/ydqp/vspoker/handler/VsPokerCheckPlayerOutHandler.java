@@ -42,7 +42,7 @@ public class VsPokerCheckPlayerOutHandler implements IServerHandler {
             logger.error("无对应的玩法类型，{} ", JSONObject.toJSONString(vsPokerCheckPlayerOut));
 
             sVsPokerCheckPlayerOut.setEnterEnabled(false);
-            sVsPokerCheckPlayerOut.setStatus(4);
+            sVsPokerCheckPlayerOut.setStatus(1);
             iSession.sendMessageByID(sVsPokerCheckPlayerOut, vsPokerCheckPlayerOut.getConnId());
             return;
         }
@@ -51,10 +51,14 @@ public class VsPokerCheckPlayerOutHandler implements IServerHandler {
         if (race.getStatus() == 0) {
             sVsPokerCheckPlayerOut.setEnterEnabled(false);
             sVsPokerCheckPlayerOut.setStatus(1);
+            iSession.sendMessageByID(sVsPokerCheckPlayerOut, vsPokerCheckPlayerOut.getConnId());
+            return;
         }
         if (race.getStatus() == 2) {
             sVsPokerCheckPlayerOut.setEnterEnabled(false);
             sVsPokerCheckPlayerOut.setStatus(3);
+            iSession.sendMessageByID(sVsPokerCheckPlayerOut, vsPokerCheckPlayerOut.getConnId());
+            return;
         }
 
         boolean b = vsPokerBasePlay.checkPlayerOut(playerData);

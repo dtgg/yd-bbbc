@@ -8,19 +8,19 @@ import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
-import com.ydqp.common.entity.Player;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerGameRank;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerRankData;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerGameRank;
-import com.ydqp.common.service.PlayerService;
-import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
 import org.apache.commons.collections.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @ServerHandler(module = "vsPoker", command = 7000015)
 public class VsPokerGameRankHandler implements IServerHandler {
@@ -56,14 +56,6 @@ public class VsPokerGameRankHandler implements IServerHandler {
             playerIds.add(Long.parseLong(s));
         }
 
-        List<Player> players = PlayerService.getInstance().getPlayerByPlayerIds(CommonUtils.longString(playerIds));
-        Map<Long, String> playerMap = new HashMap<>();
-        if (CollectionUtils.isNotEmpty(players)) {
-            for (Player player : players) {
-                playerMap.put(player.getId(), player.getPlayerName());
-            }
-        }
-
         List<SVsPlayerRankData> list = new ArrayList<>();
         SVsPlayerRankData playerRankData = new SVsPlayerRankData();
         if (vsPokerRoom.getBattleRoleMap() != null) {
@@ -72,9 +64,9 @@ public class VsPokerGameRankHandler implements IServerHandler {
                     if (entry.getKey().equals(playerIds.get(i))) {
                         SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData();
                         sVsPlayerRankData.setPlayerId(entry.getKey());
-                        sVsPlayerRankData.setPlayerName(playerMap.get(entry.getKey()));
+                        sVsPlayerRankData.setPlayerName(entry.getValue().getNickname());
                         sVsPlayerRankData.setRank(i + 1);
-                        sVsPlayerRankData.setPoint(entry.getValue().getPlayerZJ());
+                        sVsPlayerRankData.setPoint(entry.getValue().getRankZJ());
                         sVsPlayerRankData.setBonus(0);
                         list.add(sVsPlayerRankData);
 

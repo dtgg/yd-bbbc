@@ -1,9 +1,5 @@
 package com.ydqp.vspoker.room.play;
 
-import com.cfq.connection.ISession;
-import com.cfq.connection.ManagerSession;
-import com.cfq.connection.NettySession;
-import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.VsPlayerRace;
@@ -17,7 +13,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PlayVsPokerManager {
 
