@@ -87,11 +87,21 @@ public class VsPokerRoom extends Room {
         for (int i = 1; i <= 4; i++) {
             PlayerObject playerObject = this.getPlayerObjectMap().get(i);
             SPlayerInfo sPlayerInfo = new SPlayerInfo();
-            sPlayerInfo.setBetPool(playerObject.getBetPool());
+
+            Map<Long, Double> betBattleRoleId = playerObject.getBetBattleRoleId();
+            if (betBattleRoleId == null) {
+                continue;
+            }
+            for (Map.Entry<Long, Double> entry : betBattleRoleId.entrySet()) {
+                if (entry.getKey() == battleRole.getPlayerId()) {
+                    sPlayerInfo.setBetPool(entry.getValue());
+                }
+            }
+
             if (this.getStatus() == 2 || this.getStatus() == 3) {
                 sPlayerInfo.setPoker(this.getPokerMap().get(i + 1));
                 sPlayerInfo.setWin(playerObject.getWin());
-                sPlayerInfo.setWinBetPool(playerObject.getBetPool() * 1.95);
+                sPlayerInfo.setWinBetPool(sPlayerInfo.getBetPool() * 2);
             }
             sVsPokerRoomInfo.getSPlayerInfoMap().put(i, sPlayerInfo);
         }
@@ -125,14 +135,15 @@ public class VsPokerRoom extends Room {
             playerObject.getBetBattleRoleId().put(battleRole.getPlayerId(), (double)vsPokerXiazhu.getMoney());
         }
 
-        sVsPlayerXiazhu.setBetPool(playerObject.getBetPool());
+//        sVsPlayerXiazhu.setBetPool(playerObject.getBetPool());
+        sVsPlayerXiazhu.setBetPool(playerObject.getBetBattleRoleId().get(battleRole.getPlayerId()));
         sVsPlayerXiazhu.setPlayType(vsPokerXiazhu.getPlayType());
 
         this.sendMessageToBattlesByFilter(sVsPlayerXiazhu, battleRole.getPlayerId());
 
         sVsPlayerXiazhu.setBattleRoleMoney(battleRole.getPlayerZJ());
-        this.sendMessageToBattle(sVsPlayerXiazhu, battleRole.getPlayerId());
+        if (battleRole.getIsVir() == 0) {
+            this.sendMessageToBattle(sVsPlayerXiazhu, battleRole.getPlayerId());
+        }
     }
-
-
 }

@@ -93,6 +93,9 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         vsPlayerRace.setBasePoint(race.getBasePoint());
         vsPlayerRace.setRank(0);
         vsPlayerRace.setCreateTime(nowTime);
+        vsPlayerRace.setAppId(player.getAppId());
+        vsPlayerRace.setKfId(player.getKfId());
+        vsPlayerRace.setIsVir(player.getIsVir());
         VsPlayerRaceDao.getInstance().insert(vsPlayerRace.getParameterMap());
 
         VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRaceJoin.getRaceId());

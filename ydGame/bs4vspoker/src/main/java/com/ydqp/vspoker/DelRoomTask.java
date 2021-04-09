@@ -92,7 +92,10 @@ public class DelRoomTask implements Runnable{
                    SVsBonusRank  sVsBonusRank = new SVsBonusRank();
                    sVsBonusRank.setBonus(1000);
                    sVsBonusRank.setPoints(entry.getValue().getPlayerZJ());
-                   sVsBonusRank.setPlayerName(entry.getValue().getPlayerName());
+
+                   StringBuilder buffer = new StringBuilder(entry.getValue().getPlayerName());
+                   buffer.replace(2, 8, "*");
+                   sVsBonusRank.setPlayerName(buffer.toString());
                    sVsBonusRankMap.put(rank, sVsBonusRank);
                }
             });
@@ -129,19 +132,26 @@ public class DelRoomTask implements Runnable{
         } catch (NullPointerException e) {
             logger.error("no player join, redis data is null");
         }
-        int i = 0;
-        for (String s : rankInfo) {
-            long playerId = Long.parseLong(s);
-            for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
-                if (playerId == entry.getValue().getPlayerId()) {
-                    logger.info("完赛更新排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), i + 1);
-                    Object[] param = new Object[]{i + 1, 0, entry.getValue().getPlayerZJ(), raceId, playerId};
-                    params[i] = param;
-                    i++;
+        if (CollectionUtils.isNotEmpty(rankInfo)) {
+            int i = 0;
+            for (String s : rankInfo) {
+                long playerId = Long.parseLong(s);
+                for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
+                    if (playerId == entry.getValue().getPlayerId()) {
+                        logger.info("完赛更新排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), i + 1);
+
+                        double bonus = 0;
+                        if (i <= 2) {
+                            bonus = 1000;
+                        }
+                        Object[] param = new Object[]{i + 1, bonus, entry.getValue().getPlayerZJ(), raceId, playerId};
+                        params[i] = param;
+                        i++;
+                    }
                 }
             }
+            VsPlayerRaceDao.getInstance().updatePlayerRace(params);
         }
-        VsPlayerRaceDao.getInstance().updatePlayerRace(params);
     }
 }
 

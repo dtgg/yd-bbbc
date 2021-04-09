@@ -27,3 +27,7 @@ CREATE TABLE `vs_player_race`(
 
 ALTER TABLE vs_player_race ADD COLUMN bonus double(15,2) DEFAULT 0.00 COMMENT '奖励';
 ALTER TABLE vs_player_race ADD COLUMN point double(15,2) DEFAULT 0.00 COMMENT '赛事分数';
+
+--
+ALTER TABLE vs_player_race ADD COLUMN appId int(10) DEFAULT 1000001;
+ALTER TABLE vs_player_race ADD COLUMN kfId int(10) DEFAULT 0;

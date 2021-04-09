@@ -88,7 +88,7 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             }
             //赔付
             SVsPlayerWin sVsPlayerWin = new SVsPlayerWin();
-            double peiM = entry.getValue().getWinMoney() * 1.95;
+            double peiM = entry.getValue().getWinMoney() * 2;
             battleRole.setPlayerZJ(battleRole.getPlayerZJ() + peiM);
 
             sVsPlayerWin.setRoomId(vsPokerRoom.getRoomId());

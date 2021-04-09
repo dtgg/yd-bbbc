@@ -22,9 +22,6 @@ public class BattleRole {
     private String playerName;
     @Getter
     @Setter
-    private String nickname;
-    @Getter
-    @Setter
     private String playerUrl;
     @Setter
     @Getter
@@ -44,4 +41,7 @@ public class BattleRole {
     @Setter
     @Getter
     private Double rankZJ;
+    @Setter
+    @Getter
+    private int isVir;
 }

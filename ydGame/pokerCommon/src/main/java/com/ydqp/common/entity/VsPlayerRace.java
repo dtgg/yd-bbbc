@@ -17,6 +17,9 @@ public class VsPlayerRace implements Serializable {
 	public static final String CREATETIM_NAME = "createTime";
 	public static final String BONUS_NAME = "bonus";
 	public static final String POINT_NAME = "point";
+	public static final String APPID_NAME = "appId";
+	public static final String KFID_NAME = "kfId";
+	public static final String ISVIR_NAME = "isVir";
 
 
 	private int id;
@@ -90,6 +93,30 @@ public class VsPlayerRace implements Serializable {
 	public void setPoint(double point) {
 		this.point = point;
 		entityMap.put(POINT_NAME, point);
+	}
+	private int appId;
+	public int getAppId() {
+		return appId;
+	}
+	public void setAppId(int appId) {
+		this.appId = appId;
+		entityMap.put(APPID_NAME, appId);
+	}
+	private long kfId;
+	public long getKfId() {
+		return kfId;
+	}
+	public void setKfId(long kfId) {
+		this.kfId = kfId;
+		entityMap.put(KFID_NAME, kfId);
+	}
+	private int isVir;
+	public int getIsVir() {
+		return isVir;
+	}
+	public void setIsVir(int isVir) {
+		this.isVir = isVir;
+		entityMap.put(ISVIR_NAME, isVir);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

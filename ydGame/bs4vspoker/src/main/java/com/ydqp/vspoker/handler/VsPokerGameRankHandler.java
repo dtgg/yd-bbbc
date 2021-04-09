@@ -64,7 +64,11 @@ public class VsPokerGameRankHandler implements IServerHandler {
                     if (entry.getKey().equals(playerIds.get(i))) {
                         SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData();
                         sVsPlayerRankData.setPlayerId(entry.getKey());
-                        sVsPlayerRankData.setPlayerName(entry.getValue().getNickname());
+
+                        StringBuilder buffer = new StringBuilder(entry.getValue().getPlayerName());
+                        buffer.replace(2, 8, "*");
+                        sVsPlayerRankData.setPlayerName(buffer.toString());
+
                         sVsPlayerRankData.setRank(i + 1);
                         sVsPlayerRankData.setPoint(entry.getValue().getRankZJ());
                         sVsPlayerRankData.setBonus(0);

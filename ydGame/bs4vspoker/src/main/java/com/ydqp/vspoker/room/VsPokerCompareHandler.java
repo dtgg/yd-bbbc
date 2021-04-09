@@ -21,21 +21,27 @@ public class VsPokerCompareHandler implements IRoomStatusHandler{
         sVsCompareResult.setRoomId(vsPokerRoom.getRoomId());
         Poker bankPoker = vsPokerRoom.getPokerMap().get(1);
 
-        for (int i = 1; i<= 4; i++) {
-            Poker playerPoker = vsPokerRoom.getPokerMap().get(i + 1);
-            PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
+        for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
+            for (int i = 1; i<= 4; i++) {
+                Poker playerPoker = vsPokerRoom.getPokerMap().get(i + 1);
+                PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
 
-            SPlayerInfo sPlayerInfo = new SPlayerInfo();
-            sPlayerInfo.setWin(playerObject.getWin());
-            sPlayerInfo.setPoker(playerPoker);
-            sPlayerInfo.setBetPool(playerObject.getBetPool());
+                SPlayerInfo sPlayerInfo = new SPlayerInfo();
+                sPlayerInfo.setWin(playerObject.getWin());
+                sPlayerInfo.setPoker(playerPoker);
 
-            if (isBankWin(bankPoker, playerPoker)) {
-                sPlayerInfo.setWin(0);
-                sPlayerInfo.setWinBetPool(playerObject.getBetPool() * 1.95);
-                vsPokerRoom.getPlayerObjectMap().get(i).setWin(0);
+
+                Double betMoney = playerObject.getBetBattleRoleId().get(entry.getKey());
+                betMoney = betMoney == null ? 0 :betMoney;
+                sPlayerInfo.setBetPool(betMoney);
+
+                if (isBankWin(bankPoker, playerPoker)) {
+                    sPlayerInfo.setWin(0);
+                    sPlayerInfo.setWinBetPool(betMoney * 2);
+                    vsPokerRoom.getPlayerObjectMap().get(i).setWin(0);
+                }
+                sVsCompareResult.getSPlayerInfoMap().put(i, sPlayerInfo);
             }
-            sVsCompareResult.getSPlayerInfoMap().put(i, sPlayerInfo);
         }
 
         sVsCompareResult.setBankPoker(bankPoker);

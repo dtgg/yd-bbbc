@@ -49,8 +49,8 @@ public class VsPokerDao {
     }
 
     public static void main(String[] args) {
-        int startTime = 1617845400;
-        for (int i = 0; i < 60; i++) {
+        int startTime = 1617882600;
+        for (int i = 0; i < 10; i++) {
             VsRace vsRace = new VsRace();
             vsRace.setRaceType(1);
             vsRace.setBasePoint(1);
