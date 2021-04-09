@@ -64,9 +64,9 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
             return;
         }
 
-        List<VsPlayerRace> playerRaces = VsPlayerRaceDao.getInstance().getPlayerRaceByPlayerIdAndRaceId(
+        VsPlayerRace playerRaces = VsPlayerRaceDao.getInstance().getPlayerRaceByPlayerIdAndRaceId(
                 vsPokerRaceJoin.getPlayerId(), vsPokerRaceJoin.getRaceId());
-        if (CollectionUtils.isNotEmpty(playerRaces)) {
+        if (playerRaces != null) {
             logger.error("You has been joined, playerId:{}, raceId:{}", vsPokerRaceJoin.getPlayerId(), vsPokerRaceJoin.getRaceId());
             sVsPokerRaceJoin.setSuccess(false);
             sVsPokerRaceJoin.setMessage("You has been joined");

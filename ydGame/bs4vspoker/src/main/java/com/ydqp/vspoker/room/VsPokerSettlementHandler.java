@@ -96,6 +96,8 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             sVsPlayerWin.setTotalMoney(battleRole.getPlayerZJ());
             sVsPlayerWin.setWinMoney(peiM);
             sVsPlayerWin.setWinTypes(entry.getValue().getWinTypes());
+
+            if (battleRole.isQuite()) continue;
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
             //@TODO 数据库更新
         }
@@ -107,6 +109,12 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
      * @return
      */
     private int playerOut(VsPokerRoom vsPokerRoom) {
+        for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
+            RankingCache.getInstance().addRank(vsPokerRoom.getRaceId(), entry.getValue().getPlayerZJ(), entry.getKey());
+            entry.getValue().setRankZJ(entry.getValue().getPlayerZJ());
+//            entry.getValue().setRank(rankNo.intValue());
+        }
+
         int otherPlayer = 0;
         for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
             if (entry.getValue().getIsOut() == 1) {
@@ -137,13 +145,6 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
     private void updateRank(VsPokerRoom vsPokerRoom) {
         int raceId = vsPokerRoom.getRaceId();
         Map<Long, BattleRole> battleRoleMap = vsPokerRoom.getBattleRoleMap();
-        for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
-            RankingCache.getInstance().addRank(raceId, entry.getValue().getPlayerZJ(), entry.getKey());
-            entry.getValue().setRankZJ(entry.getValue().getPlayerZJ());
-//            Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
-//            logger.info("更新排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), rankNo + 1);
-//            entry.getValue().setRank(rankNo.intValue());
-        }
 
         Set<String> rankInfo = RankingCache.getInstance().getRankInfo(raceId, 0, -1);
         if (CollectionUtils.isEmpty(rankInfo)) return;
@@ -156,6 +157,10 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         for (int i = 0; i < playerIds.size(); i++) {
             for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
                 if (entry.getKey().equals(playerIds.get(i))) {
+                    Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
+                    logger.info("更新排名：raceId：{}，playerId：{}，rank：{}, zj:{}", raceId, entry.getKey(), rankNo + 1, entry.getValue().getPlayerZJ());
+
+                    if (entry.getValue().isQuite()) continue;
                     SVsPokerPerRanking sVsPokerPerRanking = new SVsPokerPerRanking();
                     sVsPokerPerRanking.setPlayerId(playerIds.get(i));
                     sVsPokerPerRanking.setRank(i + 1);

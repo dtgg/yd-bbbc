@@ -31,3 +31,5 @@ ALTER TABLE vs_player_race ADD COLUMN point double(15,2) DEFAULT 0.00 COMMENT 'è
 --
 ALTER TABLE vs_player_race ADD COLUMN appId int(10) DEFAULT 1000001;
 ALTER TABLE vs_player_race ADD COLUMN kfId int(10) DEFAULT 0;
+ALTER TABLE vs_player_race ADD COLUMN isVir int(10) DEFAULT 0;
+ALTER TABLE vs_player_race ADD COLUMN isAward int(10) DEFAULT 0;

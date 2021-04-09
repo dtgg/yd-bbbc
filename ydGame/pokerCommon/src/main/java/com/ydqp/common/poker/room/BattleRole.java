@@ -44,4 +44,7 @@ public class BattleRole {
     @Setter
     @Getter
     private int isVir;
+    @Setter
+    @Getter
+    private boolean isQuite;
 }

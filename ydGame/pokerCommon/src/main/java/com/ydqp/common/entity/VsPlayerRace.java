@@ -20,6 +20,7 @@ public class VsPlayerRace implements Serializable {
 	public static final String APPID_NAME = "appId";
 	public static final String KFID_NAME = "kfId";
 	public static final String ISVIR_NAME = "isVir";
+	public static final String ISAWARD_NAME = "isAward";
 
 
 	private int id;
@@ -117,6 +118,14 @@ public class VsPlayerRace implements Serializable {
 	public void setIsVir(int isVir) {
 		this.isVir = isVir;
 		entityMap.put(ISVIR_NAME, isVir);
+	}
+	private int isAward;
+	public int getIsAward() {
+		return isAward;
+	}
+	public void setIsAward(int isAward) {
+		this.isAward = isAward;
+		entityMap.put(ISAWARD_NAME, isAward);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

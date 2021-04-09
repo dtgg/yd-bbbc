@@ -55,7 +55,7 @@ public abstract class Room implements IRoom{
     public void sendMessageToBattles(AbstartCreateMessage abstartCreateMessage){
         //现发给正在打牌的用户
         for(Map.Entry<Long, BattleRole> entry : getBattleRoleMap().entrySet()) {
-
+            if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 ISession iSession = entry.getValue().getISession();
                 if (iSession != null) {
@@ -67,6 +67,7 @@ public abstract class Room implements IRoom{
 
         //发送给非战斗用户
         for(Map.Entry<Long, BattleRole> entry : getBattleRoleMap().entrySet()) {
+            if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 continue;
             }
@@ -101,6 +102,7 @@ public abstract class Room implements IRoom{
             if (entry.getValue().getPlayerId() == playerId) {
                 continue;
             }
+            if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 ISession iSession = entry.getValue().getISession();
                 if (iSession != null) {
@@ -115,6 +117,7 @@ public abstract class Room implements IRoom{
             if (entry.getValue().getPlayerId() == playerId) {
                 continue;
             }
+            if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 continue;
             }
@@ -130,6 +133,7 @@ public abstract class Room implements IRoom{
         BattleRole battleRole = getBattleRoleMap().get(playerData.getPlayerId());
         if (battleRole != null){
             //已经在房间了
+            battleRole.setQuite(false);
             battleRole.setConnId(playerData.getSessionId());
             battleRole.setPlayerZJ(playerData.getZjPoint());
             battleRole.setPlayerUrl(playerData.getHeadUrl());
@@ -145,6 +149,7 @@ public abstract class Room implements IRoom{
         battleRole.setPlayerName(playerData.getPlayerName());
         battleRole.setPlayerUrl(playerData.getHeadUrl());
         battleRole.setIsVir(playerData.getIsVir());
+        battleRole.setQuite(false);
         battleRole.setISession(iSession);
 
         getBattleRoleMap().put(playerData.getPlayerId(),battleRole);
@@ -160,6 +165,7 @@ public abstract class Room implements IRoom{
             if (battleRole.getIsOut() == 1) {
                 return null;
             }
+            battleRole.setQuite(false);
             battleRole.setConnId(playerData.getSessionId());
             battleRole.setPlayerUrl(playerData.getHeadUrl());
             battleRole.setISession(iSession);
@@ -174,6 +180,7 @@ public abstract class Room implements IRoom{
         battleRole.setPlayerName(playerData.getPlayerName());
         battleRole.setPlayerUrl(playerData.getHeadUrl());
         battleRole.setIsVir(playerData.getIsVir());
+        battleRole.setQuite(false);
         battleRole.setISession(iSession);
 
         getBattleRoleMap().put(playerData.getPlayerId(),battleRole);

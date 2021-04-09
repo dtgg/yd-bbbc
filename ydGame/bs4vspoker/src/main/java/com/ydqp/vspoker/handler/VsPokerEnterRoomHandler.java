@@ -35,9 +35,9 @@ public class VsPokerEnterRoomHandler implements IServerHandler {
             return;
         }
 
-        List<VsPlayerRace> playerRaces = VsPlayerRaceDao.getInstance().getPlayerRaceByPlayerIdAndRaceId(
+        VsPlayerRace playerRaces = VsPlayerRaceDao.getInstance().getPlayerRaceByPlayerIdAndRaceId(
                 vsPokerEnterRoom.getPlayerId(), vsPokerEnterRoom.getRaceId());
-        if (CollectionUtils.isEmpty(playerRaces)) {
+        if (playerRaces == null) {
             logger.error("用户未报名, playerId:{}, raceId:{}", vsPokerEnterRoom.getPlayerId(), vsPokerEnterRoom.getRaceId());
             return;
         }

@@ -190,3 +190,13 @@ message VsPokerGameBonus {
 message SVsPokerGameBonus {
   map<int32, int32> bonusMap = 1;
 }
+
+message VsPokerQuitRoom {
+  int64 playerId = 1;
+  int32 roomId = 2;
+}
+message SVsPokerQuitRoom {
+  int64 playerId = 1;
+  int32 roomId = 2;
+  bool isQuit = 3;
+}

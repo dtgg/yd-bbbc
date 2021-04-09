@@ -26,13 +26,18 @@ public class VsPlayerRaceDao {
         return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
     }
 
-    public List<VsPlayerRace> getPlayerRaceByPlayerIdAndRaceId(long playerId, int raceId) {
+    public VsPlayerRace getPlayerRaceByPlayerIdAndRaceId(long playerId, int raceId) {
         String sql = "select * from vs_player_race where playerId = " + playerId + " and raceId = " + raceId + ";";
-        return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
+        return (VsPlayerRace) JdbcOrm.getInstance().getBean(sql, VsPlayerRace.class);
     }
 
     public List<VsPlayerRace> getPlayerRaceByRaceId(int raceId) {
         String sql = "select * from vs_player_race where raceId = " + raceId + ";";
+        return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
+    }
+
+    public List<VsPlayerRace> getPlayerRaceOrderByRank(int raceId) {
+        String sql = "select * from vs_player_race where raceId = " + raceId + " order by rank asc limit 100;";
         return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
     }
 

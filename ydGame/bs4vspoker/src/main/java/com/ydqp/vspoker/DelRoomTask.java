@@ -1,6 +1,5 @@
 package com.ydqp.vspoker;
 
-import com.alibaba.fastjson.JSON;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.util.StackTraceUtil;
@@ -13,7 +12,6 @@ import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
 import com.ydqp.vspoker.room.RoomManager;
-import com.ydqp.vspoker.room.VsPokerRoom;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -94,7 +92,7 @@ public class DelRoomTask implements Runnable{
                    sVsBonusRank.setPoints(entry.getValue().getPlayerZJ());
 
                    StringBuilder buffer = new StringBuilder(entry.getValue().getPlayerName());
-                   buffer.replace(2, 8, "*");
+                   buffer.replace(2, 8, "******");
                    sVsBonusRank.setPlayerName(buffer.toString());
                    sVsBonusRankMap.put(rank, sVsBonusRank);
                }
@@ -115,13 +113,15 @@ public class DelRoomTask implements Runnable{
                 Long rankNo = RankingCache.getInstance().getRankNo(vsPokerRoom.getRaceId(), entry.getKey());
                 sVsRaceEnd.setRank(rankNo.intValue());
             }
+            if (entry.getValue().isQuite()) continue;
             vsPokerRoom.sendMessageToBattle(sVsRaceEnd, entry.getKey());
         }
 
     }
 
     private void updateRank(int raceId, Map<Long, BattleRole> battleRoleMap) {
-        Object[][] params = new Object[battleRoleMap.entrySet().size()][];
+//        Object[][] params = new Object[battleRoleMap.entrySet().size()][];
+        List<Object[]> params = new ArrayList<>();
         for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
             RankingCache.getInstance().addRank(raceId, entry.getValue().getPlayerZJ(), entry.getKey());
         }
@@ -138,19 +138,28 @@ public class DelRoomTask implements Runnable{
                 long playerId = Long.parseLong(s);
                 for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
                     if (playerId == entry.getValue().getPlayerId()) {
-                        logger.info("完赛更新排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), i + 1);
+                        logger.info("完赛排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), i + 1);
 
                         double bonus = 0;
                         if (i <= 2) {
                             bonus = 1000;
                         }
                         Object[] param = new Object[]{i + 1, bonus, entry.getValue().getPlayerZJ(), raceId, playerId};
-                        params[i] = param;
+                        params.add(param);
                         i++;
                     }
                 }
             }
-            VsPlayerRaceDao.getInstance().updatePlayerRace(params);
+            if (params.size() < battleRoleMap.entrySet().size()) {
+                logger.info("用户数量异常，房间中人数：{}, 缓存中人数：{}, 排名：{}", battleRoleMap.entrySet().size(), params.size(), rankInfo);
+            }
+            if (CollectionUtils.isNotEmpty(params)) {
+                Object[][] parameters = new Object[params.size()][];
+                for (int i1 = 0; i1 < params.size(); i1++) {
+                    parameters[i1] = params.get(i1);
+                }
+                VsPlayerRaceDao.getInstance().updatePlayerRace(parameters);
+            }
         }
     }
 }

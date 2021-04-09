@@ -1,5 +1,6 @@
 package com.ydqp.vspoker.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
 import com.cfq.handler.IServerHandler;
@@ -30,6 +31,7 @@ public class VsPokerGameRankHandler implements IServerHandler {
     @Override
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         VsPokerGameRank rank = (VsPokerGameRank) abstartParaseMessage;
+        logger.info("获取游戏内排行版信息:{}", JSON.toJSONString(rank));
 
         PlayerData playerData = PlayerCache.getInstance().getPlayer(rank.getConnId());
         if (playerData == null) {
@@ -66,13 +68,15 @@ public class VsPokerGameRankHandler implements IServerHandler {
                         sVsPlayerRankData.setPlayerId(entry.getKey());
 
                         StringBuilder buffer = new StringBuilder(entry.getValue().getPlayerName());
-                        buffer.replace(2, 8, "*");
+                        buffer.replace(2, 8, "******");
                         sVsPlayerRankData.setPlayerName(buffer.toString());
 
                         sVsPlayerRankData.setRank(i + 1);
                         sVsPlayerRankData.setPoint(entry.getValue().getRankZJ());
                         sVsPlayerRankData.setBonus(0);
-                        list.add(sVsPlayerRankData);
+                        if (i < 100) {
+                            list.add(sVsPlayerRankData);
+                        }
 
                         if (entry.getKey() == playerData.getPlayerId()) {
                             playerRankData = sVsPlayerRankData;

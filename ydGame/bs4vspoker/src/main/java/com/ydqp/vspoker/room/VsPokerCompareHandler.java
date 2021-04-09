@@ -33,7 +33,7 @@ public class VsPokerCompareHandler implements IRoomStatusHandler{
 
                 Double betMoney = playerObject.getBetBattleRoleId().get(entry.getKey());
                 betMoney = betMoney == null ? 0 :betMoney;
-                sPlayerInfo.setBetPool(betMoney);
+                sPlayerInfo.setBetPool(betMoney * 2);
 
                 if (isBankWin(bankPoker, playerPoker)) {
                     sPlayerInfo.setWin(0);
@@ -42,12 +42,13 @@ public class VsPokerCompareHandler implements IRoomStatusHandler{
                 }
                 sVsCompareResult.getSPlayerInfoMap().put(i, sPlayerInfo);
             }
+
+            sVsCompareResult.setBankPoker(bankPoker);
+
+            if (entry.getValue().isQuite()) continue;
+            //发送大小结果
+            vsPokerRoom.sendMessageToBattle(sVsCompareResult, entry.getKey());
         }
-
-        sVsCompareResult.setBankPoker(bankPoker);
-
-        //发送大小结果
-        vsPokerRoom.sendMessageToBattles(sVsCompareResult);
 
         vsPokerRoom.setStatus(3);
         vsPokerRoom.setCurWaitTime(15);

@@ -24,6 +24,7 @@ public class GeneratorRaceTask extends TimerTask {
         if (status == 0) {
             status = 1;
             int beginTime = new Long(System.currentTimeMillis() / 1000).intValue();
+            long startTime = System.currentTimeMillis();
             List<VsRace> vsRaceList = VsPokerDao.getInstance().getVsRaceByCreateTime(beginTime);
             logger.info("获取赛事信息， {}", JSONObject.toJSONString(vsRaceList));
             for (VsRace vsRace : vsRaceList) {
@@ -32,6 +33,8 @@ public class GeneratorRaceTask extends TimerTask {
 
                 //更新状态
                 VsPokerDao.getInstance().updateRaceStatus(vsRace.getId(), 1);
+                long endTime = System.currentTimeMillis();
+                logger.info("生成赛事花费时间：{}", endTime - startTime);
             }
         }
 

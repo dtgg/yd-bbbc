@@ -15,7 +15,7 @@ public class VspokerMain {
         //启动定时器，进行room的监听 1s 一次
         //start heartBeat thread
         new Timer().schedule(new BattleTask() , 1000, 1000);
-        new Timer().schedule(new GeneratorRaceTask() , 1000, 10000);
+        new Timer().schedule(new GeneratorRaceTask() , 1000, 1000);
 
         DispatchMessage serverDispatchMessage = new DispatchMessage();
         IServer iServer = new Server();

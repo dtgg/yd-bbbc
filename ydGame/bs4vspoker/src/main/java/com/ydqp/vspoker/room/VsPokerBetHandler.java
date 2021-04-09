@@ -5,6 +5,8 @@ import com.cfq.log.LoggerFactory;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerXiazhu;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Random;
 
@@ -21,15 +23,25 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
         } else {
             vsPokerRoom.setCurWaitTime(vsPokerRoom.getCurWaitTime() - 1);
 
+            int waitTime = 0;
+            if (vsPokerRoom.getBattleRoleMap().size() != 0) waitTime = getWaitTime(vsPokerRoom.getBattleRoleMap().size());
             for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
                 if (entry.getValue().getIsVir() == 0) continue;
                 if (getDivisor() == 0) continue;
+                int point = getPoint();
+                if (entry.getValue().getPlayerZJ() < point) continue;
+
+                long startTime = System.currentTimeMillis();
+                long timestamp = 0;
+                while (timestamp < waitTime) {
+                    timestamp = System.currentTimeMillis() - startTime;
+                }
 
                 VsPokerXiazhu vsPokerXiazhu = new VsPokerXiazhu();
                 vsPokerXiazhu.setRoomId(vsPokerRoom.getRoomId());
                 vsPokerXiazhu.setPlayType(getPlayType());
                 vsPokerXiazhu.setPlayerId(entry.getKey());
-                vsPokerXiazhu.setMoney(getPoint());
+                vsPokerXiazhu.setMoney(point);
                 vsPokerRoom.playerXiazhu(null, entry.getValue(), vsPokerXiazhu);
             }
         }
@@ -37,6 +49,12 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
 
     private int getDivisor() {
         return new Random().nextInt(2);
+    }
+
+    private int getWaitTime(int playerNum) {
+        BigDecimal time = BigDecimal.ONE.divide(new BigDecimal(playerNum), 3, RoundingMode.FLOOR);;
+        BigDecimal l = time.multiply(new BigDecimal(1000));
+        return new Random().nextInt(l.intValue());
     }
 
     private int getPlayType() {
