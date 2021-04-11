@@ -125,12 +125,11 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
                 sVsTaoTai.setPlayerId(entry.getKey());
 
                 Long rankNo = RankingCache.getInstance().getRankNo(vsPokerRoom.getRaceId(), entry.getKey());
-                if (rankNo <= 3) {
-                    sVsTaoTai.setBonus(1000);
-                } else {
-                    sVsTaoTai.setBonus(0.0);
-                }
-                sVsTaoTai.setRank(rankNo.intValue() + 1);
+                int rank = rankNo.intValue() + 1;
+                Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                if (bonus == null) bonus = 0D;
+                sVsTaoTai.setBonus(bonus);
+                sVsTaoTai.setRank(rank);
 
                 sVsTaoTai.setRoomId(vsPokerRoom.getRoomId());
                 vsPokerRoom.sendMessageToBattle(sVsTaoTai, entry.getKey());
@@ -157,8 +156,8 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         for (int i = 0; i < playerIds.size(); i++) {
             for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
                 if (entry.getKey().equals(playerIds.get(i))) {
-                    Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
-                    logger.info("更新排名：raceId：{}，playerId：{}，rank：{}, zj:{}", raceId, entry.getKey(), rankNo + 1, entry.getValue().getPlayerZJ());
+//                    Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
+//                    logger.info("更新排名：raceId：{}，playerId：{}，rank：{}, zj:{}", raceId, entry.getKey(), rankNo + 1, entry.getValue().getPlayerZJ());
 
                     if (entry.getValue().isQuite()) continue;
                     SVsPokerPerRanking sVsPokerPerRanking = new SVsPokerPerRanking();

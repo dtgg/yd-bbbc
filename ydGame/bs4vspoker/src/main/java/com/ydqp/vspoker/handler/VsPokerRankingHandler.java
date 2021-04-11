@@ -57,7 +57,7 @@ public class VsPokerRankingHandler implements IServerHandler {
 
             for (VsPlayerRace vsPlayerRace : vsPlayerRaces) {
                 Player player = playerMap.get(vsPlayerRace.getPlayerId());
-                SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData(vsPlayerRace, player == null ? "" : player.getNickname());
+                SVsPlayerRankData sVsPlayerRankData = new SVsPlayerRankData(vsPlayerRace, player == null ? "" : player.getPlayerName());
 
                 StringBuilder buffer = new StringBuilder(sVsPlayerRankData.getPlayerName());
                 buffer.replace(2, 8, "******");
@@ -74,7 +74,7 @@ public class VsPokerRankingHandler implements IServerHandler {
                 VsPlayerRace playerRace = VsPlayerRaceDao.getInstance().getPlayerRaceByPlayerIdAndRaceId(playerData.getPlayerId(), rank.getRaceId());
                 if (playerRace != null) {
                     Player player = playerMap.get(playerRace.getPlayerId());
-                    playerRankData = new SVsPlayerRankData(playerRace, player == null ? "" : player.getNickname());
+                    playerRankData = new SVsPlayerRankData(playerRace, player == null ? "" : player.getPlayerName());
                 }
             }
         }

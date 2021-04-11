@@ -11,6 +11,7 @@ import com.ydqp.common.sendProtoMsg.vspoker.SVsRaceEnd;
 import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
+import com.ydqp.vspoker.room.GameAwardManager;
 import com.ydqp.vspoker.room.RoomManager;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -66,7 +67,7 @@ public class DelRoomTask implements Runnable{
     private void notifyRaceEnd (Room vsPokerRoom) {
         Set<String> rankInfo = null;
         try {
-            rankInfo = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, 2);
+            rankInfo = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, -1);
         } catch (NullPointerException e) {
             logger.error("no player join, redis data is null");
         }
@@ -86,16 +87,21 @@ public class DelRoomTask implements Runnable{
         Map<Integer, SVsBonusRank> sVsBonusRankMap = new HashMap<>();
         for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
             rankMap.forEach((playerId, rank) -> {
-               if (entry.getKey().equals(playerId)) {
-                   SVsBonusRank  sVsBonusRank = new SVsBonusRank();
-                   sVsBonusRank.setBonus(1000);
-                   sVsBonusRank.setPoints(entry.getValue().getPlayerZJ());
+                if (rank <= 3) {
+                    if (entry.getKey().equals(playerId)) {
+                        SVsBonusRank  sVsBonusRank = new SVsBonusRank();
 
-                   StringBuilder buffer = new StringBuilder(entry.getValue().getPlayerName());
-                   buffer.replace(2, 8, "******");
-                   sVsBonusRank.setPlayerName(buffer.toString());
-                   sVsBonusRankMap.put(rank, sVsBonusRank);
-               }
+                        Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                        if (bonus == null) bonus = 0D;
+                        sVsBonusRank.setBonus(bonus);
+                        sVsBonusRank.setPoints(entry.getValue().getPlayerZJ());
+
+                        StringBuilder buffer = new StringBuilder(entry.getValue().getPlayerName());
+                        buffer.replace(2, 8, "******");
+                        sVsBonusRank.setPlayerName(buffer.toString());
+                        sVsBonusRankMap.put(rank, sVsBonusRank);
+                    }
+                }
             });
         }
 
@@ -105,14 +111,17 @@ public class DelRoomTask implements Runnable{
             sVsRaceEnd.setBonusRankMap(sVsBonusRankMap);
             sVsRaceEnd.setPlayerId(entry.getKey());
 
-            if (playerIds.contains(entry.getKey())) {
-                sVsRaceEnd.setBonus(1000);
-                sVsRaceEnd.setRank(rankMap.get(entry.getKey()));
-            } else {
-                sVsRaceEnd.setBonus(0);
-                Long rankNo = RankingCache.getInstance().getRankNo(vsPokerRoom.getRaceId(), entry.getKey());
-                sVsRaceEnd.setRank(rankNo.intValue());
+            for (int i = 0; i < playerIds.size(); i++) {
+                if (playerIds.get(i).equals(entry.getKey())) {
+                    int rank = i + 1;
+                    Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                    if (bonus == null) bonus = 0D;
+
+                    sVsRaceEnd.setBonus(bonus);
+                    sVsRaceEnd.setRank(rank);
+                }
             }
+
             if (entry.getValue().isQuite()) continue;
             vsPokerRoom.sendMessageToBattle(sVsRaceEnd, entry.getKey());
         }
@@ -140,11 +149,11 @@ public class DelRoomTask implements Runnable{
                     if (playerId == entry.getValue().getPlayerId()) {
                         logger.info("完赛排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), i + 1);
 
-                        double bonus = 0;
-                        if (i <= 2) {
-                            bonus = 1000;
-                        }
-                        Object[] param = new Object[]{i + 1, bonus, entry.getValue().getPlayerZJ(), raceId, playerId};
+                        int rank = i + 1;
+                        Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                        if (bonus == null) bonus = 0D;
+
+                        Object[] param = new Object[]{rank, bonus, entry.getValue().getPlayerZJ(), raceId, playerId};
                         params.add(param);
                         i++;
                     }

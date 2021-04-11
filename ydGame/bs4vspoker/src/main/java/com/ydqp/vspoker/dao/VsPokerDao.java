@@ -49,7 +49,7 @@ public class VsPokerDao {
     }
 
     public static void main(String[] args) {
-        int startTime = 1617949200;
+        int startTime = 1618103700;
         for (int i = 0; i < 100; i++) {
             VsRace vsRace = new VsRace();
             vsRace.setRaceType(1);
@@ -57,7 +57,7 @@ public class VsPokerDao {
             vsRace.setMaxPlayerNum(1000);
             vsRace.setCurPlayerNum(0);
             vsRace.setStatus(0);
-            vsRace.setBeginTime(startTime + 600 * i);
+            vsRace.setBeginTime(startTime + 300 * i);
             vsRace.setCreateTime(startTime);
             vsRace.setTotalRound(15);
             JdbcOrm.getInstance().insert("vs_race", vsRace.getParameterMap());
