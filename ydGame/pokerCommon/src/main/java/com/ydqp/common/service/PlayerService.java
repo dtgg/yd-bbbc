@@ -52,4 +52,8 @@ public class PlayerService {
     public List<Player> queryByPlayerIds(String idsStr) {
         return PlayerDao.getInstance().queryByPlayerIds(idsStr);
     }
+
+    public List<Player> getPlayerByPlayerIds(String longString) {
+        return PlayerDao.getInstance().getPlayerByPlayerIds(longString);
+    }
 }

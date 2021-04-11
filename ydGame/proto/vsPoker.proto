@@ -1,0 +1,202 @@
+syntax = "proto3";
+package com.ydqp.common.receiveProtoMsg;
+option java_outer_classname = "vsPoker";
+message VsPokerEnterRoom {
+  int64 playerId = 1;
+  int32 roomId = 2;
+  int32 roomType = 3;
+  int32 basePoint = 4;
+  int32 raceId = 5;
+}
+message VsPokerXiazhu {
+  int64 playerId = 1;
+  int32 roomId = 2;
+  int32 playType = 3;
+  int32 money = 4;
+}
+message SPlayerInfo {
+  // 下注池子
+  double betPool = 1;
+  // 下注池子
+  int32 win = 2;
+  // 下注池子
+  Poker poker = 3;
+
+  double winBetPool = 4;
+}
+message Poker {
+  string tag = 1;
+  int32 num = 2;
+  bool isLaizigou = 3;
+}
+message SVsCompareResult {
+  // roomId
+  int32 roomId = 1;
+
+  map<int32, SPlayerInfo> sPlayerInfoMap = 2;
+  // 庄家的牌
+  Poker bankPoker = 3;
+}
+message SVsFaPai {
+  // roomId
+  int32 roomId = 1;
+}
+message SVsPlayerWin {
+  // roomId
+  int32 roomId = 1;
+  // 用户id
+  int64 playerId = 2;
+  // 总的钱
+  double totalMoney = 3;
+  // 当局赢的钱
+  double winMoney = 4;
+  repeated int32 winTypes = 5;
+}
+message SVsPlayerXiazhu {
+  // roomId
+  int32 roomId = 1;
+  // 用户id
+  int32 playerId = 2;
+  // 用户id
+  int32 playType = 3;
+  // 用户id
+  double betPool = 4;
+  // 用户id
+  double betMoney = 5;
+  // 用户id
+  double battleRoleMoney = 6;
+}
+message SVsPokerRoomInfo {
+  // roomId
+  int32 roomId = 1;
+  // roomStatus
+  int32 roomStatus = 2;
+  // curWaitTime
+  int32 curWaitTime = 3;
+  // roomId
+  double battleRoleMoney = 4;
+  map<int32, SPlayerInfo> sPlayerInfoMap = 5;
+  // 庄家的牌
+  Poker bankPoker = 6;
+  int32 roomType = 7;
+  int32 rank = 8;
+  int32 round = 9;
+  int32 raceId = 10;
+}
+message SVsTaoTai {
+  // roomId
+  int32 roomId = 1;
+  // 用户id
+  int32 playerId = 2;
+  int32 rank = 3;
+  double bonus = 4;
+}
+
+message SVsBonusRank {
+  string playerName = 1;
+  double bonus = 2;
+  double points = 3;
+}
+
+message SVsRaceEnd {
+  // roomId
+  int32 roomId = 1;
+
+  map<int32, SVsBonusRank> bonusRankMap = 2;
+
+  int64 playerId = 3;
+  int32 rank = 4;
+  double bonus = 5;
+}
+
+message VsPokerRaces {
+  int64 playerId = 1;
+}
+message VsPokerRaceHistory {
+  int64 playerId = 1;
+}
+message VsPokerRanking {
+  int32 raceId = 1;
+}
+message VsPokerRaceJoin {
+  int64 playerId = 1;
+  int32 raceId = 2;
+}
+message SVsRace {
+  int32 id = 1;
+  int32 raceType = 2;
+  int32 beginTime = 3;
+  int32 curPlayerNum = 4;
+  int32 maxPlayerNum = 5;
+  int32 status = 6;
+  int32 joinStatus = 7;
+  int32 basePoint = 8;
+}
+message SVsPlayerRace {
+  int64 playerId = 1;
+  int32 raceId = 2;
+  int32 curPlayerNum = 3;
+}
+message SVsPlayerRankData {
+  int64 playerId = 1;
+  string playerName = 2;
+  double bonus = 3;
+  double point = 4;
+  int32 rank = 5;
+}
+message SVsPokerRaces {
+  repeated SVsRace sVsRaces = 1;
+}
+message SVsPokerRaceHistory {
+  repeated SVsRace sVsRaces = 1;
+}
+message SVsPokerRanking {
+  repeated SVsPlayerRankData sPlayerRankData = 1;
+  SVsPlayerRankData playerRankData = 2;
+}
+message SVsPokerRaceJoin {
+  bool success = 1;
+  string message = 2;
+  SVsPlayerRace sVsPlayerRace = 3;
+}
+
+message VsPokerGameRank {
+  int32 roomId = 1;
+}
+message SVsPokerGameRank {
+  repeated SVsPlayerRankData sPlayerRankData = 1;
+  SVsPlayerRankData playerRankData = 2;
+}
+message SVsPokerPerRanking {
+  int64 playerId = 1;
+  int32 rank = 2;
+}
+
+message VsPokerCheckPlayerOut {
+  int64 playerId = 1;
+  int32 roomId = 2;
+  int32 roomType = 3;
+  int32 basePoint = 4;
+  int32 raceId = 5;
+}
+message SVsPokerCheckPlayerOut {
+  bool enterEnabled = 1;
+  int32 status = 2;          //1:比赛未开始; 2:被淘汰; 3:比赛已结束; 4:无效的玩法类型
+}
+
+message VsPokerGameBonus {
+  int32 raceId = 1;
+}
+message SVsPokerGameBonus {
+  map<int32, int32> bonusMap = 1;
+}
+
+message VsPokerQuitRoom {
+  int64 playerId = 1;
+  int32 roomId = 2;
+}
+message SVsPokerQuitRoom {
+  int64 playerId = 1;
+  int32 roomId = 2;
+  bool isQuit = 3;
+}

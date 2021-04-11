@@ -78,4 +78,9 @@ public class PlayerDao {
         String sql = "select * from player where id in "+idsStr+";";
         return JdbcOrm.getInstance().getListBean(sql, Player.class);
     }
+
+    public List<Player> getPlayerByPlayerIds(String longString) {
+        String sql = "select * from player where id in "+longString+";";
+        return JdbcOrm.getInstance().getListBean(sql, Player.class);
+    }
 }

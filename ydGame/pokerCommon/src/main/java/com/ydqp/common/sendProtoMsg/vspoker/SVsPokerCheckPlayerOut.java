@@ -1,0 +1,41 @@
+package com.ydqp.common.sendProtoMsg.vspoker;
+
+import com.baidu.bjf.remoting.protobuf.Codec;
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
+import com.cfq.annotation.GenProto;
+import com.cfq.annotation.SendCommandAnnotation;
+import com.cfq.message.AbstartCreateMessage;
+import com.cfq.message.NetProtoMessage;
+import lombok.Getter;
+import lombok.Setter;
+
+@SendCommandAnnotation(command = 7001017)
+@GenProto(modulePro = "vsPoker")
+public class SVsPokerCheckPlayerOut extends AbstartCreateMessage {
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.BOOL , order = 1, description = "是否允许进入房间")
+    private boolean enterEnabled;
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32 , order = 2, description = "1:比赛未开始; 2:被淘汰; 3:比赛已结束; 4:无效的玩法类型")
+    private int status;
+
+    @Override
+    public NetProtoMessage encodeSendMessage() {
+        NetProtoMessage netProtoMessage = new NetProtoMessage();
+        netProtoMessage.getNetProtoMessageHead().setCmd(this.getCommand());
+        try {
+            Codec<SVsPokerCheckPlayerOut> sVsPokerCheckPlayerOutCodec = ProtobufProxy.create(SVsPokerCheckPlayerOut.class);
+            byte[] bytes = sVsPokerCheckPlayerOutCodec.encode(this);
+            netProtoMessage.getNetProtoMessageBody().setBody(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return netProtoMessage;
+    }
+}

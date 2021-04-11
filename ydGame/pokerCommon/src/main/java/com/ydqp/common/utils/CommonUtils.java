@@ -21,7 +21,7 @@ public class CommonUtils {
     public static String longString(List<Long> list) {
         StringBuilder builder = new StringBuilder();
         builder.append("(");
-        list.forEach(lon -> builder.append(lon).append(","));
+        list.forEach(aLong -> builder.append(aLong).append(","));
         builder.deleteCharAt(builder.length() - 1);
         builder.append(")");
         return builder.toString();
