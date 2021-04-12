@@ -229,11 +229,11 @@ public class PlayerService {
         player.setNickname(nickname);
         player.setHeadUrl(GuestRegisterConstant.HEAD_URL);
         player.setRoomId(GuestRegisterConstant.ROOM_ID);
-        player.setZjPoint(5000);
+        player.setZjPoint(0);
         player.setCreateTime(createTime);
         player.setAppId(appId);
         player.setKfId(kfId);
-        player.setIsVir(1);
+        player.setIsVir(0);
 
 
         long playerId = PlayerLoginDao.getInstance().insertPlayer(player.getParameterMap());

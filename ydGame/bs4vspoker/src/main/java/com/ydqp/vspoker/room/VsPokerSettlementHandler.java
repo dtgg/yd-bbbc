@@ -156,8 +156,9 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         for (int i = 0; i < playerIds.size(); i++) {
             for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
                 if (entry.getKey().equals(playerIds.get(i))) {
-//                    Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
-//                    logger.info("更新排名：raceId：{}，playerId：{}，rank：{}, zj:{}", raceId, entry.getKey(), rankNo + 1, entry.getValue().getPlayerZJ());
+                    Long rankNo = RankingCache.getInstance().getRankNo(raceId, entry.getKey());
+                    logger.info("更新排名：raceId：{}，playerId：{}，rank：{}, zj:{}, round:{}",
+                            raceId, entry.getKey(), rankNo + 1, entry.getValue().getPlayerZJ(), vsPokerRoom.getRound());
 
                     if (entry.getValue().isQuite()) continue;
                     SVsPokerPerRanking sVsPokerPerRanking = new SVsPokerPerRanking();

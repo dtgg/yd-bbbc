@@ -1,11 +1,15 @@
 package com.ydqp.vspoker.cache;
 
+import com.cfq.log.Logger;
+import com.cfq.log.LoggerFactory;
 import com.cfq.redis.JedisUtil;
 import redis.clients.jedis.Jedis;
 
 import java.util.Set;
 
 public class RankingCache {
+
+    private static final Logger logger = LoggerFactory.getLogger(RankingCache.class);
 
     private RankingCache() {}
 
@@ -24,7 +28,8 @@ public class RankingCache {
 
         Jedis jedis = JedisUtil.getInstance().getJedis();
         try {
-            jedis.zadd(RANKING_KEY + raceId, point, String.valueOf(playerId));
+            Long zadd = jedis.zadd(RANKING_KEY + raceId, point, String.valueOf(playerId));
+            logger.info("加入缓存：raceId：{}，playerId：{}，zj:{}, zadd:{}", raceId, playerId, point, zadd);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

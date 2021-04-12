@@ -33,3 +33,6 @@ ALTER TABLE vs_player_race ADD COLUMN appId int(10) DEFAULT 1000001;
 ALTER TABLE vs_player_race ADD COLUMN kfId int(10) DEFAULT 0;
 ALTER TABLE vs_player_race ADD COLUMN isVir int(10) DEFAULT 0;
 ALTER TABLE vs_player_race ADD COLUMN isAward int(10) DEFAULT 0;
+
+--
+ALTER TABLE player MODIFY COLUMN `isVir` int(10) DEFAULT 0;

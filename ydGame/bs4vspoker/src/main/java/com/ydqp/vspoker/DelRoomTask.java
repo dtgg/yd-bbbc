@@ -147,7 +147,7 @@ public class DelRoomTask implements Runnable{
                 long playerId = Long.parseLong(s);
                 for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
                     if (playerId == entry.getValue().getPlayerId()) {
-                        logger.info("完赛排名：raceId：{}，playerId：{}，rank：{}", raceId, entry.getKey(), i + 1);
+                        logger.info("完赛排名：raceId：{}，playerId：{}，rank：{}, zj", raceId, entry.getKey(), i + 1, entry.getValue().getPlayerZJ());
 
                         int rank = i + 1;
                         Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
