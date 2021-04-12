@@ -11,8 +11,9 @@ import com.ydqp.common.sendProtoMsg.vspoker.SVsRaceEnd;
 import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
-import com.ydqp.vspoker.room.GameAwardManager;
+import com.ydqp.vspoker.room.GameBonusManager;
 import com.ydqp.vspoker.room.RoomManager;
+import com.ydqp.vspoker.room.VsPokerRoom;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -41,8 +42,8 @@ public class DelRoomTask implements Runnable{
                         notifyRaceEnd(room);
                     }
 
-                    ThreadManager.getInstance().getExecutor().execute(() ->
-                            updateRank(room.getRaceId(), room.getBattleRoleMap()));
+//                    ThreadManager.getInstance().getExecutor().execute(() -> updateRank((VsPokerRoom) room));
+                    updateRank((VsPokerRoom) room);
 
                     RoomManager.getInstance().getVsPokerRoomMapMap().remove(roomId);
                     NumberPool.getInstance().push(roomId);
@@ -91,7 +92,7 @@ public class DelRoomTask implements Runnable{
                     if (entry.getKey().equals(playerId)) {
                         SVsBonusRank  sVsBonusRank = new SVsBonusRank();
 
-                        Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                        Double bonus = GameBonusManager.getInstance().getBonus((VsPokerRoom) vsPokerRoom, rank);
                         if (bonus == null) bonus = 0D;
                         sVsBonusRank.setBonus(bonus);
                         sVsBonusRank.setPoints(entry.getValue().getPlayerZJ());
@@ -114,7 +115,7 @@ public class DelRoomTask implements Runnable{
             for (int i = 0; i < playerIds.size(); i++) {
                 if (playerIds.get(i).equals(entry.getKey())) {
                     int rank = i + 1;
-                    Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                    Double bonus = GameBonusManager.getInstance().getBonus((VsPokerRoom) vsPokerRoom, rank);
                     if (bonus == null) bonus = 0D;
 
                     sVsRaceEnd.setBonus(bonus);
@@ -128,7 +129,9 @@ public class DelRoomTask implements Runnable{
 
     }
 
-    private void updateRank(int raceId, Map<Long, BattleRole> battleRoleMap) {
+    private void updateRank(VsPokerRoom vsPokerRoom) {
+        int raceId = vsPokerRoom.getRaceId();
+        Map<Long, BattleRole> battleRoleMap = vsPokerRoom.getBattleRoleMap();
 //        Object[][] params = new Object[battleRoleMap.entrySet().size()][];
         List<Object[]> params = new ArrayList<>();
         for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
@@ -150,7 +153,7 @@ public class DelRoomTask implements Runnable{
                         logger.info("完赛排名：raceId：{}，playerId：{}，rank：{}, zj", raceId, entry.getKey(), i + 1, entry.getValue().getPlayerZJ());
 
                         int rank = i + 1;
-                        Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                        Double bonus = GameBonusManager.getInstance().getBonus(vsPokerRoom, rank);
                         if (bonus == null) bonus = 0D;
 
                         Object[] param = new Object[]{rank, bonus, entry.getValue().getPlayerZJ(), raceId, playerId};

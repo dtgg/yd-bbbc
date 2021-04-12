@@ -3,6 +3,7 @@ package com.ydqp.vspoker.room.play;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.VsPlayerRace;
+import com.ydqp.common.entity.VsRace;
 import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.vspoker.cache.RankingCache;
@@ -33,12 +34,12 @@ public class PlayVsPokerManager {
     private final List<VsPokerBasePlay> zjRacePlayObjects = new ArrayList<>();
 
 
-    public void generaPlayObject(int roomType, int basePoint, int raceId, int totalRound) {
+    public void generaPlayObject(int roomType, int basePoint, VsRace vsRace, int totalRound) {
         VsPokerRoom vsPokerRoom = null;
 
         if (roomType == 1) {
             //生成免费赛
-            RaceVsPokerPlayObject freeRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId, totalRound);
+            RaceVsPokerPlayObject freeRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, vsRace.getId(), totalRound);
             freeRacePlayObjects.add(freeRaceVsPokerPlayObject);
             vsPokerRoom = freeRaceVsPokerPlayObject.generatorRoom();
 
@@ -46,12 +47,13 @@ public class PlayVsPokerManager {
 
         if (roomType == 2) {
             //包名赛
-            RaceVsPokerPlayObject zjRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, raceId, totalRound);
+            RaceVsPokerPlayObject zjRaceVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, vsRace.getId(), totalRound);
             zjRacePlayObjects.add(zjRaceVsPokerPlayObject);
             vsPokerRoom = zjRaceVsPokerPlayObject.generatorRoom();
+            vsPokerRoom.setBonus(vsRace.getBasePoint() * vsRace.getCurPlayerNum());
         }
 
-        addPlayerInfo(vsPokerRoom, raceId);
+        addPlayerInfo(vsPokerRoom, vsRace.getId());
     }
 
     public VsPokerBasePlay getPlayObject(int roomType, int basePoint, int raceId) {

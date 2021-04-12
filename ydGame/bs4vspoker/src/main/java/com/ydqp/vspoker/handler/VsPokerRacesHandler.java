@@ -35,7 +35,7 @@ public class VsPokerRacesHandler implements IServerHandler {
             return;
         }
 
-        List<VsRace> vsRaces = VsPokerDao.getInstance().getVsRaces(2);
+        List<VsRace> vsRaces = VsPokerDao.getInstance().getVsRaces(2, vsPokerRaces.getRoomType());
         List<SVsRace> sVsRaces = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(vsRaces)) {
             List<Integer> raceIds = new ArrayList<>();

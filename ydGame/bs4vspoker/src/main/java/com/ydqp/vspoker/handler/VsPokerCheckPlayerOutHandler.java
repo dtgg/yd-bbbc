@@ -37,7 +37,7 @@ public class VsPokerCheckPlayerOutHandler implements IServerHandler {
         }
 
         VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(vsPokerCheckPlayerOut.getRoomType(),
-                1, vsPokerCheckPlayerOut.getRaceId());
+                vsPokerCheckPlayerOut.getBasePoint(), vsPokerCheckPlayerOut.getRaceId());
         if (vsPokerBasePlay == null) {
             logger.error("无对应的玩法类型，{} ", JSONObject.toJSONString(vsPokerCheckPlayerOut));
 

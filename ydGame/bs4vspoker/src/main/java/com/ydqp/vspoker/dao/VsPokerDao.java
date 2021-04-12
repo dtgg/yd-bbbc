@@ -28,13 +28,13 @@ public class VsPokerDao {
         JdbcOrm.getInstance().update(sql);
     }
 
-    public List<VsRace> getVsRaces(int status) {
-        String sql = "select * from vs_race where status != " + status + " order by beginTime asc;";
+    public List<VsRace> getVsRaces(int status, int roomType) {
+        String sql = "select * from vs_race where raceType = "+roomType+" and status != " + status + " order by beginTime asc;";
         return JdbcOrm.getInstance().getListBean(sql, VsRace.class);
     }
 
-    public List<VsRace> getVsRaceHistory(int status) {
-        String sql = "select * from vs_race where status = " + status + " order by beginTime desc;";
+    public List<VsRace> getVsRaceHistory(int status, int roomType) {
+        String sql = "select * from vs_race where raceType = "+roomType+" and status = " + status + " order by beginTime desc;";
         return JdbcOrm.getInstance().getListBean(sql, VsRace.class);
     }
 
@@ -49,8 +49,8 @@ public class VsPokerDao {
     }
 
     public static void main(String[] args) {
-        int startTime = 1618103700;
-        for (int i = 0; i < 100; i++) {
+        int startTime = 1618215900;
+        for (int i = 0; i < 24; i++) {
             VsRace vsRace = new VsRace();
             vsRace.setRaceType(1);
             vsRace.setBasePoint(1);
@@ -60,6 +60,10 @@ public class VsPokerDao {
             vsRace.setBeginTime(startTime + 300 * i);
             vsRace.setCreateTime(startTime);
             vsRace.setTotalRound(15);
+            if (i % 2 == 0) {
+                vsRace.setRaceType(2);
+                vsRace.setBasePoint(10);
+            }
             JdbcOrm.getInstance().insert("vs_race", vsRace.getParameterMap());
         }
     }

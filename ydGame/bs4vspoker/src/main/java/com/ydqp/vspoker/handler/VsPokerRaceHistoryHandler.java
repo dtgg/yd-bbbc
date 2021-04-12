@@ -9,6 +9,7 @@ import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.VsRace;
+import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerRaceHistory;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRaceHistory;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRaces;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsRace;
@@ -24,13 +25,14 @@ public class VsPokerRaceHistoryHandler implements IServerHandler {
 
     @Override
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
+        VsPokerRaceHistory vsPokerRaceHistory = (VsPokerRaceHistory) abstartParaseMessage;
         PlayerData playerData = PlayerCache.getInstance().getPlayer(abstartParaseMessage.getConnId());
         if (playerData == null) {
             logger.error("player is not true");
             return;
         }
 
-        List<VsRace> vsRaces = VsPokerDao.getInstance().getVsRaceHistory(2);
+        List<VsRace> vsRaces = VsPokerDao.getInstance().getVsRaceHistory(2, vsPokerRaceHistory.getRoomType());
         List<SVsRace> sVsRaces = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(vsRaces)) {
             for (VsRace vsRace : vsRaces) {

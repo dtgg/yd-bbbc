@@ -14,7 +14,7 @@ import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerGameRank;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerRankData;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerGameRank;
 import com.ydqp.vspoker.cache.RankingCache;
-import com.ydqp.vspoker.room.GameAwardManager;
+import com.ydqp.vspoker.room.GameBonusManager;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
 import org.apache.commons.collections.CollectionUtils;
@@ -73,7 +73,7 @@ public class VsPokerGameRankHandler implements IServerHandler {
                         sVsPlayerRankData.setPlayerName(buffer.toString());
 
                         int ranks = i + 1;
-                        Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(ranks);
+                        Double bonus = GameBonusManager.getInstance().getBonus(vsPokerRoom, ranks);
                         if (bonus == null) bonus = 0D;
 
                         sVsPlayerRankData.setRank(ranks);

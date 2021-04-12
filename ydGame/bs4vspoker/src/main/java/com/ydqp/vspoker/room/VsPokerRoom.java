@@ -44,6 +44,10 @@ public class VsPokerRoom extends Room {
     @Setter
     private int totalRounds = 15;
 
+    @Getter
+    @Setter
+    private double bonus;
+
     @Override
     public void monitor() {
         try {

@@ -73,4 +73,9 @@ public class PlayerPromoteDao {
     public int updateBonusAmount(Object[] params) {
         return JdbcOrm.getInstance().updateRowByArray(UPDATE_BONUS_AMOUNT, params);
     }
+
+    public void updateRaceNum(Long playerId) {
+        String sql = "update player_promote set raceNum = raceNum + 1 where playerId = " + playerId + ";";
+        JdbcOrm.getInstance().update(sql);
+    }
 }

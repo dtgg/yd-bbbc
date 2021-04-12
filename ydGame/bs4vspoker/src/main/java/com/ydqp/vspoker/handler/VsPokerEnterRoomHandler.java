@@ -52,8 +52,8 @@ public class VsPokerEnterRoomHandler implements IServerHandler {
             playerData.setZjPoint(player.getZjPoint());
         }
 
-        VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(vsPokerEnterRoom.getRoomType(), 1,
-                vsPokerEnterRoom.getRaceId());
+        VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(vsPokerEnterRoom.getRoomType(),
+                vsPokerEnterRoom.getBasePoint(), vsPokerEnterRoom.getRaceId());
         if (vsPokerBasePlay == null) {
             logger.error("未找到对应的玩法类型，{} ", JSONObject.toJSONString(vsPokerEnterRoom));
             return;

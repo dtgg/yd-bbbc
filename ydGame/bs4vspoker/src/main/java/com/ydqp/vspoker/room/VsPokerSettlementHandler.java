@@ -126,7 +126,7 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
 
                 Long rankNo = RankingCache.getInstance().getRankNo(vsPokerRoom.getRaceId(), entry.getKey());
                 int rank = rankNo.intValue() + 1;
-                Double bonus = GameAwardManager.getInstance().getGameAwardMap().get(rank);
+                Double bonus = GameBonusManager.getInstance().getBonus(vsPokerRoom, rank);
                 if (bonus == null) bonus = 0D;
                 sVsTaoTai.setBonus(bonus);
                 sVsTaoTai.setRank(rank);

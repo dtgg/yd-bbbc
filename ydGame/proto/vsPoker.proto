@@ -111,9 +111,11 @@ message SVsRaceEnd {
 
 message VsPokerRaces {
   int64 playerId = 1;
+  int32 roomType = 2;
 }
 message VsPokerRaceHistory {
   int64 playerId = 1;
+  int32 roomType = 2;
 }
 message VsPokerRanking {
   int32 raceId = 1;
@@ -199,4 +201,11 @@ message SVsPokerQuitRoom {
   int64 playerId = 1;
   int32 roomId = 2;
   bool isQuit = 3;
+}
+
+message VsPokerSignInBonus {
+  int32 roomId = 1;
+}
+message SVsPokerSignInBonus {
+  map<int32, double> bonusMap = 1;
 }

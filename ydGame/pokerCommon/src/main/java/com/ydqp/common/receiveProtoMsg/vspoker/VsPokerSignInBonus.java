@@ -11,27 +11,22 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 7000012)
+@ReceiveCommandAnnotation(command = 7000019)
 @GenProto(modulePro = "vsPoker")
-public class VsPokerRaceHistory extends AbstartParaseMessage {
+public class VsPokerSignInBonus extends AbstartParaseMessage {
 
     @Getter
     @Setter
-    @Protobuf(fieldType = FieldType.INT64, order = 1)
-    private long playerId;
-
-    @Getter
-    @Setter
-    @Protobuf(fieldType = FieldType.INT32, order = 2)
-    private int roomType;
+    @Protobuf(fieldType = FieldType.INT32 , order = 1, description = "roomId")
+    private int roomId;
 
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
 
-        Codec<VsPokerRaceHistory> vsPokerRaceHistoryCodec = ProtobufProxy
-                .create(VsPokerRaceHistory.class);
+        Codec<VsPokerSignInBonus> vsPokerSignInBonusCodec = ProtobufProxy
+                .create(VsPokerSignInBonus.class);
 
-        return vsPokerRaceHistoryCodec.decode(body);
+        return vsPokerSignInBonusCodec.decode(body);
     }
 }

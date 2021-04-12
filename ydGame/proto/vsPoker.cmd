@@ -12,6 +12,8 @@ c->s
 7000017 = VsPokerCheckPlayerOut //检查是否能够进入房间
 7000018 = VsPokerGameBonus      //获取赛事奖励列表
 
+7000019 = VsPokerSignInBonus    //当前报名赛列表
+
 7000020 = VsPokerQuitRoom       //退出房间
 
 s->c
@@ -35,5 +37,7 @@ s->c
 
 7001017 = SVsPokerCheckPlayerOut //检查是否能够进入房间
 7001018 = SVsPokerGameBonus      //获取赛事奖励列表
+
+7001019 = SVsPokerSignInBonus    //当前报名赛列表
 
 7001020 = SVsPokerQuitRoom       //退出房间

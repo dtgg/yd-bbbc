@@ -45,4 +45,9 @@ public class VsPlayerRaceDao {
         String sql = "update vs_player_race set rank = ?, bonus = ?, point = ? where raceId = ? and playerId = ?;";
         JdbcOrm.getInstance().batchUpdate(sql, params);
     }
+
+    public List<VsPlayerRace> getPlayerRaceRunning(long playerId, String raceIdStr) {
+        String sql = "select * from vs_player_race where raceType = 1 and playerId = " + playerId + " and raceId in" + raceIdStr + ";";
+        return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
+    }
 }

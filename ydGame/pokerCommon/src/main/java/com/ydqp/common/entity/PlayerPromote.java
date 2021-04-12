@@ -29,6 +29,7 @@ public class PlayerPromote implements Serializable {
 	public static final String EFFECTIVENUM_NAME = "effectiveNum";
 	public static final String APPID_NAME = "appId";
 	public static final String BONUSAMOUNT_NAME = "bonusAmount";
+	public static final String RACENUM_NAME = "raceNum";
 
 
     	private int id;
@@ -159,6 +160,14 @@ public class PlayerPromote implements Serializable {
 	public void setBonusAmount(BigDecimal bonusAmount) {
 		this.bonusAmount = bonusAmount;
 		entityMap.put(BONUSAMOUNT_NAME, bonusAmount);
+	}
+	private int raceNum;
+	public int getRaceNum() {
+		return raceNum;
+	}
+	public void setRaceNum(int raceNum) {
+		this.raceNum = raceNum;
+		entityMap.put(RACENUM_NAME, raceNum);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

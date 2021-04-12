@@ -15,7 +15,7 @@ public class ThreadManager {
 
     @Getter
     @Setter
-    private Executor rankExecutor;
+    private Executor promoteExecutor;
 
     @Getter
     @Setter
@@ -29,6 +29,14 @@ public class ThreadManager {
 
         FixedThreadPool fixedThreadPool = new FixedThreadPool();
         executor = fixedThreadPool.getExecutor(threadPoolConfig);
+
+        ThreadPoolConfig threadPoolConfig2 = new ThreadPoolConfig();
+        threadPoolConfig2.setMaxThreads(1);
+        threadPoolConfig2.setQueueSize(2000);
+        threadPoolConfig2.setThreadName("promoteTask");
+
+        FixedThreadPool fixedThreadPool2 = new FixedThreadPool();
+        promoteExecutor = fixedThreadPool2.getExecutor(threadPoolConfig2);
     }
 
     private static final ThreadManager instance = new ThreadManager();

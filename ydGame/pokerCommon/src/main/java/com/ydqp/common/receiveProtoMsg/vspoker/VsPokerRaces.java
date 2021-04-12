@@ -20,6 +20,11 @@ public class VsPokerRaces extends AbstartParaseMessage {
     @Protobuf(fieldType = FieldType.INT64, order = 1)
     private long playerId;
 
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32, order = 2)
+    private int roomType;
+
     @Override
     public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
         byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
