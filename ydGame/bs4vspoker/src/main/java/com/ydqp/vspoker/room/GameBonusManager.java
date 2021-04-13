@@ -31,7 +31,7 @@ public class GameBonusManager {
         Map<Integer, Double> signInGameBonusMap = new HashMap<>();
         signInGameBonusMap.put(1, 0.5);
         signInGameBonusMap.put(2, 0.3);
-        signInGameBonusMap.put(3, 0.15);
+        signInGameBonusMap.put(3, 0.1);
         gameBonusMap.put(2, signInGameBonusMap);
     }
 

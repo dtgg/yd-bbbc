@@ -36,3 +36,4 @@ ALTER TABLE vs_player_race ADD COLUMN isAward int(10) DEFAULT 0;
 
 --
 ALTER TABLE player MODIFY COLUMN `isVir` int(10) DEFAULT 0;
+ALTER TABLE player_promote ADD COLUMN raceNum int(10) DEFAULT 0;
