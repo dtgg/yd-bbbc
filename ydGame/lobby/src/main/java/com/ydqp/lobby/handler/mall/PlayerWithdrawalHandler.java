@@ -118,6 +118,13 @@ public class PlayerWithdrawalHandler implements IServerHandler {
             logger.error("提现失败，虚拟账户无法提现，playerId：{}，amount:{}, balance:{}", player.getId(), amount, player.getZjPoint());
             return;
         }
+        if (player.getId() == player.getKfId()) {
+            withdrawalSuccess.setSuccess(false);
+            withdrawalSuccess.setMessage("Customer service account cannot be withdraw");
+            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+            logger.error("提现失败，客服账户无法提现，playerId：{}，amount:{}, balance:{}", player.getId(), amount, player.getZjPoint());
+            return;
+        }
         if (player.getZjPoint() < amount) {
             withdrawalSuccess.setSuccess(false);
             withdrawalSuccess.setMessage("Insufficient account balance");
