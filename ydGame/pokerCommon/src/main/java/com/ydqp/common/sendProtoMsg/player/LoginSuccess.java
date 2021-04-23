@@ -52,6 +52,14 @@ public class LoginSuccess extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.INT32, order = 8, description = "是否模拟号")
     private int isVir;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32, order = 9, description = "是否返利")
+    private int isRebate;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.DOUBLE, order = 10, description = "返利金额")
+    private double rebateAmount;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

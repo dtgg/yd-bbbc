@@ -18,11 +18,13 @@ import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRaceJoin;
 import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.vspoker.ThreadManager;
-import com.ydqp.vspoker.dao.PlayerPromoteRaceDao;
+import com.ydqp.common.dao.VsRacePromoteDao;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
 import org.apache.commons.collections.CollectionUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,25 +137,40 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         sVsPokerRaceJoin.setSVsPlayerRace(sVsPlayerRace);
         iSession.sendMessageByID(sVsPokerRaceJoin, vsPokerRaceJoin.getConnId());
 
-        ThreadManager.getInstance().getPromoteExecutor().execute(() -> playerPromoteRaceNum(playerData.getPlayerId(), race.getId()));
+        ThreadManager.getInstance().getPromoteExecutor().execute(() -> playerPromoteRaceNum(playerData, race, nowTime));
     }
 
-    private void playerPromoteRaceNum(long playerId, int raceId) {
+    private void playerPromoteRaceNum(PlayerData playerData, VsRace vsRace, int nowTime) {
         //tuiguang
-        PlayerPromote playerPromote = PlayerPromoteDao.getInstance().findByPlayerId(playerId);
+        PlayerPromote playerPromote = PlayerPromoteDao.getInstance().findByPlayerId(playerData.getPlayerId());
         if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
             PlayerPromoteDao.getInstance().updateRaceNum(playerPromote.getSuperiorId());
-        }
 
-//        PlayerPromoteRace playerPromoteRace = PlayerPromoteRaceDao.getInstance().findByPlayerIdAndRaceId(playerId, raceId);
-//        if (playerPromoteRace == null) {
-//            PlayerPromoteRace promoteRace = new PlayerPromoteRace();
-//            promoteRace.setPlayerId(playerId);
-//            promoteRace.setRaceId(raceId);
-//            promoteRace.setRaceNum(1);
-//            PlayerPromoteRaceDao.getInstance().insert(promoteRace.getParameterMap());
-//        } else {
-//            PlayerPromoteRaceDao.getInstance().updateRaceNum(playerId, raceId);
-//        }
+            Player player = PlayerService.getInstance().queryByPlayerId(playerPromote.getSuperiorId());
+            if (player.getIsRebate() == 1) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+                String time = format.format(new Date(nowTime * 1000L));
+
+                float rebate = vsRace.getBasePoint() * 0.01F;
+
+                logger.info("用户可以获得返利: playerId:{}, raceId:{}, rebate:{}", player.getId(), vsRace.getId(), rebate);
+
+                VsRacePromote promoteRace = new VsRacePromote();
+                promoteRace.setPlayerId(playerPromote.getSuperiorId());
+                promoteRace.setSubId(playerData.getPlayerId());
+                promoteRace.setPlayerName(playerData.getPlayerName());
+                promoteRace.setNickname(playerData.getNickName());
+                promoteRace.setRaceId(vsRace.getId());
+                promoteRace.setOrderId(time);
+                promoteRace.setSignFee(vsRace.getBasePoint());
+                promoteRace.setFee(rebate);
+                promoteRace.setStatus(0);
+                promoteRace.setCreateTime(new Long(System.currentTimeMillis() / 1000).intValue());
+                promoteRace.setBeginTime(vsRace.getBeginTime());
+                promoteRace.setAppId(playerData.getAppId());
+                promoteRace.setKfId(playerData.getKfId());
+                VsRacePromoteDao.getInstance().insert(promoteRace.getParameterMap());
+            }
+        }
     }
 }

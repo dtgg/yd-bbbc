@@ -24,6 +24,9 @@ message LoginSuccess {
  string openGames=7;
  //是否虚拟号
  int32 isVir=8;
+ //是否返利
+  int32 isRebate=9;
+  double rebateAmount=10;
 }
 
 message LobbyError {

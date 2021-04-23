@@ -209,3 +209,39 @@ message VsPokerSignInBonus {
 message SVsPokerSignInBonus {
   map<int32, double> bonusMap = 1;
 }
+
+message VsPokerRebateReceive {
+  int64 playerId = 1;
+}
+message VsPokerRebateRecord {
+  int64 playerId = 1;
+}
+message SVsPokerRebateReceive {
+  bool success = 1;
+  string message = 2;
+}
+message SVsPokerRebateRecordData {
+  string playerName = 1;
+  int32 createTime = 2;
+  string orderId = 3;
+  float rebate = 4;
+  int32 raceId = 5;
+}
+message SVsPokerRebateRecord {
+  repeated SVsPokerRebateRecordData records = 1;
+}
+message VsPokerRebateChange {
+  int64 playerId = 1;
+}
+message SVsPokerRebateChange {
+  int64 playerId = 1;
+  float rebate = 2;
+}
+
+message VsPokerRebateRecordDetail {
+  int64 playerId = 1;
+  int32 raceId = 2;
+}
+message SVsPokerRebateRecordDetail {
+  repeated SVsPokerRebateRecordData records = 1;
+}

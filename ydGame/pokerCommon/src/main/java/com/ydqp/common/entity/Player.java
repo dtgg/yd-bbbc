@@ -27,7 +27,8 @@ public class Player implements Serializable {
 	public static final String ORDERAMOUNT_NAME = "orderAmount";
 	public static final String WITHDRAWAMOUNT_NAME = "withdrawAmount";
 	public static final String KFID_NAME = "kfId";
-	public static final String isVir_NAME = "isVir";
+	public static final String ISVIR_NAME = "isVir";
+	public static final String ISREBATE_NAME = "isRebate";
 
 
     	private long id;
@@ -156,7 +157,15 @@ public class Player implements Serializable {
 	}
 	public void setIsVir(int isVir) {
 		this.isVir = isVir;
-		entityMap.put(isVir_NAME, isVir);
+		entityMap.put(ISVIR_NAME, isVir);
+	}
+	private int isRebate;
+	public int getIsRebate() {
+		return isRebate;
+	}
+	public void setIsRebate(int isRebate) {
+		this.isRebate = isRebate;
+		entityMap.put(ISREBATE_NAME, isRebate);
 	}
 
 	public Object getValueByFieldName(String fieldName) {

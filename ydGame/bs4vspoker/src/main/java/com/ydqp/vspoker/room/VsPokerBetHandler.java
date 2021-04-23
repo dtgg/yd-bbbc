@@ -27,6 +27,10 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             if (vsPokerRoom.getBattleRoleMap().size() != 0) waitTime = getWaitTime(vsPokerRoom.getBattleRoleMap().size());
             for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
                 if (entry.getValue().getIsVir() == 0) continue;
+
+//                int frequency = 15 - vsPokerRoom.getCurWaitTime();
+//                if (entry.getValue().getPlayerId() % frequency != 0) continue;
+
                 if (getDivisor() == 0) continue;
                 int point = getPoint();
                 if (entry.getValue().getPlayerZJ() < point) continue;
@@ -52,8 +56,9 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
     }
 
     private int getWaitTime(int playerNum) {
-        BigDecimal time = BigDecimal.ONE.divide(new BigDecimal(playerNum), 3, RoundingMode.FLOOR);;
+        BigDecimal time = BigDecimal.ONE.divide(new BigDecimal(playerNum), 3, RoundingMode.FLOOR);
         BigDecimal l = time.multiply(new BigDecimal(1000));
+        if (l.compareTo(BigDecimal.ZERO) == 0) return 0;
         return new Random().nextInt(l.intValue());
     }
 

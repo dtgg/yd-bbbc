@@ -37,3 +37,37 @@ ALTER TABLE vs_player_race ADD COLUMN isAward int(10) DEFAULT 0;
 --
 ALTER TABLE player MODIFY COLUMN `isVir` int(10) DEFAULT 0;
 ALTER TABLE player_promote ADD COLUMN raceNum int(10) DEFAULT 0;
+
+--
+ALTER TABLE player ADD COLUMN isRebate int(10) DEFAULT 0;
+
+CREATE TABLE `vs_race_promote` (
+   `id` int(10) NOT NULL AUTO_INCREMENT,
+   `playerId` bigint(20) DEFAULT NULL,
+   `subId` bigint(20) DEFAULT NULL,
+   `playerName` varchar(50) DEFAULT '',
+   `nickname` varchar(50) DEFAULT '',
+   `raceId` int(10) DEFAULT 0,
+   `orderId` varchar(50) DEFAULT '0',
+   `signFee` float(10,2) DEFAULT 0.00,
+  `fee` float(10,2) DEFAULT 0.00,
+  `status` int(10) DEFAULT 0,
+  `createTime` int(10) DEFAULT 0,
+  `beginTime` int(10) DEFAULT 0,
+  `appId` int(10) DEFAULT 1000001,
+  `kfId` int(10) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `vs_rebate_record` (
+    `id` int(10) NOT NULL AUTO_INCREMENT,
+    `playerId` bigint(20) DEFAULT NULL,
+    `playerName` varchar(50) DEFAULT '',
+    `nickname` varchar(50) DEFAULT '',
+    `rebate` float(10,2) DEFAULT 0.00,
+  `createTime` int(10) DEFAULT 0,
+  `appId` int(10) DEFAULT 1000001,
+  `kfId` int(10) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

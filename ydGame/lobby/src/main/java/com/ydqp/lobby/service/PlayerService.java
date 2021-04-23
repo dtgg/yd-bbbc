@@ -7,8 +7,10 @@ import com.cfq.log.LoggerFactory;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.constant.Constant;
 import com.ydqp.common.dao.PlayerDao;
+import com.ydqp.common.dao.VsRacePromoteDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.data.Total;
 import com.ydqp.common.entity.*;
 import com.ydqp.common.receiveProtoMsg.player.*;
 import com.ydqp.common.sendProtoMsg.player.*;
@@ -120,6 +122,10 @@ public class PlayerService {
         loginSuccess.setRoomId(player.getRoomId());
         loginSuccess.setPlayerUrl(playerData.getHeadUrl());
         loginSuccess.setIsVir(player.getIsVir());
+        loginSuccess.setIsRebate(player.getIsRebate());
+
+        Total rebateAmount = VsRacePromoteDao.getInstance().sumRebateAmount(player.getId());
+        loginSuccess.setRebateAmount(rebateAmount == null ? 0 : rebateAmount.getSum());
 
         //获取开关游戏
         String serverCodes = getGameSwitch();

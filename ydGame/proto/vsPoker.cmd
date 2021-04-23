@@ -16,6 +16,11 @@ c->s
 
 7000020 = VsPokerQuitRoom       //退出房间
 
+7000021 = VsPokerRebateReceive  //领取返利
+7000022 = VsPokerRebateRecord   //返利记录
+7000023 = VsPokerRebateChange   //返利变化
+7000024 = VsPokerRebateRecordDetail   //返利记录详情
+
 s->c
 7000001 = SVsFaPai //发牌
 7000002 = SVsCompareResult // 比牌结果
@@ -41,3 +46,8 @@ s->c
 7001019 = SVsPokerSignInBonus    //当前报名赛列表
 
 7001020 = SVsPokerQuitRoom       //退出房间
+
+7001021 = SVsPokerRebateReceive  //领取返利
+7001022 = SVsPokerRebateRecord   //返利记录
+7001023 = SVsPokerRebateChange   //返利变化
+7001024 = SVsPokerRebateRecordDetail   //返利记录详情
