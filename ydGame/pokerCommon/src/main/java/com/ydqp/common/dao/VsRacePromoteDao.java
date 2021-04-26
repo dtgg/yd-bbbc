@@ -38,10 +38,10 @@ public class VsRacePromoteDao {
         return (Total) JdbcOrm.getInstance().getBean(sql, Total.class);
     }
 
-    public List<PlayerRebateRecord> findByPlayerId(long playerId) {
-//        String sql = "select * from vs_race_promote where playerId = " + playerId + " order by id desc;";
-        String sql = "select beginTime, raceId, sum(fee) as rebate from vs_race_promote where playerId = " + playerId + " GROUP BY raceId order by raceId desc;";
-        return JdbcOrm.getInstance().getListBean(sql, PlayerRebateRecord.class);
+    public List<VsRacePromote> findByPlayerId(long playerId) {
+        String sql = "select * from vs_race_promote where playerId = " + playerId + " order by raceId desc;";
+//        String sql = "select beginTime, raceId, sum(fee) as rebate from vs_race_promote where playerId = " + playerId + " GROUP BY raceId order by raceId desc;";
+        return JdbcOrm.getInstance().getListBean(sql, VsRacePromote.class);
     }
 
     public List<VsRacePromote> findByPlayerIdAndRaceId(long playerId, int raceId) {

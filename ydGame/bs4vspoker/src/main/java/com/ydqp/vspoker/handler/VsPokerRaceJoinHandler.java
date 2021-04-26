@@ -147,7 +147,7 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
             PlayerPromoteDao.getInstance().updateRaceNum(playerPromote.getSuperiorId());
 
             Player player = PlayerService.getInstance().queryByPlayerId(playerPromote.getSuperiorId());
-            if (player.getIsRebate() == 1) {
+            if (player.getIsRebate() == 1 && vsRace.getRaceType() == 2) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
                 String time = format.format(new Date(nowTime * 1000L));
 
