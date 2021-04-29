@@ -38,7 +38,7 @@ public class ParityReceiveHandler implements IServerHandler {
         ParityReceiveSuc suc = new ParityReceiveSuc();
 
         Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
-        if (player.getIsVir() == 1 || player.getOrderAmount() <= 0) {
+        if (player.getIsVir() == 1) {// || player.getOrderAmount() <= 0
             suc.setSuccess(false);
             suc.setMessage("Virtual account cannot be receive");
             iSession.sendMessageByID(suc, parityReceive.getConnId());

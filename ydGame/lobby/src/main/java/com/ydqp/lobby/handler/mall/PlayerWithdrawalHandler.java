@@ -111,7 +111,7 @@ public class PlayerWithdrawalHandler implements IServerHandler {
         }
 
         Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
-        if (player.getIsVir() == 1 || player.getOrderAmount() <= 0) {
+        if (player.getIsVir() == 1) { // || player.getOrderAmount() <= 0
             withdrawalSuccess.setSuccess(false);
             withdrawalSuccess.setMessage("Virtual account cannot be withdraw");
             iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());

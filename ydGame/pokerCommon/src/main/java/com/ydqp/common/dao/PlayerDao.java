@@ -30,7 +30,7 @@ public class PlayerDao {
     }
 
     public int updatePlayerZjPoint(double zjPoint, long id) {
-        String sql = "update player set zjPoint = zjPoint + " + zjPoint + " where id = " + id + " and zjPoint > 0;";
+        String sql = "update player set zjPoint = zjPoint + " + zjPoint + " where id = " + id + " and zjPoint >= 0;";
         return JdbcOrm.getInstance().updateByRow(sql);
     }
 

@@ -49,7 +49,7 @@ public class ParityBonusAmountDrawHandler implements IServerHandler {
         }
 
         Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
-        if (player.getIsVir() == 1 || player.getOrderAmount() <= 0) {
+        if (player.getIsVir() == 1) {// || player.getOrderAmount() <= 0
             logger.error("Virtual account cannot be collect");
             suc.setSuccess(false);
             suc.setMessage("Virtual account cannot be collect");
