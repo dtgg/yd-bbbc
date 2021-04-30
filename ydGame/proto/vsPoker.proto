@@ -23,6 +23,8 @@ message SPlayerInfo {
   Poker poker = 3;
 
   double winBetPool = 4;
+
+  double totalBetPool = 5;
 }
 message Poker {
   string tag = 1;
@@ -65,6 +67,7 @@ message SVsPlayerXiazhu {
   double betMoney = 5;
   // 用户id
   double battleRoleMoney = 6;
+  double totalBetPool = 7;
 }
 message SVsPokerRoomInfo {
   // roomId

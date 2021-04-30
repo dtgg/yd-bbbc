@@ -39,6 +39,10 @@ public class SVsPlayerXiazhu extends AbstartCreateMessage {
     @Setter
     @Protobuf(fieldType = FieldType.DOUBLE , order = 6, description = "用户id")
     private double battleRoleMoney;
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.DOUBLE , order = 7, description = "用户id")
+    private double totalBetPool;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

@@ -143,6 +143,10 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
     private void playerPromoteRaceNum(PlayerData playerData, VsRace vsRace, int nowTime) {
         //tuiguang
         PlayerPromote playerPromote = PlayerPromoteDao.getInstance().findByPlayerId(playerData.getPlayerId());
+        if (playerPromote == null) {
+            logger.error("无法获取用户的推广信息，playerId = {}", playerData.getPlayerId());
+            return;
+        }
         if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
             PlayerPromoteDao.getInstance().updateRaceNum(playerPromote.getSuperiorId());
 

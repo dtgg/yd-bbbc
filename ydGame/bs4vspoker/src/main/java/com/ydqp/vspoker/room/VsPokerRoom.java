@@ -96,6 +96,7 @@ public class VsPokerRoom extends Room {
             if (betBattleRoleId == null) {
                 continue;
             }
+            sPlayerInfo.setTotalBetPool(playerObject.getBetPool());
             for (Map.Entry<Long, Double> entry : betBattleRoleId.entrySet()) {
                 if (entry.getKey() == battleRole.getPlayerId()) {
                     sPlayerInfo.setBetPool(entry.getValue());
@@ -142,7 +143,7 @@ public class VsPokerRoom extends Room {
 //        sVsPlayerXiazhu.setBetPool(playerObject.getBetPool());
         sVsPlayerXiazhu.setBetPool(playerObject.getBetBattleRoleId().get(battleRole.getPlayerId()));
         sVsPlayerXiazhu.setPlayType(vsPokerXiazhu.getPlayType());
-
+        sVsPlayerXiazhu.setTotalBetPool(playerObject.getBetPool());
         this.sendMessageToBattlesByFilter(sVsPlayerXiazhu, battleRole.getPlayerId());
 
         sVsPlayerXiazhu.setBattleRoleMoney(battleRole.getPlayerZJ());
