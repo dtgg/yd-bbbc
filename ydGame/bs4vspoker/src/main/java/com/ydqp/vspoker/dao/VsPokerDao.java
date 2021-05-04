@@ -34,7 +34,7 @@ public class VsPokerDao {
     }
 
     public List<VsRace> getVsRaceHistory(int status, int roomType) {
-        String sql = "select * from vs_race where raceType = "+roomType+" and status = " + status + " order by beginTime desc;";
+        String sql = "select * from vs_race where raceType = "+roomType+" and status = " + status + " order by beginTime desc limit 20;";
         return JdbcOrm.getInstance().getListBean(sql, VsRace.class);
     }
 
