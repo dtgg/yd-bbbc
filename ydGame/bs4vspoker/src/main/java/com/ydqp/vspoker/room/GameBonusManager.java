@@ -16,16 +16,14 @@ public class GameBonusManager {
 
     static {
         Map<Integer, Double> freeGameBonusMap = new HashMap<>();
-        freeGameBonusMap.put(1, 3000D);
-        freeGameBonusMap.put(2, 2000D);
-        freeGameBonusMap.put(3, 1200D);
+        freeGameBonusMap.put(1, 2000D);
+        freeGameBonusMap.put(2, 1200D);
+        freeGameBonusMap.put(3, 800D);
         freeGameBonusMap.put(4, 600D);
-        freeGameBonusMap.put(5, 600D);
-        freeGameBonusMap.put(6, 600D);
-        freeGameBonusMap.put(7, 500D);
-        freeGameBonusMap.put(8, 500D);
-        freeGameBonusMap.put(9, 500D);
-        freeGameBonusMap.put(10, 500D);
+        freeGameBonusMap.put(5, 400D);
+        for (int i = 6; i <= 30; i++) {
+            freeGameBonusMap.put(i, 200D);
+        }
         gameBonusMap.put(1, freeGameBonusMap);
 
         Map<Integer, Double> signInGameBonusMap = new HashMap<>();
