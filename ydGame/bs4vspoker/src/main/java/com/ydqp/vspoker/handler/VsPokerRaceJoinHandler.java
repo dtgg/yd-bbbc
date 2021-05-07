@@ -76,8 +76,6 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
                    return;
                }
             }
-        } else if (race.getRaceType() == 2) {
-            RankingCache.getInstance().setRaceJoin(playerData.getPlayerId());
         }
 
         if (race.getCurPlayerNum() >= race.getMaxPlayerNum()) {
@@ -150,6 +148,10 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         iSession.sendMessageByID(sVsPokerRaceJoin, vsPokerRaceJoin.getConnId());
 
         ThreadManager.getInstance().getPromoteExecutor().execute(() -> playerPromoteRaceNum(playerData, race, nowTime));
+
+        if (race.getRaceType() == 2) {
+            RankingCache.getInstance().setRaceJoin(playerData.getPlayerId());
+        }
     }
 
     private void playerPromoteRaceNum(PlayerData playerData, VsRace vsRace, int nowTime) {
