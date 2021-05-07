@@ -19,6 +19,7 @@ import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.vspoker.ThreadManager;
 import com.ydqp.common.dao.VsRacePromoteDao;
+import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
 import org.apache.commons.collections.CollectionUtils;
@@ -66,6 +67,17 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
                     return;
                 }
             }
+
+            if (race.getIsPermission() == 1) {
+                //需要参加报名赛才可以包名的免费赛
+               if (!RankingCache.getInstance().exitRaceJoin(playerData.getPlayerId())) {
+                   sVsPokerRaceJoin.setSuccess(false);
+                   sVsPokerRaceJoin.setMessage("You need to participate in today’s registration match before you have the right to participate in the free race");
+                   return;
+               }
+            }
+        } else if (race.getRaceType() == 2) {
+            RankingCache.getInstance().setRaceJoin(playerData.getPlayerId());
         }
 
         if (race.getCurPlayerNum() >= race.getMaxPlayerNum()) {

@@ -5,6 +5,9 @@ import com.cfq.log.LoggerFactory;
 import com.cfq.redis.JedisUtil;
 import redis.clients.jedis.Jedis;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 public class RankingCache {
@@ -20,6 +23,7 @@ public class RankingCache {
     }
 
     private static final String RANKING_KEY = "RANKING:";
+    private static final String RACEJOIN_KEY = "RACEJOIN:";
 
     public void addRank(int raceId, Double point, long playerId) {
         long currentTimeMillis = System.currentTimeMillis();
@@ -74,7 +78,43 @@ public class RankingCache {
         }
     }
 
+    public void setRaceJoin(long playerId) {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        try {
+            jedis.set(RACEJOIN_KEY + getTime() + ":" + playerId, "1");
+            jedis.expire(RACEJOIN_KEY + getTime() + ":" + playerId, 24 * 3600);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
+        }
+    }
+
+    public boolean exitRaceJoin(long playerId) {
+        Jedis jedis = JedisUtil.getInstance().getJedis();
+        boolean isEx = true;
+        try {
+            isEx = jedis.exists(RACEJOIN_KEY + getTime() + ":" + playerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JedisUtil.getInstance().closeJedis(jedis);
+        }
+
+        return isEx;
+    }
+
+    public String getTime () {
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(zdt);
+    }
+
     public static void main(String[] args) {
-        System.out.println(RankingCache.getInstance().getRankNo(12, 6));
+        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println(formatter.format(zdt));
+
+        //System.out.println(RankingCache.getInstance().getRankNo(12, 6));
     }
 }
