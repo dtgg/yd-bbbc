@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class VsRace implements Serializable {
   
-       public static final long serialVersionUID = 1617409332785l;
+       public static final long serialVersionUID = 1620453285628l;
        private Map<String,Object> entityMap = new HashMap<String,Object>(16,1);
 	   	public static final String ID_NAME = "id";
 	public static final String RACETYPE_NAME = "raceType";
@@ -21,6 +21,7 @@ public class VsRace implements Serializable {
 	public static final String STATUS_NAME = "status";
 	public static final String BEGINTIME_NAME = "beginTime";
 	public static final String CREATETIME_NAME = "createTime";
+	public static final String ISPERMISSION_NAME = "isPermission";
 
 
     	private int id;
@@ -63,16 +64,14 @@ public class VsRace implements Serializable {
 	 this.curPlayerNum = curPlayerNum;
 	 entityMap.put(CURPLAYERNUM_NAME, curPlayerNum);
 	}
-
 	private int totalRound;
 	public int getTotalRound() {
-		return totalRound;
+	return totalRound;
 	}
-	public void setTotalRound(int totalRound){
-		this.totalRound = totalRound;
-		entityMap.put(TOTALROUND_NAME, totalRound);
+ 	 public void setTotalRound(int totalRound){
+	 this.totalRound = totalRound;
+	 entityMap.put(TOTALROUND_NAME, totalRound);
 	}
-
 	private int status;
 	public int getStatus() {
 	return status;
@@ -96,6 +95,14 @@ public class VsRace implements Serializable {
  	 public void setCreateTime(int createTime){
 	 this.createTime = createTime;
 	 entityMap.put(CREATETIME_NAME, createTime);
+	}
+	private int isPermission;
+	public int getIsPermission() {
+	return isPermission;
+	}
+ 	 public void setIsPermission(int isPermission){
+	 this.isPermission = isPermission;
+	 entityMap.put(ISPERMISSION_NAME, isPermission);
 	}
 
 

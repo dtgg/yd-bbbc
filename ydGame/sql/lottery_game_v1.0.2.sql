@@ -71,3 +71,5 @@ CREATE TABLE `vs_rebate_record` (
   `kfId` int(10) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE vs_race ADD COLUMN isPermission int(10) DEFAULT 0;
