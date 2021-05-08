@@ -27,16 +27,16 @@ public class GameBonusManager {
         gameBonusMap.put(1, freeGameBonusMap);
 
         Map<Integer, Double> signInGameBonusMap = new HashMap<>();
-        signInGameBonusMap.put(1, 2000D);
-        signInGameBonusMap.put(2, 1200D);
-        signInGameBonusMap.put(3, 800D);
-        signInGameBonusMap.put(4, 600D);
-        signInGameBonusMap.put(5, 400D);
-        signInGameBonusMap.put(6, 200D);
-        signInGameBonusMap.put(7, 200D);
-        signInGameBonusMap.put(8, 200D);
-        signInGameBonusMap.put(9, 200D);
-        signInGameBonusMap.put(10, 200D);
+        signInGameBonusMap.put(1, 0.2);
+        signInGameBonusMap.put(2, 0.12);
+        signInGameBonusMap.put(3, 0.08);
+        signInGameBonusMap.put(4, 0.06);
+        signInGameBonusMap.put(5, 0.04);
+        signInGameBonusMap.put(6, 0.02);
+        signInGameBonusMap.put(7, 0.02);
+        signInGameBonusMap.put(8, 0.02);
+        signInGameBonusMap.put(9, 0.02);
+        signInGameBonusMap.put(10, 0.02);
         gameBonusMap.put(2, signInGameBonusMap);
     }
 
@@ -47,12 +47,11 @@ public class GameBonusManager {
     public Double getBonus(VsPokerRoom vsPokerRoom, int rank) {
         Double aDouble = gameBonusMap.get(vsPokerRoom.getRoomType()).get(rank);
         if (aDouble == null) aDouble = 0D;
-        return aDouble;
-//        if (vsPokerRoom.getRoomType() == 1) {
-//            return aDouble;
-//        } else if (vsPokerRoom.getRoomType() == 2) {
-//            return vsPokerRoom.getBonus() * aDouble;
-//        }
-//        return 0D;
+        if (vsPokerRoom.getRoomType() == 1) {
+            return aDouble;
+        } else if (vsPokerRoom.getRoomType() == 2) {
+            return vsPokerRoom.getBonus() * aDouble;
+        }
+        return 0D;
     }
 }
