@@ -5,10 +5,13 @@ import com.cfq.log.LoggerFactory;
 import com.cfq.redis.JedisUtil;
 import redis.clients.jedis.Jedis;
 
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Set;
+import java.util.TimeZone;
 
 public class RankingCache {
 
@@ -78,11 +81,11 @@ public class RankingCache {
         }
     }
 
-    public void setRaceJoin(long playerId) {
+    public void setRaceJoin(long playerId, int beTime) {
         Jedis jedis = JedisUtil.getInstance().getJedis();
         try {
-            jedis.set(RACEJOIN_KEY + getTime() + ":" + playerId, "1");
-            jedis.expire(RACEJOIN_KEY + getTime() + ":" + playerId, 24 * 3600);
+            jedis.set(RACEJOIN_KEY + getTimeByDate(beTime) + ":" + playerId, "1");
+            jedis.expire(RACEJOIN_KEY + getTimeByDate(beTime) + ":" + playerId, 24 * 3600 * 3);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -110,10 +113,28 @@ public class RankingCache {
         return formatter.format(zdt);
     }
 
+    public String getTimeByDate(int time) {
+        Date date = new Date(time * 1000L);  // 对应的北京时间是2017-08-24 11:17:10
+
+        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd");
+        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
+        return bjSdf.format(date);
+    }
+
     public static void main(String[] args) {
-        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        System.out.println(formatter.format(zdt));
+//        ZonedDateTime zdt = ZonedDateTime.now(ZoneId.of("Asia/Kolkata"));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        System.out.println(formatter.format(zdt));
+//        int t = 1623177000;
+//        Date date = new Date(t * 1000L);  // 对应的北京时间是2017-08-24 11:17:10
+//
+//        SimpleDateFormat bjSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+//
+        int t = 1623177000;
+        System.out.println(RankingCache.getInstance().getTimeByDate(t));
+
 
         //System.out.println(RankingCache.getInstance().getRankNo(12, 6));
     }

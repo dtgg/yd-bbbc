@@ -150,7 +150,7 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         ThreadManager.getInstance().getPromoteExecutor().execute(() -> playerPromoteRaceNum(playerData, race, nowTime));
 
         if (race.getRaceType() == 2) {
-            RankingCache.getInstance().setRaceJoin(playerData.getPlayerId());
+            RankingCache.getInstance().setRaceJoin(playerData.getPlayerId(), race.getBeginTime());
         }
     }
 
