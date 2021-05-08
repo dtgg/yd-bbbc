@@ -27,9 +27,16 @@ public class GameBonusManager {
         gameBonusMap.put(1, freeGameBonusMap);
 
         Map<Integer, Double> signInGameBonusMap = new HashMap<>();
-        signInGameBonusMap.put(1, 0.5);
-        signInGameBonusMap.put(2, 0.3);
-        signInGameBonusMap.put(3, 0.1);
+        freeGameBonusMap.put(1, 2000D);
+        freeGameBonusMap.put(2, 1200D);
+        freeGameBonusMap.put(3, 800D);
+        freeGameBonusMap.put(4, 600D);
+        freeGameBonusMap.put(5, 400D);
+        freeGameBonusMap.put(6, 200D);
+        freeGameBonusMap.put(7, 200D);
+        freeGameBonusMap.put(8, 200D);
+        freeGameBonusMap.put(9, 200D);
+        freeGameBonusMap.put(10, 200D);
         gameBonusMap.put(2, signInGameBonusMap);
     }
 
@@ -40,11 +47,12 @@ public class GameBonusManager {
     public Double getBonus(VsPokerRoom vsPokerRoom, int rank) {
         Double aDouble = gameBonusMap.get(vsPokerRoom.getRoomType()).get(rank);
         if (aDouble == null) aDouble = 0D;
-        if (vsPokerRoom.getRoomType() == 1) {
-            return aDouble;
-        } else if (vsPokerRoom.getRoomType() == 2) {
-            return vsPokerRoom.getBonus() * aDouble;
-        }
-        return 0D;
+        return aDouble;
+//        if (vsPokerRoom.getRoomType() == 1) {
+//            return aDouble;
+//        } else if (vsPokerRoom.getRoomType() == 2) {
+//            return vsPokerRoom.getBonus() * aDouble;
+//        }
+//        return 0D;
     }
 }
