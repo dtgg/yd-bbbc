@@ -18,7 +18,7 @@ public class VsPokerGameBonusHandler implements IServerHandler {
     public void process(ISession iSession, AbstartParaseMessage abstartParaseMessage) {
         VsPokerGameBonus vsPokerGameBonus = (VsPokerGameBonus) abstartParaseMessage;
 
-        Map<Integer, Double> gameAwardMap = GameBonusManager.getInstance().gameBonusMap(1);
+        Map<Integer, Double> gameAwardMap = GameBonusManager.getInstance().gameBonusMap(vsPokerGameBonus.getRaceId());
 
         Map<Integer, Integer> bonusMap = new HashMap<>();
         gameAwardMap.forEach((k, v) -> bonusMap.put(k, v.intValue()));
