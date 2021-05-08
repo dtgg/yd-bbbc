@@ -31,13 +31,12 @@ public class VsPokerGameBonusHandler implements IServerHandler {
         if (race.getRaceType() == 1) {
             gameAwardMap = GameBonusManager.getInstance().gameBonusMap(1);
         } else if (race.getRaceType() == 2) {
-            double totalBonus = race.getBasePoint() * race.getCurPlayerNum() * 0.9;
+            double totalBonus = race.getBasePoint() * race.getCurPlayerNum();
             Map<Integer, Double> gameAwardMapByType2 = GameBonusManager.getInstance().gameBonusMap(2);
             for (Map.Entry<Integer, Double> entry : gameAwardMapByType2.entrySet()) {
                 gameAwardMap.put(entry.getKey(), entry.getValue() * totalBonus);
             }
         }
-
 
         Map<Integer, Integer> bonusMap = new HashMap<>();
         gameAwardMap.forEach((k, v) -> bonusMap.put(k, v.intValue()));
