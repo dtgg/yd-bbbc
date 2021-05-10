@@ -73,6 +73,7 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
                if (!RankingCache.getInstance().exitRaceJoin(playerData.getPlayerId())) {
                    sVsPokerRaceJoin.setSuccess(false);
                    sVsPokerRaceJoin.setMessage("You need to participate in today’s registration match before you have the right to participate in the free race");
+                   iSession.sendMessageByID(sVsPokerRaceJoin, vsPokerRaceJoin.getConnId());
                    return;
                }
             }
