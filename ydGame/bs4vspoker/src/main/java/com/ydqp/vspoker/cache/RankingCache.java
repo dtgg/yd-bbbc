@@ -93,11 +93,11 @@ public class RankingCache {
         }
     }
 
-    public boolean exitRaceJoin(long playerId) {
+    public boolean exitRaceJoin(long playerId, int beTime) {
         Jedis jedis = JedisUtil.getInstance().getJedis();
         boolean isEx = true;
         try {
-            isEx = jedis.exists(RACEJOIN_KEY + getTime() + ":" + playerId);
+            isEx = jedis.exists(RACEJOIN_KEY + getTimeByDate(beTime) + ":" + playerId);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -70,7 +70,8 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
 
             if (race.getIsPermission() == 1) {
                 //需要参加报名赛才可以包名的免费赛
-               if (!RankingCache.getInstance().exitRaceJoin(playerData.getPlayerId())) {
+               if (!RankingCache.getInstance().exitRaceJoin(playerData.getPlayerId(), race.getBeginTime())) {
+                   logger.error("You need to participate in today’s registration match before you have the right to participate in the free race");
                    sVsPokerRaceJoin.setSuccess(false);
                    sVsPokerRaceJoin.setMessage("You need to participate in today’s registration match before you have the right to participate in the free race");
                    iSession.sendMessageByID(sVsPokerRaceJoin, vsPokerRaceJoin.getConnId());
