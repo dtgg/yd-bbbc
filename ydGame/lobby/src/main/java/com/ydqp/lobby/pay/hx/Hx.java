@@ -96,7 +96,7 @@ public class Hx extends OrderPay {
         params.put("type", "bank");
         params.put("name", account.getName());
         params.put("account", account.getAccNo());
-        params.put("ifsc", account.getAccNo());
+        params.put("ifsc", account.getIfsc());
         params.put("remark", "Withdrawal");
 
         String signStr = config.getClientId() + withdrawal.getTransferId() + account.getAccNo() + "" + amount + config.getSecretKey();
