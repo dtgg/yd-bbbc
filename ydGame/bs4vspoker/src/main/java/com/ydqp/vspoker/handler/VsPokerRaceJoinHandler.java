@@ -58,7 +58,7 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
             List<VsRace> vsRaces = VsPokerDao.getInstance().getVsRaces(2, 1);
             if (CollectionUtils.isNotEmpty(vsRaces)) {
                 List<Integer> raceIds = vsRaces.stream().map(VsRace::getId).collect(Collectors.toList());
-                List<VsPlayerRace> playerRaceList = VsPlayerRaceDao.getInstance().getPlayerRaceRunning(playerData.getPlayerId(), CommonUtils.inString(raceIds));
+                List<VsPlayerRace> playerRaceList = VsPlayerRaceDao.getInstance().getPlayerRaceRunning(playerData.getPlayerId(), CommonUtils.inString(raceIds), 1);
                 if (CollectionUtils.isNotEmpty(playerRaceList)) {
                     logger.error("Join free entry can only be continued after the previous game is over, playerId:{}, raceId:{}", vsPokerRaceJoin.getPlayerId(), vsPokerRaceJoin.getRaceId());
                     sVsPokerRaceJoin.setSuccess(false);
@@ -77,6 +77,21 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
                    iSession.sendMessageByID(sVsPokerRaceJoin, vsPokerRaceJoin.getConnId());
                    return;
                }
+            }
+        }
+
+        if (race.getRaceType() == 2) {
+            List<VsRace> vsRaces = VsPokerDao.getInstance().getVsRaces(2, 2);
+            if (CollectionUtils.isNotEmpty(vsRaces)) {
+                List<Integer> raceIds = vsRaces.stream().map(VsRace::getId).collect(Collectors.toList());
+                List<VsPlayerRace> playerRaceList = VsPlayerRaceDao.getInstance().getPlayerRaceRunning(playerData.getPlayerId(), CommonUtils.inString(raceIds), 2);
+                if (CollectionUtils.isNotEmpty(playerRaceList)) {
+                    logger.error("Can only participate in one game at a time, playerId:{}, raceId:{}", vsPokerRaceJoin.getPlayerId(), vsPokerRaceJoin.getRaceId());
+                    sVsPokerRaceJoin.setSuccess(false);
+                    sVsPokerRaceJoin.setMessage("Can only participate in one game at a time");
+                    iSession.sendMessageByID(sVsPokerRaceJoin, vsPokerRaceJoin.getConnId());
+                    return;
+                }
             }
         }
 

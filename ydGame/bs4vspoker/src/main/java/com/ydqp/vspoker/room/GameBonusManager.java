@@ -27,16 +27,9 @@ public class GameBonusManager {
         gameBonusMap.put(1, freeGameBonusMap);
 
         Map<Integer, Double> signInGameBonusMap = new HashMap<>();
-        signInGameBonusMap.put(1, 0.2);
-        signInGameBonusMap.put(2, 0.12);
-        signInGameBonusMap.put(3, 0.08);
-        signInGameBonusMap.put(4, 0.06);
-        signInGameBonusMap.put(5, 0.04);
-        signInGameBonusMap.put(6, 0.02);
-        signInGameBonusMap.put(7, 0.02);
-        signInGameBonusMap.put(8, 0.02);
-        signInGameBonusMap.put(9, 0.02);
-        signInGameBonusMap.put(10, 0.02);
+        signInGameBonusMap.put(1, 0.4);
+        signInGameBonusMap.put(2, 0.3);
+        signInGameBonusMap.put(3, 0.2);
         gameBonusMap.put(2, signInGameBonusMap);
     }
 

@@ -17,7 +17,8 @@ public class VsPokerDao {
     }
 
     public List<VsRace> getVsRaceByCreateTime(int beginTime) {
-        String sql = "select * from vs_race where status = 0 and beginTime <= " + beginTime + ";";
+//        String sql = "select * from vs_race where status = 0 and beginTime <= " + beginTime + ";";
+        String sql = "select * from vs_race where status = 0 and curPlayerNum >= 10;";
         List<VsRace> raceList = JdbcOrm.getInstance().getListBean(sql, VsRace.class);
 
         return raceList;

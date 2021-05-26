@@ -46,8 +46,8 @@ public class VsPlayerRaceDao {
         JdbcOrm.getInstance().batchUpdate(sql, params);
     }
 
-    public List<VsPlayerRace> getPlayerRaceRunning(long playerId, String raceIdStr) {
-        String sql = "select * from vs_player_race where raceType = 1 and playerId = " + playerId + " and raceId in" + raceIdStr + ";";
+    public List<VsPlayerRace> getPlayerRaceRunning(long playerId, String raceIdStr, int raceType) {
+        String sql = "select * from vs_player_race where raceType = " + raceType + " and playerId = " + playerId + " and raceId in" + raceIdStr + ";";
         return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
     }
 }
