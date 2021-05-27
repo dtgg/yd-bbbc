@@ -5,6 +5,7 @@ import com.ydqp.common.sendProtoMsg.mall.PlayerOrderSuccess;
 import com.ydqp.common.sendProtoMsg.mall.PlayerWithdrawalSuccess;
 import com.ydqp.lobby.pay.hx.Hx;
 import com.ydqp.lobby.pay.pay777.Pay777;
+import com.ydqp.lobby.pay.payplus.PayPlus;
 import com.ydqp.lobby.pay.shineu.ShineU;
 import com.ydqp.lobby.pay.uupay.UuPay;
 
@@ -20,6 +21,8 @@ public class CommonPay extends OrderPay {
                 return new UuPay();
             case "hx":
                 return new Hx();
+            case "payplus":
+                return new PayPlus();
             default:
                 return null;
         }

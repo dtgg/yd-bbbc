@@ -14,4 +14,5 @@ public interface VsPokerBasePlay {
 
     boolean checkPlayerOut(PlayerData playerData);
 
+    boolean checkRoomId(int roomId, long playerId);
 }

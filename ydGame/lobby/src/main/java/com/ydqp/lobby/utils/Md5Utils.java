@@ -28,7 +28,8 @@ public class Md5Utils {
         }
         builder.append("key=").append(secretKey);
 
-        return Objects.requireNonNull(MD5(builder.toString())).toLowerCase();
+//        return Objects.requireNonNull(MD5(builder.toString())).toLowerCase();
+        return builder.toString();
     }
 
     public static String MD5(String s) {

@@ -4,6 +4,7 @@ import com.cfq.jdbc.JdbcOrm;
 import com.ydqp.common.entity.VsRace;
 
 import java.util.List;
+import java.util.Map;
 
 public class VsPokerDao {
     private VsPokerDao() {
@@ -17,8 +18,8 @@ public class VsPokerDao {
     }
 
     public List<VsRace> getVsRaceByCreateTime(int beginTime) {
-//        String sql = "select * from vs_race where status = 0 and beginTime <= " + beginTime + ";";
-        String sql = "select * from vs_race where status = 0 and curPlayerNum >= 10;";
+        String sql = "select * from vs_race where status = 0 and raceType = 1 and beginTime <= " + beginTime + ";";
+//        String sql = "select * from vs_race where status = 0 and curPlayerNum >= 10;";
         List<VsRace> raceList = JdbcOrm.getInstance().getListBean(sql, VsRace.class);
 
         return raceList;
@@ -47,6 +48,11 @@ public class VsPokerDao {
     public int updateCurPlayerNum(int raceId) {
         String sql = "update vs_race set curPlayerNum = curPlayerNum + 1 where id = " + raceId + " and curPlayerNum < maxPlayerNum";
         return JdbcOrm.getInstance().updateByRow(sql);
+    }
+
+    public int save(Map<String, Object> parameterMap) {
+        Object primkey = JdbcOrm.getInstance().insertReturnPrimkey("vs_race", parameterMap);
+        return (int) primkey;
     }
 
     public static void main(String[] args) {
