@@ -50,7 +50,7 @@ public class VsPokerCompareHandler implements IRoomStatusHandler{
             vsPokerRoom.sendMessageToBattle(sVsCompareResult, entry.getKey());
         }
 
-        vsPokerRoom.setStatus(3);
+        vsPokerRoom.setStatus(4);
         vsPokerRoom.setCurWaitTime(15);
 
         logger.info("VsPokerCompareHandler end body = {} ", JSONObject.toJSONString(sVsCompareResult));

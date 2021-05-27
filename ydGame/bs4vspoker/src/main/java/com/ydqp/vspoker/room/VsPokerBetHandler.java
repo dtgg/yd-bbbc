@@ -18,7 +18,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
     public void doHandler(VsPokerRoom vsPokerRoom) {
         if (vsPokerRoom.getCurWaitTime() <= 0) {
             //下注15秒时间到
-            vsPokerRoom.setStatus(2);
+            vsPokerRoom.setStatus(3);
             logger.info("VsPokerBetHandler end");
         } else {
             vsPokerRoom.setCurWaitTime(vsPokerRoom.getCurWaitTime() - 1);

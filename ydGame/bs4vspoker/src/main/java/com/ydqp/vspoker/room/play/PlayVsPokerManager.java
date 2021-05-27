@@ -30,7 +30,10 @@ public class PlayVsPokerManager {
     }
 
     @Getter
+    private final List<Integer> fastRaceList = new ArrayList<>();
+    @Getter
     private final List<VsPokerBasePlay> freeRacePlayObjects = new ArrayList<>();
+
     private final List<VsPokerBasePlay> zjRacePlayObjects = new ArrayList<>();
 
 
@@ -97,6 +100,18 @@ public class PlayVsPokerManager {
 
                 RankingCache.getInstance().addRank(raceId, 0D, player.getId());
             }
+        }
+    }
+
+    public void loadFastRaceConfig () {
+        fastRaceList.add(10);
+        fastRaceList.add(100);
+        fastRaceList.add(500);
+        fastRaceList.add(1000);
+
+        for (Integer integer : fastRaceList) {
+            FastRaceVsPlayObject playChipObject = new FastRaceVsPlayObject(integer, 2);
+            zjRacePlayObjects.add(playChipObject);
         }
     }
 }

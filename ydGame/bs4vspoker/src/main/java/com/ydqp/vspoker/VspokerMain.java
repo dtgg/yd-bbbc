@@ -6,6 +6,7 @@ import com.cfq.dispatch.DispatchMessage;
 import com.cfq.net.websocket.ServerWebSocketChannelInitializer;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
+import com.ydqp.vspoker.room.play.PlayVsPokerManager;
 
 import java.util.Timer;
 
@@ -16,6 +17,8 @@ public class VspokerMain {
         //start heartBeat thread
         new Timer().schedule(new BattleTask() , 1000, 1000);
         new Timer().schedule(new GeneratorRaceTask() , 1000, 1000);
+
+        PlayVsPokerManager.getInstance().loadFastRaceConfig();
 
         DispatchMessage serverDispatchMessage = new DispatchMessage();
         IServer iServer = new Server();

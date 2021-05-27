@@ -25,7 +25,7 @@ public class VsPokerRoom extends Room {
     private static final Logger logger = LoggerFactory.getLogger(VsPokerRoom.class);
 
     // 0 发牌、 1 下注 15s, 2 发送笔牌结果 3 等待客户端播完动画效果 4 发送结算信息
-    private final IRoomStatusHandler[] roomStatusHandlers = new IRoomStatusHandler[]{new VsPokerFaPaiHandler(),
+    private final IRoomStatusHandler[] roomStatusHandlers = new IRoomStatusHandler[]{new VsPokerBeginHandler(), new VsPokerFaPaiHandler(),
     new VsPokerBetHandler(), new VsPokerCompareHandler(), new VsPokerWaitHandler(), new VsPokerSettlementHandler()};
 
     @Setter
