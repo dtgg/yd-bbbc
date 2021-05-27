@@ -104,7 +104,7 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         }
 
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
-        if (race.getBeginTime() < nowTime) {
+        if (race.getStatus() != 0) {
             logger.error("Join time has ended, playerId:{}, raceId:{}", vsPokerRaceJoin.getPlayerId(), vsPokerRaceJoin.getRaceId());
             sVsPokerRaceJoin.setSuccess(false);
             sVsPokerRaceJoin.setMessage("Join time has ended");

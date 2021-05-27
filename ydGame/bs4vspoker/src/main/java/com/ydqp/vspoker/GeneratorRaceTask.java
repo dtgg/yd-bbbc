@@ -30,6 +30,9 @@ public class GeneratorRaceTask extends TimerTask {
             if (CollectionUtils.isNotEmpty(vsRaceList))
                 logger.info("获取赛事信息， {}", JSONObject.toJSONString(vsRaceList));
             for (VsRace vsRace : vsRaceList) {
+                if (vsRace.getRaceType() == 1 && beginTime < vsRace.getBeginTime()) {
+                    continue;
+                }
                 PlayVsPokerManager.getInstance().generaPlayObject(vsRace.getRaceType(), vsRace.getBasePoint(), vsRace,
                         vsRace.getTotalRound());
 
