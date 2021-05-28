@@ -274,3 +274,18 @@ message VsPokerBackRoom {
 message SVsPokerBackRoom {
     bool backEnabled = 1;
 }
+
+message VsPokerSignGameBonus {
+  int32 raceType = 1;
+  int32 basePoint = 2;
+}
+message SVsPokerSignGameBonus {
+  map<int32, int32> bonusMap = 1;
+}
+
+message VsPokerRaceBasePoint {
+  int32 raceType = 1;
+}
+message SVsPokerRaceBasePoint {
+  repeated int32 basePoints = 1;
+}

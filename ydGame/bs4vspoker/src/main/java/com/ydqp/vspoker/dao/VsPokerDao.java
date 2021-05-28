@@ -50,9 +50,9 @@ public class VsPokerDao {
         return JdbcOrm.getInstance().updateByRow(sql);
     }
 
-    public int save(Map<String, Object> parameterMap) {
+    public long save(Map<String, Object> parameterMap) {
         Object primkey = JdbcOrm.getInstance().insertReturnPrimkey("vs_race", parameterMap);
-        return (int) primkey;
+        return (long) primkey;
     }
 
     public static void main(String[] args) {

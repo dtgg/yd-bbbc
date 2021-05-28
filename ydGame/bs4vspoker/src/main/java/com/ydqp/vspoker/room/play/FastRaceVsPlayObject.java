@@ -4,14 +4,13 @@ import com.cfq.connection.ISession;
 import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.VsPlayerRace;
 import com.ydqp.common.entity.VsRace;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
-
-import java.util.Map;
 
 public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
 
@@ -26,6 +25,9 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
             if (vsPokerRoom != null && vsPokerRoom.getCurWaitTime() > 0 && vsPokerRoom.getStatus() == 0) {
                 if (vsPokerRoom.getBattleRoleMap().size() < vsPokerRoom.getMaxPlayerNum()) {
                     vsPokerRoom.enterRoom(playerData, iSession);
+
+                    //vs_player_race
+                    addPlayerRace(playerData, vsPokerRoom);
                     return;
                 }
             }
@@ -33,6 +35,10 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
 
         VsPokerRoom vsPokerRoom = generatorRoom();
         vsPokerRoom.enterRoom(playerData, iSession);
+        addPlayerRace(playerData, vsPokerRoom);
+
+        //战绩排名
+        PlayVsPokerManager.getInstance().addPlayerInfo(vsPokerRoom, vsPokerRoom.getRaceId());
 
         //设置房间信息
         BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(playerData.getPlayerId());
@@ -78,9 +84,27 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
         vsRace.setCreateTime(nowTime);
         vsRace.setBeginTime(nowTime);
         vsRace.setIsPermission(0);
-        int raceId = VsPokerDao.getInstance().save(vsRace.getParameterMap());
+        long raceId = VsPokerDao.getInstance().save(vsRace.getParameterMap());
 
-        vsPokerRoom.setRaceId(raceId);
+        vsPokerRoom.setRaceId(new Long(raceId).intValue());
         return vsPokerRoom;
+    }
+
+    private void addPlayerRace(PlayerData playerData, VsPokerRoom vsPokerRoom) {
+        VsPlayerRace vsPlayerRace = new VsPlayerRace();
+        vsPlayerRace.setPlayerId(playerData.getPlayerId());
+        vsPlayerRace.setRaceId(vsPokerRoom.getRaceId());
+        vsPlayerRace.setRaceType(2);
+        vsPlayerRace.setBasePoint(vsPokerRoom.getBasePoint());
+        vsPlayerRace.setRank(0);
+        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+        vsPlayerRace.setCreateTime(nowTime);
+        vsPlayerRace.setAppId(playerData.getAppId());
+        vsPlayerRace.setKfId(playerData.getKfId());
+        vsPlayerRace.setIsVir(playerData.getIsVir());
+        VsPlayerRaceDao.getInstance().insert(vsPlayerRace.getParameterMap());
+
+        //报名人数加1
+        VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRoom.getRaceId());
     }
 }
