@@ -68,11 +68,11 @@ public class PlayerWithdrawalHandler implements IServerHandler {
         }
 
         double amount = withdrawals.getAmount();
-        if (amount < 100) {
+        if (amount < 200) {
             withdrawalSuccess.setSuccess(false);
-            withdrawalSuccess.setMessage("The amount must be greater than 100");
+            withdrawalSuccess.setMessage("The amount must be greater than 200");
             iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
-            logger.error("提现失败，提现金额小于100，playerId：{}，amount:{}", withdrawals.getPlayerId(), amount);
+            logger.error("提现失败，提现金额小于200，playerId：{}，amount:{}", withdrawals.getPlayerId(), amount);
             return;
         }
         if (amount % 50 != 0) {
