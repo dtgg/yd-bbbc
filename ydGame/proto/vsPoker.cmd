@@ -21,6 +21,10 @@ c->s
 7000023 = VsPokerRebateChange   //返利变化
 7000024 = VsPokerRebateRecordDetail   //返利记录详情
 
+7000025 = VsPokerCheckPlayerJoin      //检查是否需要报名
+7000026 = VsPokerFastRaceJoin   //快速赛报名
+7000027 = VsPokerBackRoom       //返回快速赛房间
+
 s->c
 7000001 = SVsFaPai //发牌
 7000002 = SVsCompareResult // 比牌结果
@@ -51,3 +55,7 @@ s->c
 7001022 = SVsPokerRebateRecord   //返利记录
 7001023 = SVsPokerRebateChange   //返利变化
 7001024 = SVsPokerRebateRecordDetail   //返利记录详情
+
+7001025 = SVsPokerCheckPlayerJoin      //检查是否需要报名
+7001026 = SVsPokerFastRaceJoin   //快速赛报名
+7001027 = SVsPokerBackRoom       //返回快速赛房间

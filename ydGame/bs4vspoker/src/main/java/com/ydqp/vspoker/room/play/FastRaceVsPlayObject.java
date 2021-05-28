@@ -2,6 +2,7 @@ package com.ydqp.vspoker.room.play;
 
 import com.cfq.connection.ISession;
 import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.VsRace;
 import com.ydqp.common.poker.room.BattleRole;
@@ -33,8 +34,13 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
         VsPokerRoom vsPokerRoom = generatorRoom();
         vsPokerRoom.enterRoom(playerData, iSession);
 
+        //设置房间信息
+        BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(playerData.getPlayerId());
+        vsPokerRoom.getVsPokerRoomInfo(battleRole);
+
         playerData.setRoomId(vsPokerRoom.getRoomId());
         PlayerCache.getInstance().addPlayer(iSession.getSessionId(), playerData);
+        PlayerDao.getInstance().updatePlayerRoomId(playerData.getPlayerId(), vsPokerRoom.getRoomId());
     }
 
     @Override

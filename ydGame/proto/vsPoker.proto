@@ -248,3 +248,29 @@ message VsPokerRebateRecordDetail {
 message SVsPokerRebateRecordDetail {
   repeated SVsPokerRebateRecordData records = 1;
 }
+
+
+message VsPokerCheckPlayerJoin {
+    int32 basePoint = 1;
+}
+
+message SVsPokerCheckPlayerJoin {
+    bool joinEnabled = 1;
+}
+
+message VsPokerFastRaceJoin {
+    int32 basePoint = 1;
+}
+
+message SVsPokerFastRaceJoin {
+    bool enterRoomSuccess = 1;
+    string message = 2;
+}
+
+message VsPokerBackRoom {
+    int64 playerId = 1;
+}
+
+message SVsPokerBackRoom {
+    bool backEnabled = 1;
+}
