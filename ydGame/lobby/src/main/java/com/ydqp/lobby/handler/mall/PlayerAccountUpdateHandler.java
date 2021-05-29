@@ -55,6 +55,12 @@ public class PlayerAccountUpdateHandler implements IServerHandler {
             logger.error("{}账户信息更新失败,存在为空的字段,playerAccountInfo:{}", JSONObject.toJSONString(playerAccountUpdate));
         }
 
+        if ("paytm123456".equals(ifsc)) {
+            success = false;
+            message = "Does not support paytm";
+            logger.error("paytm123456不允许绑定，playerId:{}", playerId);
+        }
+
         if (name.length() > 100) {
             success = false;
             message = "Beneficiary name only alphabets and white space (100 character limit)";
