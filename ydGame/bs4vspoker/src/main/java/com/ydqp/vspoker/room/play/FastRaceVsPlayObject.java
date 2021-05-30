@@ -82,7 +82,7 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().createVsPokerRoom(roomType,basePoint);
         vsPokerRoom.setCurWaitTime(60);
         vsPokerRoom.setMaxPlayerNum(10);
-        vsPokerRoom.setTotalRounds(5);
+        vsPokerRoom.setTotalRounds(10);
         RoomManager.getInstance().putRoom(vsPokerRoom);
 
         roomIdList.add(vsPokerRoom.getRoomId());
@@ -93,7 +93,7 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
         vsRace.setBasePoint(basePoint);
         vsRace.setMaxPlayerNum(10);
         vsRace.setCurPlayerNum(0);
-        vsRace.setTotalRound(5);
+        vsRace.setTotalRound(10);
         vsRace.setStatus(0);
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
         vsRace.setCreateTime(nowTime);
