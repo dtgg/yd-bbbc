@@ -23,7 +23,7 @@ public class VsPokerSignInBonusHandler implements IServerHandler {
         Map<Integer, Double> rateMap = GameBonusManager.getInstance().gameBonusMap(2);
 
         Map<Integer, Double> bonusMap = new HashMap<>();
-        rateMap.forEach((rank, rate) -> bonusMap.put(rank, rate * room.getBonus()));
+        rateMap.forEach((rank, rate) -> bonusMap.put(rank, rate * room.getBasePoint() * 10));
 
         SVsPokerSignInBonus sVsPokerSignInBonus = new SVsPokerSignInBonus();
         sVsPokerSignInBonus.setBonusMap(bonusMap);

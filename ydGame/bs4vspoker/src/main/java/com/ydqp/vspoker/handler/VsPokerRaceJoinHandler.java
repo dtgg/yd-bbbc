@@ -132,12 +132,12 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         }
         if (race.getBasePoint() > 0) {
             PlayerDao.getInstance().updatePlayerZjPoint(-race.getBasePoint(), playerData.getPlayerId());
-            playerData.setZjPoint(playerData.getZjPoint() - race.getBasePoint());
-            PlayerCache.getInstance().addPlayer(vsPokerRaceJoin.getConnId(), playerData);
+//            playerData.setZjPoint(playerData.getZjPoint() - race.getBasePoint());
+//            PlayerCache.getInstance().addPlayer(vsPokerRaceJoin.getConnId(), playerData);
 
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
             coinPointSuccess.setPlayerId(playerData.getPlayerId());
-            coinPointSuccess.setCoinPoint(playerData.getZjPoint());
+            coinPointSuccess.setCoinPoint(player.getZjPoint() - race.getBasePoint());
             iSession.sendMessageByID(coinPointSuccess, vsPokerRaceJoin.getConnId());
         }
 
@@ -153,7 +153,7 @@ public class VsPokerRaceJoinHandler implements IServerHandler {
         vsPlayerRace.setIsVir(player.getIsVir());
         VsPlayerRaceDao.getInstance().insert(vsPlayerRace.getParameterMap());
 
-        VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRaceJoin.getRaceId());
+        VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRaceJoin.getRaceId(), 1);
 
         SVsPlayerRace sVsPlayerRace = new SVsPlayerRace();
         sVsPlayerRace.setPlayerId(vsPokerRaceJoin.getPlayerId());

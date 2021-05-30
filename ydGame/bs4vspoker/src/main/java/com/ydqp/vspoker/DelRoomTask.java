@@ -4,8 +4,13 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.util.StackTraceUtil;
 import com.ydqp.common.ThreadManager;
+import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.dao.PlayerDao;
+import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.entity.Player;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.poker.room.Room;
+import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsBonusRank;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsRaceEnd;
 import com.ydqp.vspoker.cache.RankingCache;
@@ -14,6 +19,8 @@ import com.ydqp.vspoker.dao.VsPokerDao;
 import com.ydqp.vspoker.room.GameBonusManager;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
+import com.ydqp.vspoker.room.play.PlayVsPokerManager;
+import com.ydqp.vspoker.room.play.VsPokerBasePlay;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -124,6 +131,7 @@ public class DelRoomTask implements Runnable{
             }
 
             if (entry.getValue().isQuite()) continue;
+            if (entry.getValue().getIsVir() == 1) continue;
             vsPokerRoom.sendMessageToBattle(sVsRaceEnd, entry.getKey());
         }
 
@@ -136,6 +144,13 @@ public class DelRoomTask implements Runnable{
         List<Object[]> params = new ArrayList<>();
         for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
             RankingCache.getInstance().addRank(raceId, entry.getValue().getPlayerZJ(), entry.getKey());
+
+            if (entry.getValue().getIsVir() == 0) {
+                VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(2, vsPokerRoom.getBasePoint(), 0);
+                if (vsPokerBasePlay.getPlayerRoomId(entry.getKey()) == vsPokerRoom.getRoomId()) {
+                    vsPokerBasePlay.deletePlayerMap(entry.getKey());
+                }
+            }
         }
 
         Set<String> rankInfo = null;
@@ -144,6 +159,7 @@ public class DelRoomTask implements Runnable{
         } catch (NullPointerException e) {
             logger.error("no player join, redis data is null");
         }
+
         if (CollectionUtils.isNotEmpty(rankInfo)) {
             int i = 0;
             for (String s : rankInfo) {
@@ -154,7 +170,21 @@ public class DelRoomTask implements Runnable{
 
                         int rank = i + 1;
                         Double bonus = GameBonusManager.getInstance().getBonus(vsPokerRoom, rank);
-                        if (bonus == null) bonus = 0D;
+                        if (bonus == null || bonus == 0) {
+                            bonus = 0D;
+                        } else {
+                            if (vsPokerRoom.getRoomType() == 2 && entry.getValue().getIsVir() == 0) {
+                                logger.info("快速赛赔付，playerId:{}, bonus:{}", playerId, bonus);
+                                Player player = PlayerDao.getInstance().queryById(playerId);
+                                //更新数据库
+                                PlayerDao.getInstance().updatePlayerZjPoint(bonus, playerId);
+
+                                CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+                                coinPointSuccess.setPlayerId(entry.getKey());
+                                coinPointSuccess.setCoinPoint(player.getZjPoint() + bonus);
+                                vsPokerRoom.sendMessageToBattle(coinPointSuccess, playerId);
+                            }
+                        }
 
                         Object[] param = new Object[]{rank, bonus, entry.getValue().getPlayerZJ(), raceId, playerId};
                         params.add(param);

@@ -104,7 +104,6 @@ public class PlayVsPokerManager {
     }
 
     public void loadFastRaceConfig () {
-        fastRaceList.add(10);
         fastRaceList.add(100);
         fastRaceList.add(500);
         fastRaceList.add(1000);

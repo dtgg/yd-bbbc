@@ -7,6 +7,7 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerCheckPlayerJoin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerCheckPlayerJoin;
@@ -29,7 +30,7 @@ public class VsPokerCheckPlayerJoinHandler implements IServerHandler {
 
         VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(2, checkPlayerJoin.getBasePoint(), 0);
 
-        boolean joinEnabled = vsPokerBasePlay.checkRoomId(playerData.getRoomId(), playerData.getPlayerId());
+        boolean joinEnabled = vsPokerBasePlay.checkRoomId(playerData, playerData.getPlayerId());
 
         SVsPokerCheckPlayerJoin pokerCheckPlayerJoin = new SVsPokerCheckPlayerJoin();
         pokerCheckPlayerJoin.setJoinEnabled(joinEnabled);

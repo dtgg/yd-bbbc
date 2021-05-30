@@ -17,6 +17,7 @@ public class VspokerMain {
         //start heartBeat thread
         new Timer().schedule(new BattleTask() , 1000, 1000);
         new Timer().schedule(new GeneratorRaceTask() , 1000, 1000);
+        new Timer().schedule(new VsPokerMaintainTimer() , 1000, 10000);
 
         PlayVsPokerManager.getInstance().loadFastRaceConfig();
 

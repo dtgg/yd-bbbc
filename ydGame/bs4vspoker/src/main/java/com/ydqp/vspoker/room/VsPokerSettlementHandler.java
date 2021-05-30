@@ -9,6 +9,8 @@ import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerWin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerPerRanking;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsTaoTai;
 import com.ydqp.vspoker.cache.RankingCache;
+import com.ydqp.vspoker.room.play.PlayVsPokerManager;
+import com.ydqp.vspoker.room.play.VsPokerBasePlay;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -134,6 +136,9 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
                 sVsTaoTai.setRoomId(vsPokerRoom.getRoomId());
                 vsPokerRoom.sendMessageToBattle(sVsTaoTai, entry.getKey());
                 entry.getValue().setIsOut(1);
+
+                VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(2, vsPokerRoom.getBasePoint(), 0);
+                vsPokerBasePlay.deletePlayerMap(entry.getKey());
             } else {
                 otherPlayer++;
             }

@@ -31,7 +31,7 @@ public class VsPokerXiazhuHandler implements IServerHandler {
         }
 
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
-        if (vsPokerRoom.getStatus() != 1) {
+        if (vsPokerRoom.getStatus() != 2) {
             logger.error("玩家下注，房间不在下注时间内");
             return;
         }

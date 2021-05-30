@@ -27,6 +27,7 @@ message LoginSuccess {
  //是否返利
   int32 isRebate=9;
   double rebateAmount=10;
+  int32 tickets=11;
 }
 
 message LobbyError {
@@ -235,4 +236,10 @@ message GetServiceConfig {
 message SServiceConfig {
   string telegram = 1;
   string whatsapp = 2;
+}
+
+
+message SRemainTickets {
+  int64 playerId = 1;
+  int32 tickets = 2;
 }

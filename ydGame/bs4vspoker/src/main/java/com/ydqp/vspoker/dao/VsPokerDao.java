@@ -45,8 +45,8 @@ public class VsPokerDao {
         return (VsRace) JdbcOrm.getInstance().getBean(sql, VsRace.class);
     }
 
-    public int updateCurPlayerNum(int raceId) {
-        String sql = "update vs_race set curPlayerNum = curPlayerNum + 1 where id = " + raceId + " and curPlayerNum < maxPlayerNum";
+    public int updateCurPlayerNum(int raceId, int remainNum) {
+        String sql = "update vs_race set curPlayerNum = curPlayerNum + "+remainNum+" where id = " + raceId + " and curPlayerNum < maxPlayerNum";
         return JdbcOrm.getInstance().updateByRow(sql);
     }
 

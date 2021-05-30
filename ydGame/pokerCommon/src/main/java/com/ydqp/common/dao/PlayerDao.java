@@ -30,7 +30,7 @@ public class PlayerDao {
     }
 
     public int updatePlayerZjPoint(double zjPoint, long id) {
-        String sql = "update player set zjPoint = zjPoint + " + zjPoint + " where id = " + id + " and zjPoint " + zjPoint + " >= 0;";
+        String sql = "update player set zjPoint = zjPoint + " + zjPoint + " where id = " + id + " and zjPoint + " + zjPoint + " >= 0;";
         return JdbcOrm.getInstance().updateByRow(sql);
     }
 
@@ -81,6 +81,16 @@ public class PlayerDao {
 
     public List<Player> getPlayerByPlayerIds(String longString) {
         String sql = "select * from player where id in "+longString+";";
+        return JdbcOrm.getInstance().getListBean(sql, Player.class);
+    }
+
+    public void updatePlayerTickets(long playerId) {
+        String updatePlayerTickets = "update player set tickets = tickets - 1 where id = " +playerId + ";";
+        JdbcOrm.getInstance().update(updatePlayerTickets);
+    }
+
+    public List<Player> getVirPlayer() {
+        String sql = "select * from player where isVir = 1 limit 100";
         return JdbcOrm.getInstance().getListBean(sql, Player.class);
     }
 }

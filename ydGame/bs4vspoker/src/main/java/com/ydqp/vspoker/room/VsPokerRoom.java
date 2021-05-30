@@ -42,7 +42,7 @@ public class VsPokerRoom extends Room {
 
     @Getter
     @Setter
-    private int totalRounds = 15;
+    private int totalRounds = 10;
 
     @Getter
     @Setter
@@ -83,7 +83,7 @@ public class VsPokerRoom extends Room {
         sVsPokerRoomInfo.setRoomStatus(this.getStatus());
         sVsPokerRoomInfo.setBattleRoleMoney(battleRole.getPlayerZJ());
         Long rankNo = RankingCache.getInstance().getRankNo(this.getRaceId(), battleRole.getPlayerId());
-        sVsPokerRoomInfo.setRank(rankNo.intValue() + 1);
+        sVsPokerRoomInfo.setRank(rankNo == null ? 1 : rankNo.intValue() + 1);
         sVsPokerRoomInfo.setRoomType(this.getRoomType());
         sVsPokerRoomInfo.setRound(this.getRound());
         sVsPokerRoomInfo.setRaceId(this.getRaceId());
@@ -103,7 +103,7 @@ public class VsPokerRoom extends Room {
                 }
             }
 
-            if (this.getStatus() == 2 || this.getStatus() == 3) {
+            if (this.getStatus() == 3 || this.getStatus() == 4) {
                 sPlayerInfo.setPoker(this.getPokerMap().get(i + 1));
                 sPlayerInfo.setWin(playerObject.getWin());
                 sPlayerInfo.setWinBetPool(sPlayerInfo.getBetPool() * 2);
@@ -111,7 +111,7 @@ public class VsPokerRoom extends Room {
             sVsPokerRoomInfo.getSPlayerInfoMap().put(i, sPlayerInfo);
         }
         //设置庄家的牌
-        if (this.getStatus() == 2 || this.getStatus() == 3) {
+        if (this.getStatus() == 3 || this.getStatus() == 4) {
             sVsPokerRoomInfo.setBankPoker(this.getPokerMap().get(1));
         }
 

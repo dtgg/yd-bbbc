@@ -289,3 +289,19 @@ message VsPokerRaceBasePoint {
 message SVsPokerRaceBasePoint {
   repeated int32 basePoints = 1;
 }
+
+message VsPokerFastRaceHistory {
+  int64 playerId = 1;
+}
+
+message SVsPokerFastRaceInfo {
+  int32 createTime = 1;
+  int32 basePoint = 2;
+  int32 ranking = 3;
+  double bonus = 4;
+}
+
+message SVsPokerFastRaceHistory {
+  int64 playerId = 1;
+  repeated SVsPokerFastRaceInfo fastRaceInfoList = 2;
+}

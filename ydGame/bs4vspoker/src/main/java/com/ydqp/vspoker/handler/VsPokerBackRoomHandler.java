@@ -7,7 +7,9 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.message.AbstartParaseMessage;
 import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
+import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerBackRoom;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
@@ -29,6 +31,24 @@ public class VsPokerBackRoomHandler implements IServerHandler {
         VsPokerRoom room = RoomManager.getInstance().getRoom(playerData.getRoomId());
         if (room == null) {
             logger.error("返回快速赛房间失败，房间不存在，playerId：{}", playerData.getPlayerId());
+
+            playerData.setRoomId(0);
+            PlayerCache.getInstance().addPlayer(abstartParaseMessage.getConnId(), playerData);
+            PlayerDao.getInstance().updatePlayerRoomId(playerData.getPlayerId(), 0);
+
+            backRoom.setBackEnabled(false);
+            iSession.sendMessageByID(backRoom, abstartParaseMessage.getConnId());
+            return;
+        }
+
+        BattleRole battleRole = room.getBattleRoleMap().get(playerData.getPlayerId());
+        if (battleRole == null) {
+            logger.error("返回快速赛房间失败，用户不在房间中，playerId：{}", playerData.getPlayerId());
+
+            playerData.setRoomId(0);
+            PlayerCache.getInstance().addPlayer(abstartParaseMessage.getConnId(), playerData);
+            PlayerDao.getInstance().updatePlayerRoomId(playerData.getPlayerId(), 0);
+
             backRoom.setBackEnabled(false);
             iSession.sendMessageByID(backRoom, abstartParaseMessage.getConnId());
             return;

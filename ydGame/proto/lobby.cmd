@@ -35,6 +35,7 @@ s->c
 1001033 = PlayerResetPasswordSuc//重置密码成功
 
 9010000 = CoinPointSuccess  //通知玩家筹码变化
+9030000 = SRemainTickets    //通知玩家门票变化
 
 #推广
 1001070 = ParityOrderSuc

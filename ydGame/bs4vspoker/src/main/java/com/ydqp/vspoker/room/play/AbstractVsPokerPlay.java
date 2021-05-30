@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,9 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
     private int totalRound;
 
     public List<Integer> roomIdList = new ArrayList<>();
+    @Setter
+    @Getter
+    public Map<Long, Integer> playerMap = new HashMap<>();
 
     public AbstractVsPokerPlay(int basePoint, int roomType, int raceId, int totalRound){
         this.basePoint = basePoint;
@@ -110,5 +114,25 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean checkRoomId(PlayerData playerData, long playerId) {
+        return false;
+    }
+
+    @Override
+    public void putPlayerMap(long playerId, int roomId) {
+
+    }
+
+    @Override
+    public void deletePlayerMap(long playerId) {
+        playerMap.remove(playerId);
+    }
+
+    @Override
+    public int getPlayerRoomId(long playerId) {
+        return playerMap.get(playerId) == null ? 0 : playerMap.get(playerId);
     }
 }

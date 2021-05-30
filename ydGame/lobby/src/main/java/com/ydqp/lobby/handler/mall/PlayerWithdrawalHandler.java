@@ -111,6 +111,13 @@ public class PlayerWithdrawalHandler implements IServerHandler {
         }
 
         Player player = PlayerService.getInstance().queryByPlayerId(playerData.getPlayerId());
+        if (player.getOrderAmount() < 200) {
+            withdrawalSuccess.setSuccess(false);
+            withdrawalSuccess.setMessage("The deposit amount is less than 200 cannot be withdrawn");
+            iSession.sendMessageByID(withdrawalSuccess, withdrawals.getConnId());
+            logger.error("提现失败，充值金额小于200，playerId：{}，amount:{}, balance:{}", player.getId(), amount, player.getZjPoint());
+            return;
+        }
         if (player.getIsVir() == 1) { // || player.getOrderAmount() <= 0
             withdrawalSuccess.setSuccess(false);
             withdrawalSuccess.setMessage("Virtual account cannot be withdraw");

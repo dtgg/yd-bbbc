@@ -14,5 +14,11 @@ public interface VsPokerBasePlay {
 
     boolean checkPlayerOut(PlayerData playerData);
 
-    boolean checkRoomId(int roomId, long playerId);
+    boolean checkRoomId(PlayerData playerData, long playerId);
+
+    void putPlayerMap(long playerId, int roomId);
+
+    void deletePlayerMap(long playerId);
+
+    int getPlayerRoomId(long playerId);
 }

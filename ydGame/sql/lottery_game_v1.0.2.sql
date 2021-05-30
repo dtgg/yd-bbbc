@@ -73,3 +73,6 @@ CREATE TABLE `vs_rebate_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE vs_race ADD COLUMN isPermission int(10) DEFAULT 0;
+
+--
+ALTER TABLE player ADD COLUMN tickets INT(10) DEFAULT 0;

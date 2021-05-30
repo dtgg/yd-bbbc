@@ -26,6 +26,7 @@ c->s
 7000027 = VsPokerBackRoom       //返回快速赛房间
 7000028 = VsPokerSignGameBonus        //快速赛奖励
 7000029 = VsPokerRaceBasePoint        //快速赛底分等级
+7000030 = VsPokerFastRaceHistory      //快速赛历史记录
 
 s->c
 7000001 = SVsFaPai //发牌
@@ -63,3 +64,4 @@ s->c
 7001027 = SVsPokerBackRoom       //返回快速赛房间
 7001028 = SVsPokerSignGameBonus        //快速赛奖励
 7001029 = SVsPokerRaceBasePoint        //快速赛底分等级
+7001030 = SVsPokerFastRaceHistory      //快速赛历史记录

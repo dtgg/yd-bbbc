@@ -123,6 +123,7 @@ public class PlayerService {
         loginSuccess.setPlayerUrl(playerData.getHeadUrl());
         loginSuccess.setIsVir(player.getIsVir());
         loginSuccess.setIsRebate(player.getIsRebate());
+        loginSuccess.setTickets(player.getTickets());
 
         Total rebateAmount = VsRacePromoteDao.getInstance().sumRebateAmount(player.getId());
         loginSuccess.setRebateAmount(rebateAmount == null ? 0 : rebateAmount.getSum());
@@ -224,6 +225,12 @@ public class PlayerService {
             superiorId = referralPlayer.getId();
             kfId = referralPlayer.getKfId();
             appId = referralPlayer.getAppId();
+        } else {
+            suc.setSuccess(false);
+            suc.setMessage("Please fill in the promotion code to register");
+            iSession.sendMessageByID(suc, mobileRegister.getConnId());
+            logger.error("注册失败，推广码为空， mobile:{}", mobileRegister.getReferralCode());
+            return;
         }
 
         String nickname = GuestRegisterConstant.MOBILE_NICKNAME_PREFIX + randomStr(GuestRegisterConstant.NICKNAME_LONGTH);
@@ -240,7 +247,7 @@ public class PlayerService {
         player.setAppId(appId);
         player.setKfId(kfId);
         player.setIsVir(0);
-
+        player.setTickets(3);
 
         long playerId = PlayerLoginDao.getInstance().insertPlayer(player.getParameterMap());
         //referral code

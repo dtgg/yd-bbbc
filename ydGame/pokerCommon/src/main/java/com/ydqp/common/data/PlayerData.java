@@ -42,6 +42,9 @@ public class PlayerData {
     @Setter
     @Getter
     private int isVir;
+    @Setter
+    @Getter
+    private int tickets;
 
     public PlayerData(){}
 
@@ -56,6 +59,7 @@ public class PlayerData {
         this.registerTime = player.getCreateTime();
         this.kfId = player.getKfId();
         this.isVir = player.getIsVir();
+        this.tickets = player.getTickets();
     }
 
 }

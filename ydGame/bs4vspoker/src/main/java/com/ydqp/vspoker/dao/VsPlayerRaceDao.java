@@ -50,4 +50,9 @@ public class VsPlayerRaceDao {
         String sql = "select * from vs_player_race where raceType = " + raceType + " and playerId = " + playerId + " and raceId in" + raceIdStr + ";";
         return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
     }
+
+    public List<VsPlayerRace> getPlayerRaceByPlayerId(long playerId) {
+        String sql = "select * from vs_player_race where playerId = " + playerId + " order by createTime desc limit 20";
+        return JdbcOrm.getInstance().getListBean(sql, VsPlayerRace.class);
+    }
 }

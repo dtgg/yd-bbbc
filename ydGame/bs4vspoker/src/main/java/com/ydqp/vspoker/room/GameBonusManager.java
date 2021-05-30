@@ -43,7 +43,7 @@ public class GameBonusManager {
         if (vsPokerRoom.getRoomType() == 1) {
             return aDouble;
         } else if (vsPokerRoom.getRoomType() == 2) {
-            return vsPokerRoom.getBonus() * aDouble;
+            return vsPokerRoom.getBasePoint() * 10 * aDouble;
         }
         return 0D;
     }
