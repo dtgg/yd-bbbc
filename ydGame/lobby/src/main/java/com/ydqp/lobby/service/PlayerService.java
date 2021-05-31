@@ -247,7 +247,6 @@ public class PlayerService {
         player.setAppId(appId);
         player.setKfId(kfId);
         player.setIsVir(0);
-        player.setTickets(3);
 
         long playerId = PlayerLoginDao.getInstance().insertPlayer(player.getParameterMap());
         //referral code
