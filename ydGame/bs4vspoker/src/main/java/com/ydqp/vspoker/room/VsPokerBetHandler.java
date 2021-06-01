@@ -103,7 +103,6 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     } else {
                                         //大于2倍，随机下注
                                         point = randomBet(entry.getValue().getPlayerZJ().intValue());
-                                        playType = getPlayType();
                                     }
                                 } else {
                                     //排名前三名随机下注
