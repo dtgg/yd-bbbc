@@ -40,8 +40,6 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             }
 
             //虚拟用户下注
-            //配置
-            Map<Integer, VsRaceConfig> racConfigMap = vsPokerRoom.getRaceConfigMap();
             //房间中的用户排名
             List<Long> rankPlayerList = vsPokerRoom.getRankPlayerIds();
 
@@ -64,80 +62,72 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                     wait(vsPokerRoom.getBattleRoleMap().size());
 
                     //未获取到排名
-                    if (CollectionUtils.isEmpty(rankPlayerList) || racConfigMap == null || racConfigMap.size() == 0) {
-                        xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), getPoint(), entry.getValue());
+                    if (CollectionUtils.isEmpty(rankPlayerList) || !vsPokerRoom.isVirBet()) {
+                        logger.info("未取到排名或未命中调控概率");
+                        xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), randomBet(entry.getValue().getPlayerZJ().intValue()), entry.getValue());
                         continue;
                     }
 
+                    int awardNum = realPlayerZjList.size() > 1 ? 2 : 3;
                     //下注金额
                     int point = 0;
                     int playType = 0;
-                    VsRaceConfig vsRaceConfig = racConfigMap.get(vsPokerRoom.getBasePoint());
-                    if (vsRaceConfig != null && vsRaceConfig.getFrequency() != 0 && getFrequencyNum() < vsRaceConfig.getFrequency()) {
-                        //判断下注
-                        for (int i = 0; i < virPlayerIds.size(); i++) {
-                            //虚拟用户前两名
-                            if (i < 2) {
-                                //前两名已下注
-                                if (vsPokerRoom.isVirBet()) continue;
-                                if (virPlayerIds.size() == 1) {
-                                    vsPokerRoom.setVirBet(true);
-                                } else {
-                                    if (i == 1) vsPokerRoom.setVirBet(true);
+                    //判断下注
+                    for (int i = 0; i < virPlayerIds.size(); i++) {
+                        long playerId = virPlayerIds.get(i);
+                        if (entry.getKey() != playerId) continue;
+                        //虚拟用户前两、三名
+                        if (i < awardNum) {
+                            Integer rank = rankPlayerMap.get(playerId);
+                            //最后一轮
+                            if (vsPokerRoom.getRound() == 10) {
+                                logger.info("最后一轮");
+                                //A、B、C、D全不中
+                                if (CollectionUtils.isEmpty(winPlayTypes)) {
+                                    point = 0;
+                                    continue;
                                 }
+                                playType = getWinPlayType(winPlayTypes);
 
-                                long playerId = virPlayerIds.get(i);
-                                Integer rank = rankPlayerMap.get(playerId);
-                                //最后一轮
-                                if (vsPokerRoom.getTotalRounds() == 10) {
-                                    //A、B、C、D全不中
+                                //第二名真实用户当前积分
+                                int realPlayerZj = realPlayerZjList.size() >= 2 ? realPlayerZjList.get(1) : realPlayerZjList.get(0);
+                                //虚拟用户当前积分
+                                int virPlayerZj = virBattleRoleMap.get(playerId).getPlayerZJ().intValue();
+                                //小于真是用户积分，全下
+                                if (virPlayerZj <= realPlayerZj) {
+                                    point = virPlayerZj;
+                                } else if (virPlayerZj < realPlayerZj * 2) {
+                                    //介于真实用户积分2倍之间
+                                    int differencePoint = realPlayerZj * 2 - virPlayerZj;
+                                    point = differencePoint + 10;
+                                } else {
+                                    //大于2倍，随机下注
+                                    point = randomBet(entry.getValue().getPlayerZJ().intValue());
+                                }
+                            } else {
+                                //排名前三名随机下注
+                                if (rank < 4) {
+                                    logger.info("前三名随机下");
+                                    point = randomBet(entry.getValue().getPlayerZJ().intValue());
+                                    playType = getPlayType();
+                                } else {
+                                    logger.info("不在前三名，全下");
+                                    //不在前三名，全下
                                     if (CollectionUtils.isEmpty(winPlayTypes)) {
+                                        //A、B、C、D全不中
                                         point = 0;
                                         continue;
                                     }
+                                    point = entry.getValue().getPlayerZJ().intValue();
                                     playType = getWinPlayType(winPlayTypes);
-
-                                    //第二名真实用户当前积分
-                                    int realPlayerZj = realPlayerZjList.size() >= 2 ? realPlayerZjList.get(1) : realPlayerZjList.get(0);
-                                    //虚拟用户当前积分
-                                    int virPlayerZj = virBattleRoleMap.get(playerId).getPlayerZJ().intValue();
-                                    //小于真是用户积分，全下
-                                    if (virPlayerZj <= realPlayerZj) {
-                                        point = virPlayerZj;
-                                    } else if (virPlayerZj < realPlayerZj * 2) {
-                                        //介于真实用户积分2倍之间
-                                        int differencePoint = realPlayerZj * 2 - virPlayerZj;
-                                        point = differencePoint + 10;
-                                    } else {
-                                        //大于2倍，随机下注
-                                        point = randomBet(entry.getValue().getPlayerZJ().intValue());
-                                    }
-                                } else {
-                                    //排名前三名随机下注
-                                    if (rank < 3) {
-                                        point = randomBet(entry.getValue().getPlayerZJ().intValue());
-                                        playType = getPlayType();
-                                    } else {
-                                        //不在前三名，全下
-                                        if (CollectionUtils.isEmpty(winPlayTypes)) {
-                                            //A、B、C、D全不中
-                                            point = 0;
-                                            continue;
-                                        }
-                                        point = entry.getValue().getPlayerZJ().intValue();
-                                        playType = getWinPlayType(winPlayTypes);
-                                    }
                                 }
-                            } else {
-                                //随机下注
-                                point = randomBet(entry.getValue().getPlayerZJ().intValue());
-                                playType = getPlayType();
                             }
+                        } else {
+                            logger.info("不在虚拟用户前三名随机下注");
+                            //随机下注
+                            point = randomBet(entry.getValue().getPlayerZJ().intValue());
+                            playType = getPlayType();
                         }
-                    } else {
-                        //随机下注
-                        point = randomBet(entry.getValue().getPlayerZJ().intValue());
-                        playType = getPlayType();
                     }
                     if (point == 0 || playType == 0) continue;
 
@@ -195,16 +185,11 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
         return bankPoker.getNum() >= playerPoker.getNum();
     }
 
-    private int getFrequencyNum() {
-        Random random = new Random();
-        return 1 + random.nextInt(10);
-    }
-
     private void setData(List<Long> rankPlayerList, Map<Long, BattleRole> battleRoleMap, Map<Long, Integer> rankPlayerMap,
                          List<Long> virPlayerIds, Map<Long, BattleRole> virBattleRoleMap, List<Integer> realPlayerZjList) {
         if (CollectionUtils.isEmpty(rankPlayerList)) return;
         for (int i = 0; i < rankPlayerList.size(); i++) {
-            long playerId = rankPlayerList.get(1);
+            long playerId = rankPlayerList.get(i);
             boolean isVir = true;
             for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
                 //过滤真实用户

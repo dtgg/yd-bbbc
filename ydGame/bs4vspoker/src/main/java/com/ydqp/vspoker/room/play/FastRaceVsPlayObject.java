@@ -19,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
 
@@ -87,7 +88,7 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
     @Override
     public VsPokerRoom generatorRoom() {
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().createVsPokerRoom(roomType,basePoint);
-        vsPokerRoom.setCurWaitTime(60);
+        vsPokerRoom.setCurWaitTime(10);
         vsPokerRoom.setMaxPlayerNum(10);
         vsPokerRoom.setTotalRounds(10);
         RoomManager.getInstance().putRoom(vsPokerRoom);
@@ -109,7 +110,9 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
         long raceId = VsPokerDao.getInstance().save(vsRace.getParameterMap());
 
         vsPokerRoom.setRaceId(new Long(raceId).intValue());
-        vsPokerRoom.setRaceConfigMap(getRacConfigMap());
+        VsRaceConfig raceConfig = getRaceConfig(basePoint);
+        vsPokerRoom.setVirBet(raceConfig != null && getFrequencyNum() <= raceConfig.getFrequency());
+
         return vsPokerRoom;
     }
 
@@ -131,14 +134,12 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
         VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRoom.getRaceId(), 1);
     }
 
-    private Map<Integer, VsRaceConfig> getRacConfigMap() {
-        Map<Integer, VsRaceConfig> map = new HashMap<>();
-        List<VsRaceConfig> raceConfigList = VsRaceConfigDao.getInstance().getRaceConfigs();
-        if (CollectionUtils.isNotEmpty(raceConfigList)) {
-            for (VsRaceConfig vsRaceConfig : raceConfigList) {
-                map.put(vsRaceConfig.getBasePoint(), vsRaceConfig);
-            }
-        }
-        return map;
+    private VsRaceConfig getRaceConfig(int basePoint) {
+        return VsRaceConfigDao.getInstance().getRaceConfigs(basePoint);
+    }
+
+    private int getFrequencyNum() {
+        Random random = new Random();
+        return 1 + random.nextInt(10);
     }
 }

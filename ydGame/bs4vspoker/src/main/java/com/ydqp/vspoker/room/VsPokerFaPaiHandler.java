@@ -1,5 +1,6 @@
 package com.ydqp.vspoker.room;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.poker.Poker;
@@ -36,6 +37,7 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
 
         //加载当前排名信息
         Set<String> rankInfo = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, -1);
+        logger.info("排行榜信息：", JSONObject.toJSONString(rankInfo));
         if (CollectionUtils.isEmpty(rankInfo)) {
             vsPokerRoom.setRankPlayerIds(new ArrayList<>());
             return;

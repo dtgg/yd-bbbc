@@ -15,8 +15,8 @@ public class VsRaceConfigDao {
         return instance;
     }
 
-    public List<VsRaceConfig> getRaceConfigs() {
-        String sql = "select * from vs_race_config where enabled = 1;";
-        return JdbcOrm.getInstance().getListBean(sql, VsRaceConfig.class);
+    public VsRaceConfig getRaceConfigs(int basePoint) {
+        String sql = "select * from vs_race_config where enabled = 1 and basePoint = "+basePoint+";";
+        return (VsRaceConfig) JdbcOrm.getInstance().getBean(sql, VsRaceConfig.class);
     }
 }

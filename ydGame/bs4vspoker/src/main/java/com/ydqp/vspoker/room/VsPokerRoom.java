@@ -52,10 +52,6 @@ public class VsPokerRoom extends Room {
 
     @Getter
     @Setter
-    private Map<Integer, VsRaceConfig> raceConfigMap;
-
-    @Getter
-    @Setter
     private List<Long> rankPlayerIds;
 
     @Getter
