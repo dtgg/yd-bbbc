@@ -62,6 +62,10 @@ public class VsPokerRoom extends Room {
     @Setter
     private boolean virBet;
 
+    @Getter
+    @Setter
+    private boolean allIn;
+
     @Override
     public void monitor() {
         try {

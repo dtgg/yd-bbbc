@@ -10,6 +10,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class VsPokerFaPaiHandler implements IRoomStatusHandler{
@@ -47,5 +48,13 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
             rankPlayerIds.add(Long.parseLong(playerIdStr));
         }
         vsPokerRoom.setRankPlayerIds(rankPlayerIds);
+        vsPokerRoom.setAllIn(allIn());
+    }
+
+    private boolean allIn() {
+        Random random = new Random();
+        int anInt = random.nextInt(10);
+        //20%
+        return anInt < 5;
     }
 }

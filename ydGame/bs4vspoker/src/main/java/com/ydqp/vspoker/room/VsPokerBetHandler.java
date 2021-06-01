@@ -72,7 +72,6 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
 
                     //未获取到排名
                     if (CollectionUtils.isEmpty(rankPlayerList) || !vsPokerRoom.isHarvest()) {
-                        logger.info("未取到排名或未命中调控概率");
                         xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), randomBet(entry.getValue().getPlayerZJ().intValue()), entry.getValue());
                         continue;
                     }
@@ -85,10 +84,10 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                         long playerId = virPlayerIds.get(i);
                         if (entry.getKey() != playerId) continue;
                         Integer virRank = virRankMap.get(playerId);
+                        Integer rank = rankPlayerMap.get(playerId);
                         //虚拟用户前两、三名
                         if (virRank < awardNum) {
                             if (vsPokerRoom.isVirBet()) continue;
-                            logger.info("前三名下注");
                             if (j == awardNum - 1) {
                                 vsPokerRoom.setVirBet(true);
                             }
@@ -96,7 +95,6 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
 
                             //最后一轮
                             if (vsPokerRoom.getRound() == 10) {
-                                logger.info("最后一轮");
                                 //A、B、C、D全不中
                                 if (CollectionUtils.isEmpty(winPlayTypes)) {
                                     point = 0;
@@ -120,10 +118,8 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     point = randomBet(entry.getValue().getPlayerZJ().intValue());
                                 }
                             } else {
-                                Integer rank = rankPlayerMap.get(playerId);
                                 //排名前三名随机下注
                                 if (rank < awardNum) {
-                                    logger.info("前三名随机下");
                                     point = randomBet(entry.getValue().getPlayerZJ().intValue());
                                     playType = getPlayType();
                                 } else {
@@ -140,10 +136,15 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                 }
                             }
                         } else {
-                            logger.info("不在虚拟用户前三名随机下注");
                             //随机下注
-                            point = randomBet(entry.getValue().getPlayerZJ().intValue());
-                            playType = getPlayType();
+                            if (vsPokerRoom.isAllIn() && getDivisor() == 0) {
+                                point = entry.getValue().getPlayerZJ().intValue();
+                                playType = getPlayType();
+                                vsPokerRoom.setAllIn(false);
+                            } else {
+                                point = randomBet(entry.getValue().getPlayerZJ().intValue());
+                                playType = getPlayType();
+                            }
                         }
                     }
                     if (point == 0 || playType == 0) continue;
@@ -159,6 +160,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
         if (getDivisor() == 0) return 0;  //是否下注
         int point = getPoint();   //随机下注金额
         if (playerZj < point) return 0;
+        logger.info("randomBet:{}", point);
         return point;
     }
 
@@ -238,8 +240,8 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
     private void cycleXiazhu(VsPokerRoom vsPokerRoom, int playType, long playerId, int point, BattleRole battleRole) {
         int thousandNum = point / 1000;
         int hundredNum = (point - thousandNum * 1000) / 200;
-        int fiftyNum = (point - thousandNum * 1000 - hundredNum * 100) / 50;
-        int tenNum = (point - thousandNum * 1000 - hundredNum * 100 - fiftyNum * 50) / 10;
+        int fiftyNum = (point - thousandNum * 1000 - hundredNum * 200) / 50;
+        int tenNum = (point - thousandNum * 1000 - hundredNum * 200 - fiftyNum * 50) / 10;
 
         if (thousandNum > 0) {
             for (int i = 0; i < thousandNum; i++) {
