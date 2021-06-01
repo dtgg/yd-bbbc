@@ -1,5 +1,6 @@
 package com.ydqp.vspoker.room;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
@@ -36,8 +37,10 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             for (Map.Entry<Integer, Poker> pokerEntry : pokerMap.entrySet()) {
                 if (pokerEntry.getKey() == 1) continue;
                 boolean bankWin = isBankWin(bankPoker, pokerEntry.getValue());
-                if (!bankWin) winPlayTypes.add(pokerEntry.getKey());
+                if (!bankWin) winPlayTypes.add(pokerEntry.getKey() - 1);
             }
+
+            logger.info("wwwwwwwwwwwwwwww = {}", JSONObject.toJSONString(winPlayTypes));
 
             //虚拟用户下注
             //房间中的用户排名
@@ -124,7 +127,6 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     point = randomBet(entry.getValue().getPlayerZJ().intValue());
                                     playType = getPlayType();
                                 } else {
-                                    logger.info("不在前三名，全下");
                                     //不在前三名，全下
                                     if (CollectionUtils.isEmpty(winPlayTypes)) {
                                         //A、B、C、D全不中
@@ -133,6 +135,8 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     }
                                     point = entry.getValue().getPlayerZJ().intValue();
                                     playType = getWinPlayType(winPlayTypes);
+                                    logger.info("不在前三名，全下 playerId = {}, rank = {}, point = {}, playType = {}", entry.getValue(), rank,
+                                            point, playType);
                                 }
                             }
                         } else {
