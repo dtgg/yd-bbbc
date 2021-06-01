@@ -23,6 +23,8 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         paiFu(vsPokerRoom);
         //重置数据，房间状态
         vsPokerRoom.setRound(vsPokerRoom.getRound() + 1);
+        vsPokerRoom.setVirBet(false);
+        vsPokerRoom.setRankPlayerIds(new ArrayList<>());
 
         for (int i = 1; i <= 4; i++) {
             PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);

@@ -4,8 +4,12 @@ import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.poker.Poker;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsFaPai;
+import com.ydqp.vspoker.cache.RankingCache;
+import org.apache.commons.collections.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class VsPokerFaPaiHandler implements IRoomStatusHandler{
 
@@ -29,5 +33,17 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
         vsPokerRoom.setStatus(2);
         vsPokerRoom.setCurWaitTime(15);
         logger.info("fapai end");
+
+        //加载当前排名信息
+        Set<String> rankInfo = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, -1);
+        if (CollectionUtils.isEmpty(rankInfo)) {
+            vsPokerRoom.setRankPlayerIds(new ArrayList<>());
+            return;
+        }
+        List<Long> rankPlayerIds = new ArrayList<>();
+        for (String playerIdStr : rankInfo) {
+            rankPlayerIds.add(Long.parseLong(playerIdStr));
+        }
+        vsPokerRoom.setRankPlayerIds(rankPlayerIds);
     }
 }

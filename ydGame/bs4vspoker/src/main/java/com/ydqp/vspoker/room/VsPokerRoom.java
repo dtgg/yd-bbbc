@@ -6,6 +6,7 @@ import com.cfq.log.LoggerFactory;
 import com.cfq.util.StackTraceUtil;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
+import com.ydqp.common.entity.VsRaceConfig;
 import com.ydqp.common.poker.Poker;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.poker.room.Room;
@@ -17,6 +18,7 @@ import com.ydqp.vspoker.cache.RankingCache;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,6 +49,18 @@ public class VsPokerRoom extends Room {
     @Getter
     @Setter
     private double bonus;
+
+    @Getter
+    @Setter
+    private Map<Integer, VsRaceConfig> raceConfigMap;
+
+    @Getter
+    @Setter
+    private List<Long> rankPlayerIds;
+
+    @Getter
+    @Setter
+    private boolean virBet;
 
     @Override
     public void monitor() {

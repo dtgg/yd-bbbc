@@ -40,24 +40,22 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             }
 
             //虚拟用户下注
+            //配置
+            Map<Integer, VsRaceConfig> racConfigMap = vsPokerRoom.getRaceConfigMap();
             //房间中的用户排名
-            Set<String> rankPlayerIds = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, -1);
-            if (CollectionUtils.isNotEmpty(rankPlayerIds)) {
-                //配置
-                Map<Integer, VsRaceConfig> racConfigMap = getRacConfigMap();
-                //虚拟用户排名
-                Map<Long, Integer> rankPlayerMap = new HashMap<>();
-                //虚拟用户ID
-                List<Long> virPlayerIds = new ArrayList<>();
-                //虚拟用户battleRole
-                Map<Long, BattleRole> virBattleRoleMap = new HashMap<>();
+            List<Long> rankPlayerList = vsPokerRoom.getRankPlayerIds();
 
-                List<String> rankPlayerList = new ArrayList<>(rankPlayerIds);
-                List<Integer> realPlayerZjList = new ArrayList<>();
+            //虚拟用户排名
+            Map<Long, Integer> rankPlayerMap = new HashMap<>();
+            //虚拟用户ID
+            List<Long> virPlayerIds = new ArrayList<>();
+            //虚拟用户battleRole
+            Map<Long, BattleRole> virBattleRoleMap = new HashMap<>();
+            //真实用户战绩
+            List<Integer> realPlayerZjList = new ArrayList<>();
+            setData(rankPlayerList, vsPokerRoom.getBattleRoleMap(), rankPlayerMap, virPlayerIds, virBattleRoleMap, realPlayerZjList);
 
-                setData(rankPlayerList, vsPokerRoom.getBattleRoleMap(), rankPlayerMap, virPlayerIds, virBattleRoleMap, realPlayerZjList);
-
-
+            if (vsPokerRoom.getBattleRoleMap() != null && vsPokerRoom.getBattleRoleMap().size() > 0) {
                 //下注
                 for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
                     if (entry.getValue().getIsVir() == 0) continue;
@@ -65,19 +63,25 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                     //虚拟用户下注间隔时间
                     wait(vsPokerRoom.getBattleRoleMap().size());
 
+                    //未获取到排名
+                    if (CollectionUtils.isEmpty(rankPlayerList) || racConfigMap == null || racConfigMap.size() == 0) {
+                        xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), getPoint(), entry.getValue());
+                        continue;
+                    }
+
                     //下注金额
                     int point = 0;
                     int playType = 0;
                     VsRaceConfig vsRaceConfig = racConfigMap.get(vsPokerRoom.getBasePoint());
-                    if (vsRaceConfig != null && vsRaceConfig.getFrequency() != 0 && vsPokerRoom.getRaceId() / vsRaceConfig.getFrequency() == 0) {
-                        //随机下注
-                        point = randomBet(entry.getValue().getPlayerZJ().intValue());
-                        playType = getPlayType();
-                    } else {
+                    if (vsRaceConfig != null && vsRaceConfig.getFrequency() != 0 && getFrequencyNum() < vsRaceConfig.getFrequency()) {
                         //判断下注
                         for (int i = 0; i < virPlayerIds.size(); i++) {
                             //虚拟用户前两名
                             if (i < 2) {
+                                //前两名已下注
+                                if (vsPokerRoom.isVirBet()) continue;
+                                vsPokerRoom.setVirBet(true);
+
                                 long playerId = virPlayerIds.get(i);
                                 Integer rank = rankPlayerMap.get(playerId);
                                 //最后一轮
@@ -89,8 +93,8 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     }
                                     playType = getWinPlayType(winPlayTypes);
 
-                                    //第二名真是用户当前积分
-                                    int realPlayerZj = realPlayerZjList.size() > 2 ? realPlayerZjList.get(1): realPlayerZjList.get(0);
+                                    //第二名真实用户当前积分
+                                    int realPlayerZj = realPlayerZjList.size() >= 2 ? realPlayerZjList.get(1): realPlayerZjList.get(0);
                                     //虚拟用户当前积分
                                     int virPlayerZj = virBattleRoleMap.get(playerId).getPlayerZJ().intValue();
                                     //小于真是用户积分，全下
@@ -126,15 +130,15 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                 playType = getPlayType();
                             }
                         }
+                    } else {
+                        //随机下注
+                        point = randomBet(entry.getValue().getPlayerZJ().intValue());
+                        playType = getPlayType();
                     }
                     if (point == 0 || playType == 0) continue;
 
-                    VsPokerXiazhu vsPokerXiazhu = new VsPokerXiazhu();
-                    vsPokerXiazhu.setRoomId(vsPokerRoom.getRoomId());
-                    vsPokerXiazhu.setPlayType(playType);
-                    vsPokerXiazhu.setPlayerId(entry.getKey());
-                    vsPokerXiazhu.setMoney(point);
-                    vsPokerRoom.playerXiazhu(null, entry.getValue(), vsPokerXiazhu);
+                    //循环下注
+                    cycleXiazhu(vsPokerRoom, playType, entry.getKey(), point, entry.getValue());
                 }
             }
         }
@@ -183,25 +187,20 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
         return points[index];
     }
 
-    private Map<Integer, VsRaceConfig> getRacConfigMap() {
-        Map<Integer, VsRaceConfig> map = new HashMap<>();
-        List<VsRaceConfig> raceConfigList = VsRaceConfigDao.getInstance().getRaceConfigs();
-        if (CollectionUtils.isNotEmpty(raceConfigList)) {
-            for (VsRaceConfig vsRaceConfig : raceConfigList) {
-                map.put(vsRaceConfig.getBasePoint(), vsRaceConfig);
-            }
-        }
-        return map;
-    }
-
     private boolean isBankWin (Poker bankPoker, Poker playerPoker) {
         return bankPoker.getNum() >= playerPoker.getNum();
     }
 
-    private void setData(List<String> rankPlayerList, Map<Long, BattleRole> battleRoleMap, Map<Long, Integer> rankPlayerMap,
+    private int getFrequencyNum() {
+        Random random = new Random();
+        return 1 + random.nextInt(10);
+    }
+
+    private void setData(List<Long> rankPlayerList, Map<Long, BattleRole> battleRoleMap, Map<Long, Integer> rankPlayerMap,
                          List<Long> virPlayerIds, Map<Long, BattleRole> virBattleRoleMap, List<Integer> realPlayerZjList) {
+        if (CollectionUtils.isEmpty(rankPlayerList)) return;
         for (int i = 0; i < rankPlayerList.size(); i++) {
-            long playerId = Long.parseLong(rankPlayerList.get(1));
+            long playerId = rankPlayerList.get(1);
             boolean isVir = true;
             for (Map.Entry<Long, BattleRole> entry : battleRoleMap.entrySet()) {
                 //过滤真实用户
@@ -218,6 +217,43 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             if (!isVir) continue;
             rankPlayerMap.put(playerId, i + 1);
             virPlayerIds.add(playerId);
+        }
+    }
+
+    private void xiazhu(VsPokerRoom vsPokerRoom, int playType, long playerId, int point, BattleRole battleRole) {
+        VsPokerXiazhu vsPokerXiazhu = new VsPokerXiazhu();
+        vsPokerXiazhu.setRoomId(vsPokerRoom.getRoomId());
+        vsPokerXiazhu.setPlayType(playType);
+        vsPokerXiazhu.setPlayerId(playerId);
+        vsPokerXiazhu.setMoney(point);
+        vsPokerRoom.playerXiazhu(null, battleRole, vsPokerXiazhu);
+    }
+
+    private void cycleXiazhu(VsPokerRoom vsPokerRoom, int playType, long playerId, int point, BattleRole battleRole) {
+        int thousandNum = point / 1000;
+        int hundredNum = (point - thousandNum * 1000) / 200;
+        int fiftyNum = (point - thousandNum * 1000 - hundredNum * 100) / 50;
+        int tenNum = (point - thousandNum * 1000 - hundredNum * 100 - fiftyNum * 50) / 10;
+
+        if (thousandNum > 0) {
+            for (int i = 0; i < thousandNum; i++) {
+                xiazhu(vsPokerRoom, playType, playerId, 1000, battleRole);
+            }
+        }
+        if (hundredNum > 0) {
+            for (int i = 0; i < hundredNum; i++) {
+                xiazhu(vsPokerRoom, playType, playerId, 200, battleRole);
+            }
+        }
+        if (fiftyNum > 0) {
+            for (int i = 0; i < fiftyNum; i++) {
+                xiazhu(vsPokerRoom, playType, playerId, 50, battleRole);
+            }
+        }
+        if (tenNum > 0) {
+            for (int i = 0; i < tenNum; i++) {
+                xiazhu(vsPokerRoom, playType, playerId, 10, battleRole);
+            }
         }
     }
 }

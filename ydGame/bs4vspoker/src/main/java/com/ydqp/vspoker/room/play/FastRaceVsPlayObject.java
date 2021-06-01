@@ -6,12 +6,19 @@ import com.ydqp.common.dao.PlayerDao;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.VsPlayerRace;
 import com.ydqp.common.entity.VsRace;
+import com.ydqp.common.entity.VsRaceConfig;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
 import com.ydqp.vspoker.dao.VsPokerDao;
+import com.ydqp.vspoker.dao.VsRaceConfigDao;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
 
@@ -102,6 +109,7 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
         long raceId = VsPokerDao.getInstance().save(vsRace.getParameterMap());
 
         vsPokerRoom.setRaceId(new Long(raceId).intValue());
+        vsPokerRoom.setRaceConfigMap(getRacConfigMap());
         return vsPokerRoom;
     }
 
@@ -121,5 +129,16 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
 
         //报名人数加1
         VsPokerDao.getInstance().updateCurPlayerNum(vsPokerRoom.getRaceId(), 1);
+    }
+
+    private Map<Integer, VsRaceConfig> getRacConfigMap() {
+        Map<Integer, VsRaceConfig> map = new HashMap<>();
+        List<VsRaceConfig> raceConfigList = VsRaceConfigDao.getInstance().getRaceConfigs();
+        if (CollectionUtils.isNotEmpty(raceConfigList)) {
+            for (VsRaceConfig vsRaceConfig : raceConfigList) {
+                map.put(vsRaceConfig.getBasePoint(), vsRaceConfig);
+            }
+        }
+        return map;
     }
 }
