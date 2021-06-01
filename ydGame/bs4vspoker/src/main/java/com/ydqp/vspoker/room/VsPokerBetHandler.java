@@ -53,6 +53,12 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             List<Integer> realPlayerZjList = new ArrayList<>();
             setData(rankPlayerList, vsPokerRoom.getBattleRoleMap(), rankPlayerMap, virPlayerIds, virBattleRoleMap, realPlayerZjList);
 
+            int j = 1;
+            int awardNum = realPlayerZjList.size() > 1 ? 3 : 4;
+            Map<Long, Integer> virRankMap = new HashMap<>();
+            for (int i = 0; i < virPlayerIds.size(); i++) {
+                virRankMap.put(virPlayerIds.get(i), i+1);
+            }
             if (vsPokerRoom.getBattleRoleMap() != null && vsPokerRoom.getBattleRoleMap().size() > 0) {
                 //下注
                 for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
@@ -62,13 +68,12 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                     wait(vsPokerRoom.getBattleRoleMap().size());
 
                     //未获取到排名
-                    if (CollectionUtils.isEmpty(rankPlayerList) || !vsPokerRoom.isVirBet()) {
+                    if (CollectionUtils.isEmpty(rankPlayerList) || !vsPokerRoom.isHarvest()) {
                         logger.info("未取到排名或未命中调控概率");
                         xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), randomBet(entry.getValue().getPlayerZJ().intValue()), entry.getValue());
                         continue;
                     }
 
-                    int awardNum = realPlayerZjList.size() > 1 ? 2 : 3;
                     //下注金额
                     int point = 0;
                     int playType = 0;
@@ -76,9 +81,16 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                     for (int i = 0; i < virPlayerIds.size(); i++) {
                         long playerId = virPlayerIds.get(i);
                         if (entry.getKey() != playerId) continue;
+                        Integer virRank = virRankMap.get(playerId);
                         //虚拟用户前两、三名
-                        if (i < awardNum) {
-                            Integer rank = rankPlayerMap.get(playerId);
+                        if (virRank < awardNum) {
+                            if (vsPokerRoom.isVirBet()) continue;
+                            logger.info("前三名下注");
+                            if (j == awardNum - 1) {
+                                vsPokerRoom.setVirBet(true);
+                            }
+                            j++;
+
                             //最后一轮
                             if (vsPokerRoom.getRound() == 10) {
                                 logger.info("最后一轮");
@@ -105,8 +117,9 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     point = randomBet(entry.getValue().getPlayerZJ().intValue());
                                 }
                             } else {
+                                Integer rank = rankPlayerMap.get(playerId);
                                 //排名前三名随机下注
-                                if (rank < 4) {
+                                if (rank < awardNum) {
                                     logger.info("前三名随机下");
                                     point = randomBet(entry.getValue().getPlayerZJ().intValue());
                                     playType = getPlayType();

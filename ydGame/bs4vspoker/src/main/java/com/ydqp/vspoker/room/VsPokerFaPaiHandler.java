@@ -37,7 +37,7 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
 
         //加载当前排名信息
         Set<String> rankInfo = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, -1);
-        logger.info("排行榜信息：", JSONObject.toJSONString(rankInfo));
+        logger.info("排行榜信息：{}", JSONObject.toJSONString(rankInfo));
         if (CollectionUtils.isEmpty(rankInfo)) {
             vsPokerRoom.setRankPlayerIds(new ArrayList<>());
             return;

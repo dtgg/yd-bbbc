@@ -111,7 +111,7 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
 
         vsPokerRoom.setRaceId(new Long(raceId).intValue());
         VsRaceConfig raceConfig = getRaceConfig(basePoint);
-        vsPokerRoom.setVirBet(raceConfig != null && getFrequencyNum() <= raceConfig.getFrequency());
+        vsPokerRoom.setHarvest(raceConfig != null && getFrequencyNum() <= raceConfig.getFrequency());
 
         return vsPokerRoom;
     }

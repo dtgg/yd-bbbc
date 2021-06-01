@@ -52,6 +52,10 @@ public class VsPokerRoom extends Room {
 
     @Getter
     @Setter
+    private boolean harvest;
+
+    @Getter
+    @Setter
     private List<Long> rankPlayerIds;
 
     @Getter
