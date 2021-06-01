@@ -144,11 +144,11 @@
             </activation>
 
             <properties>
-                <jdbc.url>jdbc:mysql://rm-a2dhnp794du2031ia.mysql.ap-south-1.rds.aliyuncs.com/lottery_game?characterEncoding=utf-8</jdbc.url>
+                <jdbc.url>jdbc:mysql://rm-a2d058tq7m03sy1u6.mysql.ap-south-1.rds.aliyuncs.com/lottery_game?characterEncoding=utf-8</jdbc.url>
                 <username>game_root</username>
                 <password>Game666@@</password>
 
-                <redis.host>r-a2dwus30znfmh6d13k.redis.ap-south-1.rds.aliyuncs.com</redis.host>
+                <redis.host>r-a2dhzn68dk5sqefuhu.redis.ap-south-1.rds.aliyuncs.com</redis.host>
                 <redis.auth>Game666@@</redis.auth>
 
                 <statupload.url>http://luckyunion-admin.alcs8.com/statistics/collect</statupload.url>
