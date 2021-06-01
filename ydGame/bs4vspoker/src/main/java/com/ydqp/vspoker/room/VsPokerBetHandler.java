@@ -80,7 +80,11 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                             if (i < 2) {
                                 //前两名已下注
                                 if (vsPokerRoom.isVirBet()) continue;
-                                vsPokerRoom.setVirBet(true);
+                                if (virPlayerIds.size() == 1) {
+                                    vsPokerRoom.setVirBet(true);
+                                } else {
+                                    if (i == 1) vsPokerRoom.setVirBet(true);
+                                }
 
                                 long playerId = virPlayerIds.get(i);
                                 Integer rank = rankPlayerMap.get(playerId);
@@ -94,13 +98,13 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     playType = getWinPlayType(winPlayTypes);
 
                                     //第二名真实用户当前积分
-                                    int realPlayerZj = realPlayerZjList.size() >= 2 ? realPlayerZjList.get(1): realPlayerZjList.get(0);
+                                    int realPlayerZj = realPlayerZjList.size() >= 2 ? realPlayerZjList.get(1) : realPlayerZjList.get(0);
                                     //虚拟用户当前积分
                                     int virPlayerZj = virBattleRoleMap.get(playerId).getPlayerZJ().intValue();
                                     //小于真是用户积分，全下
                                     if (virPlayerZj <= realPlayerZj) {
                                         point = virPlayerZj;
-                                    } else if (virPlayerZj < realPlayerZj * 2){
+                                    } else if (virPlayerZj < realPlayerZj * 2) {
                                         //介于真实用户积分2倍之间
                                         int differencePoint = realPlayerZj * 2 - virPlayerZj;
                                         point = differencePoint + 10;
@@ -187,7 +191,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
         return points[index];
     }
 
-    private boolean isBankWin (Poker bankPoker, Poker playerPoker) {
+    private boolean isBankWin(Poker bankPoker, Poker playerPoker) {
         return bankPoker.getNum() >= playerPoker.getNum();
     }
 
