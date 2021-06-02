@@ -66,6 +66,10 @@ public class VsPokerRoom extends Room {
     @Setter
     private boolean allIn;
 
+    @Getter
+    @Setter
+    private int randomTime;
+
     @Override
     public void monitor() {
         try {

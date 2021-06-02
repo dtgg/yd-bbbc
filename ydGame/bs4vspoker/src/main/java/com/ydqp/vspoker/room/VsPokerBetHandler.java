@@ -87,7 +87,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                         Integer rank = rankPlayerMap.get(playerId);
                         //虚拟用户前两、三名
                         if (virRank < awardNum) {
-                            if (vsPokerRoom.getCurWaitTime() > 5) {
+                            if (vsPokerRoom.getCurWaitTime() > vsPokerRoom.getRandomTime()) {
                                 continue;
                             }
                             if (vsPokerRoom.isVirBet()) continue;
@@ -129,11 +129,22 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                     //不在前三名，全下
                                     if (CollectionUtils.isEmpty(winPlayTypes)) {
                                         //A、B、C、D全不中
-                                        point = 0;
-                                        continue;
+                                        point = randomBet(entry.getValue().getPlayerZJ().intValue());
+                                        playType = getPlayType();
+                                    } else {
+                                        if (winPlayTypes.size() == 1) {
+                                            point = randomBet(entry.getValue().getPlayerZJ().intValue());
+                                            playType = getPlayType();
+                                        } else {
+                                            point = entry.getValue().getPlayerZJ().intValue() / winPlayTypes.size();
+                                            for (Integer winPlayType : winPlayTypes) {
+                                                playType = winPlayType;
+                                                cycleXiazhu(vsPokerRoom, playType, entry.getKey(), point, entry.getValue());
+                                            }
+                                            point = 0;
+                                            playType = 0;
+                                        }
                                     }
-                                    point = entry.getValue().getPlayerZJ().intValue();
-                                    playType = getWinPlayType(winPlayTypes);
                                     logger.info("不在前三名，全下 playerId = {}, rank = {}, point = {}, playType = {}", entry.getValue(), rank,
                                             point, playType);
                                 }

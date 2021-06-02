@@ -49,6 +49,7 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
         }
         vsPokerRoom.setRankPlayerIds(rankPlayerIds);
         vsPokerRoom.setAllIn(allIn());
+        vsPokerRoom.setRandomTime(new Random().nextInt(14));
     }
 
     private boolean allIn() {
