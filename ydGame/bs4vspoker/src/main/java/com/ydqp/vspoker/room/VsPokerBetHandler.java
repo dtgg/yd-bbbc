@@ -72,7 +72,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
 
                     //未获取到排名
                     if (CollectionUtils.isEmpty(rankPlayerList) || !vsPokerRoom.isHarvest()) {
-                        xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), randomBet(entry.getValue().getPlayerZJ().intValue()), entry.getValue());
+                        cycleXiazhu(vsPokerRoom, getPlayType(), entry.getKey(), randomBet(entry.getValue().getPlayerZJ().intValue()), entry.getValue());
                         continue;
                     }
 
@@ -161,7 +161,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
 
     private int randomBet(int playerZj) {
         if (getDivisor() == 0) return 0;  //是否下注
-        int point = 1000;   //随机下注金额
+        int point = getPoint();   //随机下注金额
         if (playerZj < point) return 0;
         logger.info("randomBet:{}", point);
         return point;
@@ -198,9 +198,9 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
     }
 
     private int getPoint() {
-        int[] points = new int[]{10, 50, 200, 1000};
-        int index = new Random().nextInt(4);
-        return points[index];
+//        int[] points = new int[]{10, 50, 200, 1000};
+        int index = 5 + new Random().nextInt(15);
+        return index * 100;
     }
 
     private boolean isBankWin(Poker bankPoker, Poker playerPoker) {
