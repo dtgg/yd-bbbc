@@ -55,6 +55,6 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
         Random random = new Random();
         int anInt = random.nextInt(10);
         //20%
-        return anInt < 2;
+        return anInt < 5;
     }
 }
