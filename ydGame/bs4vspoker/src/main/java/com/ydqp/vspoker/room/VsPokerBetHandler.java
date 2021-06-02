@@ -173,8 +173,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
     private int randomBet(int playerZj) {
         if (getDivisor() == 0) return 0;  //是否下注
         int point = getPoint();   //随机下注金额
-        if (playerZj < point) return 0;
-        logger.info("randomBet:{}", point);
+        if (playerZj < point) point = playerZj;
         return point;
     }
 
