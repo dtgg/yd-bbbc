@@ -88,7 +88,7 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
     @Override
     public VsPokerRoom generatorRoom() {
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().createVsPokerRoom(roomType,basePoint);
-        vsPokerRoom.setCurWaitTime(10);
+        vsPokerRoom.setCurWaitTime(60);
         vsPokerRoom.setMaxPlayerNum(10);
         vsPokerRoom.setTotalRounds(10);
         RoomManager.getInstance().putRoom(vsPokerRoom);

@@ -87,6 +87,9 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                         Integer rank = rankPlayerMap.get(playerId);
                         //虚拟用户前两、三名
                         if (virRank < awardNum) {
+                            if (vsPokerRoom.getCurWaitTime() > 5) {
+                                continue;
+                            }
                             if (vsPokerRoom.isVirBet()) continue;
                             if (j == awardNum - 1) {
                                 vsPokerRoom.setVirBet(true);
