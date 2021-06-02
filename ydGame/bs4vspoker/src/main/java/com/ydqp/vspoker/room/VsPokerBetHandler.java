@@ -136,7 +136,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                                             point = randomBet(entry.getValue().getPlayerZJ().intValue());
                                             playType = getPlayType();
                                         } else {
-                                            point = entry.getValue().getPlayerZJ().intValue() / winPlayTypes.size();
+                                            point = entry.getValue().getPlayerZJ().intValue() / winPlayTypes.size() + 1;
                                             for (Integer winPlayType : winPlayTypes) {
                                                 playType = winPlayType;
                                                 cycleXiazhu(vsPokerRoom, playType, entry.getKey(), point, entry.getValue());
