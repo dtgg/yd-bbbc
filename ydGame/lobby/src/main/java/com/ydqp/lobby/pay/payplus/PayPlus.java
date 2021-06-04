@@ -46,14 +46,14 @@ public class PayPlus extends OrderPay {
 
         Map<String, String> params = new HashMap<>();
         params.put("merId", config.getMchId());
-        params.put("orderId", order.getOrderId());
+        params.put("orderId", order.getOrderId().substring(0, 30));
         params.put("orderAmt", String.valueOf(Double.valueOf(order.getAmount()).intValue()));
         params.put("channel", "PAYU");
         params.put("desc", "desc");
-        params.put("ip", "153.122.175.102");
+        params.put("ip", "147.139.42.92");
         params.put("notifyUrl", config.getPaymentNotifyUrl());
 //        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/payplus/notify");
-        params.put("returnUrl", "https://www.google.com");
+        params.put("returnUrl", "https://paycoco.cocohaoya.com/api/pay/success");
         params.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
 
         String signStr = Md5Utils.sortMapAndSign(params, config.getBusinessAccount());
@@ -122,10 +122,10 @@ public class PayPlus extends OrderPay {
 
         HashMap<String, String> params = new HashMap<>();
         params.put("merId", config.getMchId());
-        params.put("orderId", withdrawal.getTransferId());
+        params.put("orderId", withdrawal.getTransferId().substring(0, 30));
         BigDecimal am = new BigDecimal(String.valueOf(withdrawal.getAmount()));
-//        BigDecimal amount = am.multiply(BigDecimal.ONE.subtract(config.getWithdrawFee())).setScale(2, RoundingMode.DOWN);
-        params.put("money", am.toString());
+        BigDecimal amount = am.multiply(BigDecimal.ONE.subtract(config.getWithdrawFee())).setScale(2, RoundingMode.DOWN);
+        params.put("money", amount.toString());
         params.put("name", account.getName());
         params.put("ka", account.getAccNo());
         params.put("zhihang", account.getIfsc());
@@ -187,8 +187,8 @@ public class PayPlus extends OrderPay {
     }
 
     public static void main(String[] args) {
-//        PayChannelConfig config = new PayChannelConfig();
-        PayWithdrawalConfig config = new PayWithdrawalConfig();
+        PayChannelConfig config = new PayChannelConfig();
+//        PayWithdrawalConfig config = new PayWithdrawalConfig();
         config.setName("payplus");
         config.setMchId("20210511 ");
         config.setAppId("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3ZutgeQDyv1OrtNLjXUNVALcmOFTyNKMn4v8EhXQSr5SgLf/Rmv4unpc0hqeDfZzL1Apk1vOhGn5tM27NNDXbo3eigNP38WMrlRk7LC1jdOIV2kOPjHROIX0smOBbk1sAm7Bksz6OvDhjreVomoPVU/CtVq2K35h0bKiPA88SOBC3iqwy7gPz8xbLTxbi/bODfMXerqntNzqVGp9MPxS3VRc3gBanP1ruEPiuadDCmot8GY073xQ0YFkZcvoID2uUODWRE1EGRm9DWYv7y0QiwCQOL7Vt2BSJHM2FadTyFae0y8Q4v7xGiquk7QWHqmjfFcEXPU/mTFVIkb0ApHLIQIDAQAB");
@@ -200,13 +200,13 @@ public class PayPlus extends OrderPay {
         config.setPayoutNotifyUrl("http://whw.ngrok2.xiaomiqiu.cn/api/payplus/payout/notify");
 
         PlayerOrder order = new PlayerOrder();
-        order.setOrderId(UUID.randomUUID().toString().replace("-", "").substring(0, 30));
-        order.setAmount(100);
+        order.setOrderId(UUID.randomUUID().toString().replace("-", ""));
+        order.setAmount(200);
 
-//        new CommonPay().getOrderPay(config.getName()).payment(order, config);
+        new CommonPay().getOrderPay(config.getName()).payment(order, config);
 
         PlayerWithdrawal withdrawal = new PlayerWithdrawal();
-        withdrawal.setTransferId(UUID.randomUUID().toString().replace("-", "").substring(0, 30));
+        withdrawal.setTransferId(UUID.randomUUID().toString().replace("-", ""));
         withdrawal.setAmount(100);
 //
         PlayerAccount account = new PlayerAccount();
@@ -214,6 +214,6 @@ public class PayPlus extends OrderPay {
         account.setAccNo("4111111111111111");
         account.setIfsc("PYTM0123456");
         account.setBankName("PYTM");
-        new CommonPay().getOrderPay(config.getName()).payout(withdrawal, config, account);
+//        new CommonPay().getOrderPay(config.getName()).payout(withdrawal, config, account);
     }
 }
