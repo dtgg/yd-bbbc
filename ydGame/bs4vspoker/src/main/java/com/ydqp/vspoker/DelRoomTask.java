@@ -40,6 +40,7 @@ public class DelRoomTask implements Runnable{
             for(Integer roomId : RoomManager.getInstance().getDelRoomId()) {
                 Room room = RoomManager.getInstance().getRoom(roomId);
                 if (room != null) {
+                    if (room.getRoomType() == 3) continue;
                     logger.info("删除房间开始，roomId = {}", roomId);
 
                     if (room.getRoomType() == 1 ||room.getRoomType() == 2) {

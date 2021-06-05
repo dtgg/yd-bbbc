@@ -18,6 +18,7 @@ import com.ydqp.vspoker.cache.RankingCache;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,6 +70,10 @@ public class VsPokerRoom extends Room {
     @Getter
     @Setter
     private int randomTime;
+
+    @Getter
+    @Setter
+    private Map<Integer, List<Boolean>> trendMap = new HashMap<>();
 
     @Override
     public void monitor() {

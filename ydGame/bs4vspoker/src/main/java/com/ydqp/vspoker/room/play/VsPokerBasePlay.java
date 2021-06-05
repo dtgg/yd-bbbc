@@ -21,4 +21,6 @@ public interface VsPokerBasePlay {
     void deletePlayerMap(long playerId);
 
     int getPlayerRoomId(long playerId);
+
+    void enterZjRoom(PlayerData playerData, ISession iSession, int roomId);
 }

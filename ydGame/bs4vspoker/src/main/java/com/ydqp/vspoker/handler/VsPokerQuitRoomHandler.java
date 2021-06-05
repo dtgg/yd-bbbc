@@ -11,6 +11,7 @@ import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerQuitRoom;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerQuitRoom;
+import com.ydqp.common.service.PlayerService;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
 
@@ -50,6 +51,10 @@ public class VsPokerQuitRoomHandler implements IServerHandler {
         }
 
         battleRole.setQuite(true);
+        if (vsPokerRoom.getRoomType() == 3) {
+            vsPokerRoom.getBattleRoleMap().remove(vsPokerQuitRoom.getPlayerId());
+            PlayerService.getInstance().updatePlayerRoomId(playerData.getPlayerId(), 0);
+        }
         logger.info("玩家离开房间, roomId:{}, playerId:{}", vsPokerQuitRoom.getRoomId(), vsPokerQuitRoom.getPlayerId());
 
         sVsPokerQuitRoom.setRoomId(vsPokerQuitRoom.getRoomId());
@@ -58,3 +63,5 @@ public class VsPokerQuitRoomHandler implements IServerHandler {
         iSession.sendMessageByID(sVsPokerQuitRoom, vsPokerQuitRoom.getConnId());
     }
 }
+
+

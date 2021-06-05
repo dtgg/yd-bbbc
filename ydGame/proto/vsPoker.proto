@@ -305,3 +305,21 @@ message SVsPokerFastRaceHistory {
   int64 playerId = 1;
   repeated SVsPokerFastRaceInfo fastRaceInfoList = 2;
 }
+
+message VsPokerZjRaceJoin {
+  int64 playerId = 1;
+  int32 raceType = 2;
+}
+
+message SVsPokerZjRaceJoin {
+  bool enterRoomSuccess = 1;
+  string message = 2;
+}
+
+message VsPokerTrend {
+  int32 playType = 1;
+}
+
+message SVsPokerTrend {
+  repeated bool trendList = 1;
+}

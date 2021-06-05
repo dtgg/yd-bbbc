@@ -43,8 +43,12 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
         this.totalRound = totalRound;
     }
 
-    public  AbstractVsPokerPlay(int basePoint, int roomType){
+    public AbstractVsPokerPlay(int basePoint, int roomType){
         this.basePoint = basePoint;
+        this.roomType = roomType;
+    }
+
+    public AbstractVsPokerPlay(int roomType){
         this.roomType = roomType;
     }
 
@@ -91,7 +95,11 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
             if (this.basePoint == basePoint) {
                 return true;
             }
-        }else {
+        } else if (roomType == 3) {
+            if (this.roomType == roomType) {
+                return true;
+            }
+        } else {
             if (this.roomType == roomType && this.basePoint == basePoint){
                 return true;
             }
@@ -134,5 +142,10 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
     @Override
     public int getPlayerRoomId(long playerId) {
         return playerMap.get(playerId) == null ? 0 : playerMap.get(playerId);
+    }
+
+    @Override
+    public void enterZjRoom(PlayerData playerData, ISession iSession, int roomId) {
+
     }
 }

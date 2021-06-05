@@ -25,6 +25,11 @@ public class VsPokerBeginHandler implements IRoomStatusHandler{
             //下注60秒时间到
             vsPokerRoom.setStatus(1);
 
+            if (vsPokerRoom.getRoomType() == 3) {
+                addVir(vsPokerRoom);
+                return;
+            }
+
             //添加机器人
             if (vsPokerRoom.getBattleRoleMap().size() < vsPokerRoom.getMaxPlayerNum()) {
                 List<Player> players = PlayerDao.getInstance().getVirPlayer();
@@ -57,6 +62,29 @@ public class VsPokerBeginHandler implements IRoomStatusHandler{
             }
         } else {
             vsPokerRoom.setCurWaitTime(vsPokerRoom.getCurWaitTime() - 1);
+        }
+    }
+
+    private void addVir(VsPokerRoom vsPokerRoom) {
+        List<Player> players = PlayerDao.getInstance().getVirPlayer();
+        //10个机器人
+        for (int i = 0; i < 10; i++) {
+            PlayerData playerData = new PlayerData(players.get(i));
+
+            vsPokerRoom.vsEnterRoom(playerData, null);
+            //vs_player_race
+            VsPlayerRace vsPlayerRace = new VsPlayerRace();
+            vsPlayerRace.setPlayerId(playerData.getPlayerId());
+            vsPlayerRace.setRaceId(vsPokerRoom.getRaceId());
+            vsPlayerRace.setRaceType(2);
+            vsPlayerRace.setBasePoint(vsPokerRoom.getBasePoint());
+            vsPlayerRace.setRank(0);
+            int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+            vsPlayerRace.setCreateTime(nowTime);
+            vsPlayerRace.setAppId(playerData.getAppId());
+            vsPlayerRace.setKfId(playerData.getKfId());
+            vsPlayerRace.setIsVir(playerData.getIsVir());
+            VsPlayerRaceDao.getInstance().insert(vsPlayerRace.getParameterMap());
         }
     }
 }

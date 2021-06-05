@@ -28,6 +28,9 @@ c->s
 7000029 = VsPokerRaceBasePoint        //快速赛底分等级
 7000030 = VsPokerFastRaceHistory      //快速赛历史记录
 
+7000031 = VsPokerZjRaceJoin     //zj场
+7000032 = VsPokerTrend          //走势图
+
 s->c
 7000001 = SVsFaPai //发牌
 7000002 = SVsCompareResult // 比牌结果
@@ -65,3 +68,6 @@ s->c
 7001028 = SVsPokerSignGameBonus        //快速赛奖励
 7001029 = SVsPokerRaceBasePoint        //快速赛底分等级
 7001030 = SVsPokerFastRaceHistory      //快速赛历史记录
+
+7001031 = SVsPokerZjRaceJoin     //zj场
+7001032 = SVsPokerTrend          //走势图

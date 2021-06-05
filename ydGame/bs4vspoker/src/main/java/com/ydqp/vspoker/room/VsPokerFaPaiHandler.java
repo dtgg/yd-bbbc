@@ -35,6 +35,7 @@ public class VsPokerFaPaiHandler implements IRoomStatusHandler{
         vsPokerRoom.setStatus(2);
         vsPokerRoom.setCurWaitTime(15);
         logger.info("fapai end");
+        if (vsPokerRoom.getRoomType() == 3) return;
 
         //加载当前排名信息
         Set<String> rankInfo = RankingCache.getInstance().getRankInfo(vsPokerRoom.getRaceId(), 0, -1);

@@ -8,6 +8,7 @@ import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerWin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerPerRanking;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsTaoTai;
+import com.ydqp.common.service.PlayerService;
 import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.room.play.PlayVsPokerManager;
 import com.ydqp.vspoker.room.play.VsPokerBasePlay;
@@ -20,6 +21,10 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
     private static final Logger logger = LoggerFactory.getLogger(VsPokerSettlementHandler.class);
     @Override
     public void doHandler(VsPokerRoom vsPokerRoom) {
+        if (vsPokerRoom.getRoomType() == 3) {
+            zjPaiFu(vsPokerRoom);
+            return;
+        }
         paiFu(vsPokerRoom);
         //重置数据，房间状态
         vsPokerRoom.setRound(vsPokerRoom.getRound() + 1);
@@ -104,6 +109,57 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             if (battleRole.isQuite()) continue;
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
             //@TODO 数据库更新
+        }
+    }
+
+    private void zjPaiFu (VsPokerRoom vsPokerRoom) {
+        Map<Long, PlayerWin> playerWinMap = new HashMap<>();
+        for (int i = 1; i <= 4; i++){
+            PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
+            if (playerObject.getWin() == 1) {
+                Map<Long, Double> betBattleRoleId = playerObject.getBetBattleRoleId();
+                if (betBattleRoleId == null) {
+                    continue;
+                }
+
+                for (Map.Entry<Long, Double> entry : betBattleRoleId.entrySet()) {
+                    BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(entry.getKey());
+                    if (battleRole != null && battleRole.getIsVir() == 0) {
+                        PlayerWin playerWin = playerWinMap.get(battleRole.getPlayerId());
+                        if (playerWin == null) {
+                            playerWin = new PlayerWin();
+
+                        }
+                        playerWin.getWinTypes().add(i);
+                        playerWin.setWinMoney(playerWin.getWinMoney() + entry.getValue());
+                        playerWinMap.put(battleRole.getPlayerId(), playerWin);
+                    }
+                }
+            }
+        }
+
+        for (Map.Entry<Long, PlayerWin> entry : playerWinMap.entrySet()) {
+            BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(entry.getKey());
+            if (battleRole == null) {
+                logger.error("结算时进行赔付，结果没找到下注的battleRole,playerId = {} money = {}", entry.getKey(),
+                        JSONObject.toJSONString(entry.getValue()));
+                continue;
+            }
+            if (battleRole.getIsVir() == 1) continue;
+            //赔付
+            SVsPlayerWin sVsPlayerWin = new SVsPlayerWin();
+            double peiM = entry.getValue().getWinMoney() * 2;
+            battleRole.setPlayerZJ(battleRole.getPlayerZJ() + peiM);
+
+            sVsPlayerWin.setRoomId(vsPokerRoom.getRoomId());
+            sVsPlayerWin.setPlayerId(battleRole.getPlayerId());
+            sVsPlayerWin.setTotalMoney(battleRole.getPlayerZJ());
+            sVsPlayerWin.setWinMoney(peiM);
+            sVsPlayerWin.setWinTypes(entry.getValue().getWinTypes());
+
+            vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
+            //数据库更新
+            PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
         }
     }
 

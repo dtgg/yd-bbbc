@@ -36,6 +36,8 @@ public class PlayVsPokerManager {
 
     private final List<VsPokerBasePlay> zjRacePlayObjects = new ArrayList<>();
 
+    private final List<VsPokerBasePlay> zjPlayObjects = new ArrayList<>();
+
 
     public void generaPlayObject(int roomType, int basePoint, VsRace vsRace, int totalRound) {
         VsPokerRoom vsPokerRoom = null;
@@ -70,6 +72,12 @@ public class PlayVsPokerManager {
             }
         } else if (roomType == 2) {
             for(VsPokerBasePlay vsPokerBasePlay : zjRacePlayObjects) {
+                if (vsPokerBasePlay.checkTheRoomType(roomType, basePoint, raceId)) {
+                    return vsPokerBasePlay;
+                }
+            }
+        } else if (roomType == 3) {
+            for(VsPokerBasePlay vsPokerBasePlay : zjPlayObjects) {
                 if (vsPokerBasePlay.checkTheRoomType(roomType, basePoint, raceId)) {
                     return vsPokerBasePlay;
                 }

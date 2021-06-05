@@ -102,3 +102,5 @@ CREATE TABLE `vs_race_config`
     `enabled`   int(11) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+ALTER TABLE vs_race_config ADD COLUMN raceType INT(10) DEFAULT 1 AFTER id;

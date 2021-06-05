@@ -15,6 +15,7 @@ public class VsRaceConfig implements Serializable {
     public static final String BASEPOINT_NAME = "basePoint";
     public static final String FREQUENCY_NAME = "frequency";
     public static final String ENABLED_NAME = "enabled";
+    public static final String RACETYP_NAME = "raceType";
 
 
     private int id;
@@ -59,6 +60,17 @@ public class VsRaceConfig implements Serializable {
     public void setEnabled(int enabled) {
         this.enabled = enabled;
         entityMap.put(ENABLED_NAME, enabled);
+    }
+
+    private int raceType;
+
+    public int getRaceType() {
+        return raceType;
+    }
+
+    public void setRaceType(int raceType) {
+        this.raceType = raceType;
+        entityMap.put(RACETYP_NAME, raceType);
     }
 
     public Object getValueByFieldName(String fieldName) {

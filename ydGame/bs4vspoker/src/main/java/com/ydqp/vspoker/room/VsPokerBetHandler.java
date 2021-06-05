@@ -31,6 +31,11 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
         } else {
             vsPokerRoom.setCurWaitTime(vsPokerRoom.getCurWaitTime() - 1);
 
+            if (vsPokerRoom.getRoomType() == 3) {
+                zjVirBet(vsPokerRoom);
+                return;
+            }
+
             Map<Integer, Poker> pokerMap = vsPokerRoom.getPokerMap();
             Poker bankPoker = vsPokerRoom.getPokerMap().get(1);
             List<Integer> winPlayTypes = new ArrayList<>();
@@ -275,6 +280,26 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             for (int i = 0; i < tenNum; i++) {
                 xiazhu(vsPokerRoom, playType, playerId, 10, battleRole);
             }
+        }
+    }
+
+    private void zjVirBet(VsPokerRoom vsPokerRoom) {
+        for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
+            if (entry.getValue().getIsVir() == 0) continue;
+
+            if (getDivisor() == 0) continue;
+            int point = randomBet(entry.getValue().getPlayerZJ().intValue());
+            if (entry.getValue().getPlayerZJ() < point) continue;
+
+            wait(vsPokerRoom.getBattleRoleMap().size());
+
+            VsPokerXiazhu vsPokerXiazhu = new VsPokerXiazhu();
+            vsPokerXiazhu.setRoomId(vsPokerRoom.getRoomId());
+            vsPokerXiazhu.setPlayType(getPlayType());
+            vsPokerXiazhu.setPlayerId(entry.getKey());
+            vsPokerXiazhu.setMoney(point);
+            vsPokerRoom.playerXiazhu(null, entry.getValue(), vsPokerXiazhu);
+            xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), point, entry.getValue());
         }
     }
 }

@@ -147,8 +147,13 @@ public abstract class Room implements IRoom{
         //新玩家进来
         battleRole = new BattleRole();
         battleRole.setConnId(playerData.getSessionId());
-        battleRole.setPlayerZJ(playerData.getZjPoint());
-        battleRole.setRankZJ(playerData.getZjPoint());
+        if (playerData.getIsVir() == 1) {
+            battleRole.setPlayerZJ(10000D);
+            battleRole.setRankZJ(10000D);
+        } else {
+            battleRole.setPlayerZJ(playerData.getZjPoint());
+            battleRole.setRankZJ(playerData.getZjPoint());
+        }
         battleRole.setPlayerId(playerData.getPlayerId());
         battleRole.setPlayerName(playerData.getPlayerName());
         battleRole.setPlayerUrl(playerData.getHeadUrl());

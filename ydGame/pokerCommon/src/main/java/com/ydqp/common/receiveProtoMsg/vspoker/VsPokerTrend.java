@@ -1,0 +1,32 @@
+package com.ydqp.common.receiveProtoMsg.vspoker;
+
+import com.baidu.bjf.remoting.protobuf.Codec;
+import com.baidu.bjf.remoting.protobuf.FieldType;
+import com.baidu.bjf.remoting.protobuf.ProtobufProxy;
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
+import com.cfq.annotation.GenProto;
+import com.cfq.annotation.ReceiveCommandAnnotation;
+import com.cfq.message.AbstartParaseMessage;
+import com.cfq.message.NetProtoMessage;
+import lombok.Getter;
+import lombok.Setter;
+
+@ReceiveCommandAnnotation(command = 7000007)
+@GenProto(modulePro = "vsPoker")
+public class VsPokerTrend extends AbstartParaseMessage {
+
+    @Getter
+    @Setter
+    @Protobuf(fieldType = FieldType.INT32, order = 1)
+    private int playType;
+
+    @Override
+    public AbstartParaseMessage paraseMessage(NetProtoMessage netProtoMessage) throws Exception {
+        byte[] body = netProtoMessage.getNetProtoMessageBody().getBody();
+
+        Codec<VsPokerTrend> vsPokerTrendCodec = ProtobufProxy
+                .create(VsPokerTrend.class);
+
+        return vsPokerTrendCodec.decode(body);
+    }
+}
