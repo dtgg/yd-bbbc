@@ -4,14 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.ThreadManager;
+import com.ydqp.common.entity.VsZjPlayerRace;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerWin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerPerRanking;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsTaoTai;
 import com.ydqp.common.service.PlayerService;
 import com.ydqp.vspoker.cache.RankingCache;
+import com.ydqp.vspoker.dao.VsZjPlayerRaceDao;
 import com.ydqp.vspoker.room.play.PlayVsPokerManager;
 import com.ydqp.vspoker.room.play.VsPokerBasePlay;
+import com.ydqp.vspoker.room.play.ZjVsPlayObject;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -23,13 +26,13 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
     public void doHandler(VsPokerRoom vsPokerRoom) {
         if (vsPokerRoom.getRoomType() == 3) {
             zjPaiFu(vsPokerRoom);
-            return;
+        } else {
+            paiFu(vsPokerRoom);
+            vsPokerRoom.setRankPlayerIds(new ArrayList<>());
+            vsPokerRoom.setVirBet(false);
         }
-        paiFu(vsPokerRoom);
         //重置数据，房间状态
         vsPokerRoom.setRound(vsPokerRoom.getRound() + 1);
-        vsPokerRoom.setRankPlayerIds(new ArrayList<>());
-        vsPokerRoom.setVirBet(false);
 
         for (int i = 1; i <= 4; i++) {
             PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
@@ -39,6 +42,9 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         }
         vsPokerRoom.getPokerMap().clear();
         vsPokerRoom.setStatus(0);
+        if (vsPokerRoom.getRoomType() == 3) {
+            return;
+        }
 
         if(vsPokerRoom.getRoomType() == 1 || vsPokerRoom.getRoomType() == 2) {
             //淘汰用户
@@ -106,7 +112,9 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             sVsPlayerWin.setWinMoney(peiM);
             sVsPlayerWin.setWinTypes(entry.getValue().getWinTypes());
 
-            if (battleRole.isQuite()) continue;
+            if (battleRole.isQuite()) {
+                continue;
+            }
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
             //@TODO 数据库更新
         }
@@ -114,6 +122,7 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
 
     private void zjPaiFu (VsPokerRoom vsPokerRoom) {
         Map<Long, PlayerWin> playerWinMap = new HashMap<>();
+        int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
         for (int i = 1; i <= 4; i++){
             PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
             if (playerObject.getWin() == 1) {
@@ -135,6 +144,28 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
                         playerWinMap.put(battleRole.getPlayerId(), playerWin);
                     }
                 }
+            } else {
+                //未中奖
+                Map<Long, Double> betBattleRoleId = playerObject.getBetBattleRoleId();
+                if (betBattleRoleId == null) {
+                    continue;
+                }
+
+                for (Map.Entry<Long, Double> entry : betBattleRoleId.entrySet()) {
+                    BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(entry.getKey());
+                    if (battleRole != null && battleRole.getIsVir() == 0) {
+                        VsZjPlayerRace zjPlayerRace = new VsZjPlayerRace();
+                        zjPlayerRace.setPlayerId(battleRole.getPlayerId());
+                        zjPlayerRace.setRaceType(3);
+                        zjPlayerRace.setRaceId(vsPokerRoom.getRaceId());
+                        zjPlayerRace.setRound(vsPokerRoom.getRound());
+                        zjPlayerRace.setAmount(entry.getValue());
+                        zjPlayerRace.setIsAward(0);
+                        zjPlayerRace.setBonus(0);
+                        zjPlayerRace.setCreateTime(nowTime);
+                        VsZjPlayerRaceDao.getInstance().insert(zjPlayerRace.getParameterMap());
+                    }
+                }
             }
         }
 
@@ -145,10 +176,12 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
                         JSONObject.toJSONString(entry.getValue()));
                 continue;
             }
-            if (battleRole.getIsVir() == 1) continue;
+            if (battleRole.getIsVir() == 1) {
+                continue;
+            }
             //赔付
             SVsPlayerWin sVsPlayerWin = new SVsPlayerWin();
-            double peiM = entry.getValue().getWinMoney() * 2;
+            double peiM = entry.getValue().getWinMoney() * 1.9;
             battleRole.setPlayerZJ(battleRole.getPlayerZJ() + peiM);
 
             sVsPlayerWin.setRoomId(vsPokerRoom.getRoomId());
@@ -160,6 +193,17 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
             //数据库更新
             PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
+
+            VsZjPlayerRace zjPlayerRace = new VsZjPlayerRace();
+            zjPlayerRace.setPlayerId(battleRole.getPlayerId());
+            zjPlayerRace.setRaceType(3);
+            zjPlayerRace.setRaceId(vsPokerRoom.getRaceId());
+            zjPlayerRace.setRound(vsPokerRoom.getRound());
+            zjPlayerRace.setAmount(entry.getValue().getWinMoney());
+            zjPlayerRace.setIsAward(1);
+            zjPlayerRace.setBonus(peiM);
+            zjPlayerRace.setCreateTime(nowTime);
+            VsZjPlayerRaceDao.getInstance().insert(zjPlayerRace.getParameterMap());
         }
     }
 
@@ -187,7 +231,9 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
                 Long rankNo = RankingCache.getInstance().getRankNo(vsPokerRoom.getRaceId(), entry.getKey());
                 int rank = rankNo.intValue() + 1;
                 Double bonus = GameBonusManager.getInstance().getBonus(vsPokerRoom, rank);
-                if (bonus == null) bonus = 0D;
+                if (bonus == null) {
+                    bonus = 0D;
+                }
                 sVsTaoTai.setBonus(bonus);
                 sVsTaoTai.setRank(rank);
 
@@ -209,7 +255,9 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
         Map<Long, BattleRole> battleRoleMap = vsPokerRoom.getBattleRoleMap();
 
         Set<String> rankInfo = RankingCache.getInstance().getRankInfo(raceId, 0, -1);
-        if (CollectionUtils.isEmpty(rankInfo)) return;
+        if (CollectionUtils.isEmpty(rankInfo)) {
+            return;
+        }
 
         List<Long> playerIds = new ArrayList<>();
         for (String s : rankInfo) {
@@ -223,7 +271,9 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
                     logger.info("更新排名：raceId：{}，playerId：{}，rank：{}, zj:{}, round:{}",
                             raceId, entry.getKey(), rankNo + 1, entry.getValue().getPlayerZJ(), vsPokerRoom.getRound());
 
-                    if (entry.getValue().isQuite()) continue;
+                    if (entry.getValue().isQuite()) {
+                        continue;
+                    }
                     SVsPokerPerRanking sVsPokerPerRanking = new SVsPokerPerRanking();
                     sVsPokerPerRanking.setPlayerId(playerIds.get(i));
                     sVsPokerPerRanking.setRank(i + 1);

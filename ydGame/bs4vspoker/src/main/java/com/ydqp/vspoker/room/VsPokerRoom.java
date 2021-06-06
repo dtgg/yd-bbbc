@@ -11,9 +11,11 @@ import com.ydqp.common.poker.Poker;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.poker.room.Room;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerXiazhu;
+import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.vspoker.SPlayerInfo;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerXiazhu;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRoomInfo;
+import com.ydqp.common.service.PlayerService;
 import com.ydqp.vspoker.cache.RankingCache;
 import lombok.Getter;
 import lombok.Setter;
@@ -176,6 +178,16 @@ public class VsPokerRoom extends Room {
         sVsPlayerXiazhu.setBattleRoleMoney(battleRole.getPlayerZJ());
         if (battleRole.getIsVir() == 0) {
             this.sendMessageToBattle(sVsPlayerXiazhu, battleRole.getPlayerId());
+        }
+
+        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
+        if (vsPokerRoom.getRoomType() == 3) {
+            PlayerService.getInstance().updatePlayerZjPoint(vsPokerXiazhu.getMoney(), player.getId());
+
+            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+            coinPointSuccess.setCoinPoint(player.getZjPoint() - vsPokerXiazhu.getMoney());
+            coinPointSuccess.setPlayerId(player.getId());
+            this.sendMessageToBattle(coinPointSuccess, battleRole.getPlayerId());
         }
     }
 }

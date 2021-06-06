@@ -20,6 +20,7 @@ public class VspokerMain {
         new Timer().schedule(new VsPokerMaintainTimer() , 1000, 10000);
 
         PlayVsPokerManager.getInstance().loadFastRaceConfig();
+        PlayVsPokerManager.getInstance().loadZjRace();
 
         DispatchMessage serverDispatchMessage = new DispatchMessage();
         IServer iServer = new Server();

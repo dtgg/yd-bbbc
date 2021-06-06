@@ -52,6 +52,12 @@ public abstract class AbstractVsPokerPlay implements VsPokerBasePlay {
         this.roomType = roomType;
     }
 
+    public AbstractVsPokerPlay(int roomType, int raceId, int totalRound){
+        this.roomType = roomType;
+        this.raceId = raceId;
+        this.totalRound = -1;
+    }
+
     @Override
     public VsPokerRoom generatorRoom() {
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().createVsPokerRoom(roomType,basePoint);

@@ -12,6 +12,8 @@ import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerXiazhu;
+import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
+import com.ydqp.common.service.PlayerService;
 import com.ydqp.vspoker.room.RoomManager;
 import com.ydqp.vspoker.room.VsPokerRoom;
 
@@ -36,8 +38,8 @@ public class VsPokerXiazhuHandler implements IServerHandler {
             return;
         }
 
+        Player player = PlayerDao.getInstance().queryById(playerData.getPlayerId());
         if (vsPokerRoom.getRoomType() == 3) {
-            Player player = PlayerDao.getInstance().queryById(playerData.getPlayerId());
             if(player == null) {
                 logger.error("no player");
                 return;
@@ -64,6 +66,6 @@ public class VsPokerXiazhuHandler implements IServerHandler {
             }
         }
 
-        vsPokerRoom.playerXiazhu(null, battleRole, vsPokerXiazhu);
+        vsPokerRoom.playerXiazhu(player, battleRole, vsPokerXiazhu);
     }
 }

@@ -41,7 +41,7 @@ public class VsPokerDao {
     }
 
     public VsRace getRaceById(int id) {
-        String sql = "select *from vs_race where id = " + id + ";";
+        String sql = "select * from vs_race where id = " + id + ";";
         return (VsRace) JdbcOrm.getInstance().getBean(sql, VsRace.class);
     }
 
@@ -53,6 +53,11 @@ public class VsPokerDao {
     public long save(Map<String, Object> parameterMap) {
         Object primkey = JdbcOrm.getInstance().insertReturnPrimkey("vs_race", parameterMap);
         return (long) primkey;
+    }
+
+    public VsRace getRaceByType(int raceType) {
+        String sql = "select * from vs_race where raceType = " + raceType + ";";
+        return (VsRace) JdbcOrm.getInstance().getBean(sql, VsRace.class);
     }
 
     public static void main(String[] args) {

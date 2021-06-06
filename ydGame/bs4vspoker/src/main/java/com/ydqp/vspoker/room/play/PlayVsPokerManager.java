@@ -8,6 +8,7 @@ import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.CommonUtils;
 import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsPlayerRaceDao;
+import com.ydqp.vspoker.dao.VsPokerDao;
 import com.ydqp.vspoker.room.VsPokerRoom;
 import lombok.Getter;
 import org.apache.commons.collections.CollectionUtils;
@@ -56,6 +57,13 @@ public class PlayVsPokerManager {
             zjRacePlayObjects.add(zjRaceVsPokerPlayObject);
             vsPokerRoom = zjRaceVsPokerPlayObject.generatorRoom();
             vsPokerRoom.setBonus(vsRace.getBasePoint() * vsRace.getCurPlayerNum());
+        }
+
+        if (roomType == 3) {
+            //zj场
+            RaceVsPokerPlayObject zjVsPokerPlayObject = new RaceVsPokerPlayObject(basePoint,roomType, vsRace.getId(), totalRound);
+            zjPlayObjects.add(zjVsPokerPlayObject);
+            return;
         }
 
         addPlayerInfo(vsPokerRoom, vsRace.getId());
@@ -120,5 +128,27 @@ public class PlayVsPokerManager {
             FastRaceVsPlayObject playChipObject = new FastRaceVsPlayObject(integer, 2);
             zjRacePlayObjects.add(playChipObject);
         }
+    }
+
+    public void loadZjRace () {
+        VsRace vsRace = VsPokerDao.getInstance().getRaceByType(3);
+        if (vsRace == null) {
+            int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+            vsRace = new VsRace();
+            vsRace.setBasePoint(0);
+            vsRace.setBeginTime(nowTime);
+            vsRace.setCreateTime(nowTime);
+            vsRace.setCurPlayerNum(0);
+            vsRace.setIsPermission(0);
+            vsRace.setMaxPlayerNum(-1);
+            vsRace.setRaceType(3);
+            vsRace.setStatus(0);
+            vsRace.setTotalRound(-1);
+            long id = VsPokerDao.getInstance().save(vsRace.getParameterMap());
+            vsRace.setId(new Long(id).intValue());
+        }
+
+        ZjVsPlayObject playChipObject = new ZjVsPlayObject(3, vsRace.getId());
+        zjPlayObjects.add(playChipObject);
     }
 }
