@@ -13,6 +13,7 @@ import com.ydqp.common.poker.room.Room;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerXiazhu;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.vspoker.SPlayerInfo;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayTypeWin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerXiazhu;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRoomInfo;
 import com.ydqp.common.service.PlayerService;
@@ -20,6 +21,7 @@ import com.ydqp.vspoker.cache.RankingCache;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +77,7 @@ public class VsPokerRoom extends Room {
 
     @Getter
     @Setter
-    private Map<Integer, List<Boolean>> trendMap = new HashMap<>();
+    private List<SVsPlayTypeWin> trendList = new ArrayList<>();
 
     @Override
     public void monitor() {

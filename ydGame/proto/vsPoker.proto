@@ -319,7 +319,9 @@ message SVsPokerZjRaceJoin {
 message VsPokerTrend {
   int32 playType = 1;
 }
-
+message SVsPlayTypeWin {
+  map<int32, bool> playTypeWinMap = 1;
+}
 message SVsPokerTrend {
-  repeated bool trendList = 1;
+  repeated SVsPlayTypeWin trendList = 1;
 }

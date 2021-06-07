@@ -8,7 +8,7 @@ import com.ydqp.common.poker.Poker;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.sendProtoMsg.vspoker.SPlayerInfo;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsCompareResult;
-import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRoomInfo;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayTypeWin;
 
 import java.util.*;
 
@@ -100,12 +100,6 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
                     sPlayerInfo.setWin(0);
                     sPlayerInfo.setWinBetPool(betMoney * 2);
                     vsPokerRoom.getPlayerObjectMap().get(i).setWin(0);
-
-                    if (vsPokerRoom.getTrendMap().get(i + 1) == null) {
-                        vsPokerRoom.getTrendMap().put(i + 1, new ArrayList<Boolean>(){{add(!isBankWin(bankPoker, playerPoker));}});
-                    } else {
-                        vsPokerRoom.getTrendMap().get(i + 1).add(!isBankWin(bankPoker, playerPoker));
-                    }
                 }
                 sVsCompareResult.getSPlayerInfoMap().put(i, sPlayerInfo);
             }
@@ -114,6 +108,18 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
             //发送大小结果
             vsPokerRoom.sendMessageToBattle(sVsCompareResult, entry.getKey());
         }
+
+        Map<Integer, Poker> pokerMap = vsPokerRoom.getPokerMap();
+        Poker newBankPoker = pokerMap.get(1);
+        Map<Integer, Boolean> pokerWinMap = new HashMap<>();
+        for (int i = 1; i <= 4; i++) {
+            Poker playerPoker = vsPokerRoom.getPokerMap().get(i + 1);
+            pokerWinMap.put(i + 1, !isBankWin(newBankPoker, playerPoker));
+        }
+        SVsPlayTypeWin sVsPlayTypeWin = new SVsPlayTypeWin();
+        sVsPlayTypeWin.setPlayTypeWinMap(pokerWinMap);
+        vsPokerRoom.getTrendList().add(sVsPlayTypeWin);
+        if (vsPokerRoom.getTrendList().size() > 20) vsPokerRoom.getTrendList().remove(0);
     }
 
     private void changePoker(VsPokerRoom vsPokerRoom, Poker bankPoker) {
