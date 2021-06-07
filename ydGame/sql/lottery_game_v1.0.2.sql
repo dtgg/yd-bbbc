@@ -104,3 +104,16 @@ CREATE TABLE `vs_race_config`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 ALTER TABLE vs_race_config ADD COLUMN raceType INT(10) DEFAULT 1 AFTER id;
+--
+CREATE TABLE `vs_zj_player_race` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `playerId` bigint(20) NOT NULL,
+  `raceType` int(10) NOT NULL DEFAULT '0',
+  `raceId` int(10) NOT NULL DEFAULT '0',
+  `round` int(10) NOT NULL DEFAULT '0',
+  `amount` float(10,2) NOT NULL DEFAULT '0.00',
+  `isAward` int(10) NOT NULL DEFAULT '0',
+  `bonus` float(10,2) NOT NULL DEFAULT '0.00',
+  `createTime` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

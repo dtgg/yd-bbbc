@@ -298,8 +298,7 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             vsPokerXiazhu.setPlayType(getPlayType());
             vsPokerXiazhu.setPlayerId(entry.getKey());
             vsPokerXiazhu.setMoney(point);
-            vsPokerRoom.playerXiazhu(null, entry.getValue(), vsPokerXiazhu);
-            xiazhu(vsPokerRoom, getPlayType(), entry.getKey(), point, entry.getValue());
+            cycleXiazhu(vsPokerRoom, getPlayType(), entry.getKey(), point, entry.getValue());
         }
     }
 }
