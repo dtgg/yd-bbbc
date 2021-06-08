@@ -150,18 +150,33 @@ public class VsPokerRoom extends Room {
     }
 
     public void playerXiazhu(Player player, BattleRole battleRole, VsPokerXiazhu vsPokerXiazhu) {
-
-        battleRole.setPlayerZJ(battleRole.getPlayerZJ() - vsPokerXiazhu.getMoney());
-        SVsPlayerXiazhu sVsPlayerXiazhu = new SVsPlayerXiazhu();
-        sVsPlayerXiazhu.setRoomId(this.getRoomId());
-        sVsPlayerXiazhu.setPlayerId(battleRole.getPlayerId());
-        sVsPlayerXiazhu.setBetMoney(vsPokerXiazhu.getMoney());
-
         PlayerObject playerObject = this.getPlayerObjectMap().get(vsPokerXiazhu.getPlayType());
         if (playerObject == null) {
             logger.error("用户下注,传入类型不对, playtype = {}", vsPokerXiazhu.getPlayType());
             return;
         }
+
+        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
+        if (vsPokerRoom.getRoomType() == 3 && battleRole.getIsVir() == 0) {
+            PlayerService.getInstance().updatePlayerZjPoint(vsPokerXiazhu.getMoney(), battleRole.getPlayerId());
+            if (player == null) {
+                player = PlayerService.getInstance().queryByPlayerId(battleRole.getPlayerId());
+            }
+            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+            coinPointSuccess.setCoinPoint(player.getZjPoint() - vsPokerXiazhu.getMoney());
+            coinPointSuccess.setPlayerId(player.getId());
+            this.sendMessageToBattle(coinPointSuccess, battleRole.getPlayerId());
+        }
+
+        if (battleRole.getIsVir() == 0) {
+            battleRole.setPlayerZJ(battleRole.getPlayerZJ() - vsPokerXiazhu.getMoney());
+        }
+        SVsPlayerXiazhu sVsPlayerXiazhu = new SVsPlayerXiazhu();
+        sVsPlayerXiazhu.setRoomId(this.getRoomId());
+        sVsPlayerXiazhu.setPlayerId(battleRole.getPlayerId());
+        sVsPlayerXiazhu.setBetMoney(vsPokerXiazhu.getMoney());
+
+
         playerObject.setBetPool(playerObject.getBetPool() + vsPokerXiazhu.getMoney());
 
         Double betMoney = playerObject.getBetBattleRoleId().get(battleRole.getPlayerId());
@@ -180,16 +195,6 @@ public class VsPokerRoom extends Room {
         sVsPlayerXiazhu.setBattleRoleMoney(battleRole.getPlayerZJ());
         if (battleRole.getIsVir() == 0) {
             this.sendMessageToBattle(sVsPlayerXiazhu, battleRole.getPlayerId());
-        }
-
-        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
-        if (vsPokerRoom.getRoomType() == 3) {
-            PlayerService.getInstance().updatePlayerZjPoint(vsPokerXiazhu.getMoney(), player.getId());
-
-            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
-            coinPointSuccess.setCoinPoint(player.getZjPoint() - vsPokerXiazhu.getMoney());
-            coinPointSuccess.setPlayerId(player.getId());
-            this.sendMessageToBattle(coinPointSuccess, battleRole.getPlayerId());
         }
     }
 }

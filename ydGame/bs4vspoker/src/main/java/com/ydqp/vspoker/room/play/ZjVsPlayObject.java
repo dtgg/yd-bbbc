@@ -57,6 +57,7 @@ public class ZjVsPlayObject extends AbstractVsPokerPlay {
     @Override
     public VsPokerRoom generatorRoom() {
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().createVsPokerRoom(roomType,basePoint);
+        vsPokerRoom.setMaxPlayerNum(10);
         RoomManager.getInstance().putRoom(vsPokerRoom);
 
         roomIdList.add(vsPokerRoom.getRoomId());

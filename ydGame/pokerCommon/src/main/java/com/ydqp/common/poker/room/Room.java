@@ -59,6 +59,7 @@ public abstract class Room implements IRoom{
     public void sendMessageToBattles(AbstartCreateMessage abstartCreateMessage){
         //现发给正在打牌的用户
         for(Map.Entry<Long, BattleRole> entry : getBattleRoleMap().entrySet()) {
+            if (entry.getValue().getIsVir() == 1) continue;
             if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 ISession iSession = entry.getValue().getISession();
@@ -71,6 +72,7 @@ public abstract class Room implements IRoom{
 
         //发送给非战斗用户
         for(Map.Entry<Long, BattleRole> entry : getBattleRoleMap().entrySet()) {
+            if (entry.getValue().getIsVir() == 1) continue;
             if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 continue;
@@ -106,6 +108,7 @@ public abstract class Room implements IRoom{
             if (entry.getValue().getPlayerId() == playerId) {
                 continue;
             }
+            if (entry.getValue().getIsVir() == 1) continue;
             if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 ISession iSession = entry.getValue().getISession();
@@ -121,6 +124,7 @@ public abstract class Room implements IRoom{
             if (entry.getValue().getPlayerId() == playerId) {
                 continue;
             }
+            if (entry.getValue().getIsVir() == 1) continue;
             if (entry.getValue().isQuite()) continue;
             if(entry.getValue().isHaveBet()) {
                 continue;

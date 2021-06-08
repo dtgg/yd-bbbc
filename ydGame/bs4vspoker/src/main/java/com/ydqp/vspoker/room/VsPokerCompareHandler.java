@@ -25,6 +25,8 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
 
         if (vsPokerRoom.getRoomType() == 3) {
             zjPokerCompare(vsPokerRoom, bankPoker, sVsCompareResult);
+            vsPokerRoom.setStatus(4);
+            vsPokerRoom.setCurWaitTime(15);
             return;
         }
 
@@ -78,6 +80,7 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
     }
 
     private void zjPokerCompare(VsPokerRoom vsPokerRoom, Poker bankPoker, SVsCompareResult sVsCompareResult) {
+        logger.info("现金场比牌");
         if (vsPokerRoom.isHarvest()) {
             changePoker(vsPokerRoom, bankPoker);
         }

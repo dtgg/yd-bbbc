@@ -121,6 +121,7 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
     }
 
     private void zjPaiFu (VsPokerRoom vsPokerRoom) {
+        logger.info("现金场赔付");
         Map<Long, PlayerWin> playerWinMap = new HashMap<>();
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
         for (int i = 1; i <= 4; i++){

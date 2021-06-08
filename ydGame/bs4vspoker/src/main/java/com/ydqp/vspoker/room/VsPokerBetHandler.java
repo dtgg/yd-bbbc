@@ -284,12 +284,12 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
     }
 
     private void zjVirBet(VsPokerRoom vsPokerRoom) {
+        logger.info("现金场机器人下注");
         for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
             if (entry.getValue().getIsVir() == 0) continue;
-
-            if (getDivisor() == 0) continue;
             int point = randomBet(entry.getValue().getPlayerZJ().intValue());
-            if (entry.getValue().getPlayerZJ() < point) continue;
+            if (point == 0) continue;
+            if (entry.getValue().getPlayerZJ() < point) point = entry.getValue().getPlayerZJ().intValue();
 
             wait(vsPokerRoom.getBattleRoleMap().size());
 
