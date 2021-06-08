@@ -1,5 +1,7 @@
 package com.ydqp.vspoker.room;
 
+import com.cfq.log.Logger;
+import com.cfq.log.LoggerFactory;
 import com.ydqp.common.poker.room.Room;
 import com.ydqp.common.poker.vspoker.VsPokerCard;
 import com.ydqp.vspoker.NumberPool;
@@ -12,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RoomManager {
+    private static final Logger logger = LoggerFactory.getLogger(RoomManager.class);
 
     private RoomManager() {}
 

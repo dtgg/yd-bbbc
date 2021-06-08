@@ -16,6 +16,7 @@ public class VsRaceConfig implements Serializable {
     public static final String FREQUENCY_NAME = "frequency";
     public static final String ENABLED_NAME = "enabled";
     public static final String RACETYP_NAME = "raceType";
+    public static final String KILLAREA_NAME = "killArea";
 
 
     private int id;
@@ -71,6 +72,17 @@ public class VsRaceConfig implements Serializable {
     public void setRaceType(int raceType) {
         this.raceType = raceType;
         entityMap.put(RACETYP_NAME, raceType);
+    }
+
+    private int killArea;
+
+    public int getKillArea() {
+        return killArea;
+    }
+
+    public void setKillArea(int killArea) {
+        this.killArea = killArea;
+        entityMap.put(KILLAREA_NAME, killArea);
     }
 
     public Object getValueByFieldName(String fieldName) {

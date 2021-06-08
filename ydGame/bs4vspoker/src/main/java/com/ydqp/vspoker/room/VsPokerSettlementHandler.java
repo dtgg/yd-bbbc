@@ -1,11 +1,15 @@
 package com.ydqp.vspoker.room;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.ThreadManager;
+import com.ydqp.common.cache.PlayerCache;
+import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.VsZjPlayerRace;
 import com.ydqp.common.poker.room.BattleRole;
+import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerWin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerPerRanking;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsTaoTai;
@@ -121,8 +125,12 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
     }
 
     private void zjPaiFu (VsPokerRoom vsPokerRoom) {
+        logger.info("现金场赔付");
         Map<Long, PlayerWin> playerWinMap = new HashMap<>();
         int nowTime = new Long(System.currentTimeMillis() / 1000L).intValue();
+
+        Map<Long, Double> playerAmountMap = new HashMap<>();
+        Map<Long, Double> playerBonusMap = new HashMap<>();
         for (int i = 1; i <= 4; i++){
             PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
             if (playerObject.getWin() == 1) {
@@ -154,16 +162,11 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
                 for (Map.Entry<Long, Double> entry : betBattleRoleId.entrySet()) {
                     BattleRole battleRole = vsPokerRoom.getBattleRoleMap().get(entry.getKey());
                     if (battleRole != null && battleRole.getIsVir() == 0) {
-                        VsZjPlayerRace zjPlayerRace = new VsZjPlayerRace();
-                        zjPlayerRace.setPlayerId(battleRole.getPlayerId());
-                        zjPlayerRace.setRaceType(3);
-                        zjPlayerRace.setRaceId(vsPokerRoom.getRaceId());
-                        zjPlayerRace.setRound(vsPokerRoom.getRound());
-                        zjPlayerRace.setAmount(entry.getValue());
-                        zjPlayerRace.setIsAward(0);
-                        zjPlayerRace.setBonus(0);
-                        zjPlayerRace.setCreateTime(nowTime);
-                        VsZjPlayerRaceDao.getInstance().insert(zjPlayerRace.getParameterMap());
+                        if (playerAmountMap.get(battleRole.getPlayerId()) == null) {
+                            playerAmountMap.put(battleRole.getPlayerId(), entry.getValue());
+                        } else {
+                            playerAmountMap.put(battleRole.getPlayerId(), playerAmountMap.get(battleRole.getPlayerId()) + entry.getValue());
+                        }
                     }
                 }
             }
@@ -181,7 +184,7 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             }
             //赔付
             SVsPlayerWin sVsPlayerWin = new SVsPlayerWin();
-            double peiM = entry.getValue().getWinMoney() * 1.9;
+            double peiM = entry.getValue().getWinMoney() * 1.95;
             battleRole.setPlayerZJ(battleRole.getPlayerZJ() + peiM);
 
             sVsPlayerWin.setRoomId(vsPokerRoom.getRoomId());
@@ -193,15 +196,39 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
             //数据库更新
             PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
+            PlayerData playerData = PlayerCache.getInstance().getPlayer(battleRole.getConnId());
+            playerData.setZjPoint(playerData.getZjPoint() + peiM);
+            PlayerCache.getInstance().addPlayer(battleRole.getConnId(), playerData);
+            logger.info("现金场赔付：playerId:{}, amount:{}", entry.getKey(), peiM);
 
+            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+            coinPointSuccess.setPlayerId(entry.getKey());
+            coinPointSuccess.setCoinPoint(playerData.getZjPoint());
+            vsPokerRoom.sendMessageToBattle(coinPointSuccess, entry.getKey());
+
+            if (playerAmountMap.get(battleRole.getPlayerId()) == null) {
+                playerAmountMap.put(battleRole.getPlayerId(), entry.getValue().getWinMoney());
+            } else {
+                playerAmountMap.put(battleRole.getPlayerId(), playerAmountMap.get(battleRole.getPlayerId()) + entry.getValue().getWinMoney());
+            }
+            if (playerBonusMap.get(battleRole.getPlayerId()) == null) {
+                playerBonusMap.put(battleRole.getPlayerId(), peiM);
+            } else {
+                playerBonusMap.put(battleRole.getPlayerId(), playerBonusMap.get(battleRole.getPlayerId()) + peiM);
+            }
+        }
+
+        for (Map.Entry<Long, Double> entry : playerAmountMap.entrySet()) {
             VsZjPlayerRace zjPlayerRace = new VsZjPlayerRace();
-            zjPlayerRace.setPlayerId(battleRole.getPlayerId());
+            zjPlayerRace.setPlayerId(entry.getKey());
             zjPlayerRace.setRaceType(3);
             zjPlayerRace.setRaceId(vsPokerRoom.getRaceId());
             zjPlayerRace.setRound(vsPokerRoom.getRound());
-            zjPlayerRace.setAmount(entry.getValue().getWinMoney());
+            zjPlayerRace.setAmount(entry.getValue());
             zjPlayerRace.setIsAward(1);
-            zjPlayerRace.setBonus(peiM);
+            zjPlayerRace.setBonus(playerBonusMap.get(entry.getKey()) == null ? 0 : playerBonusMap.get(entry.getKey()));
+            zjPlayerRace.setAppId(vsPokerRoom.getBattleRoleMap().get(entry.getKey()).getAppId());
+            zjPlayerRace.setKfId(vsPokerRoom.getBattleRoleMap().get(entry.getKey()).getKfId());
             zjPlayerRace.setCreateTime(nowTime);
             VsZjPlayerRaceDao.getInstance().insert(zjPlayerRace.getParameterMap());
         }

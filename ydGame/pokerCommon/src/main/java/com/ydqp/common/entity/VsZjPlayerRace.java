@@ -19,6 +19,8 @@ public class VsZjPlayerRace implements Serializable {
     public static final String AMOUNT_NAME = "amount";
     public static final String ISAWARD_NAME = "isAward";
     public static final String BONUS_NAME = "bonus";
+    public static final String APPID_NAME = "appId";
+    public static final String KFID_NAME = "kfId";
     public static final String CREATETIME_NAME = "createTime";
 
 
@@ -108,6 +110,28 @@ public class VsZjPlayerRace implements Serializable {
     public void setBonus(double bonus) {
         this.bonus = bonus;
         entityMap.put(BONUS_NAME, bonus);
+    }
+
+    private int appId;
+
+    public int getAppId() {
+        return appId;
+    }
+
+    public void setAppId(int appId) {
+        this.appId = appId;
+        entityMap.put(APPID_NAME, appId);
+    }
+
+    private long kfId;
+
+    public long getKfId() {
+        return kfId;
+    }
+
+    public void setKfId(long kfId) {
+        this.kfId = kfId;
+        entityMap.put(KFID_NAME, kfId);
     }
 
     private int createTime;

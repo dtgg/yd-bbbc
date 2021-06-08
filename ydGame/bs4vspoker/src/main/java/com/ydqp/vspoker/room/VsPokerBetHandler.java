@@ -45,8 +45,6 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
                 if (!bankWin) winPlayTypes.add(pokerEntry.getKey() - 1);
             }
 
-            logger.info("wwwwwwwwwwwwwwww = {}", JSONObject.toJSONString(winPlayTypes));
-
             //虚拟用户下注
             //房间中的用户排名
             List<Long> rankPlayerList = vsPokerRoom.getRankPlayerIds();
@@ -286,10 +284,9 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
     private void zjVirBet(VsPokerRoom vsPokerRoom) {
         for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
             if (entry.getValue().getIsVir() == 0) continue;
-
-            if (getDivisor() == 0) continue;
-            int point = randomBet(entry.getValue().getPlayerZJ().intValue());
-            if (entry.getValue().getPlayerZJ() < point) continue;
+            int point = getRandomPoint();
+            if (point == 0) continue;
+            if (entry.getValue().getPlayerZJ() < point) point = entry.getValue().getPlayerZJ().intValue();
 
             wait(vsPokerRoom.getBattleRoleMap().size());
 
@@ -300,5 +297,11 @@ public class VsPokerBetHandler implements IRoomStatusHandler {
             vsPokerXiazhu.setMoney(point);
             cycleXiazhu(vsPokerRoom, getPlayType(), entry.getKey(), point, entry.getValue());
         }
+    }
+
+    private int getRandomPoint() {
+        int[] points = new int[]{10, 50, 200, 1000};
+        int index = new Random().nextInt(4);
+        return points[index];
     }
 }

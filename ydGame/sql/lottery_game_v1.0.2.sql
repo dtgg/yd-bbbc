@@ -117,3 +117,9 @@ CREATE TABLE `vs_zj_player_race` (
   `createTime` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+ALTER TABLE vs_race_config ADD COLUMN killArea INT(10) DEFAULT 2;
+--
+ALTER TABLE vs_zj_player_race ADD COLUMN appId INT(10) DEFAULT 0;
+ALTER TABLE vs_zj_player_race ADD COLUMN kfId BIGINT(20) DEFAULT 0;

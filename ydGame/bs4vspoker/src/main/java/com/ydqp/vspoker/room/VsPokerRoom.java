@@ -4,6 +4,7 @@ import com.cfq.connection.ISession;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.util.StackTraceUtil;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.VsRaceConfig;
@@ -13,6 +14,7 @@ import com.ydqp.common.poker.room.Room;
 import com.ydqp.common.receiveProtoMsg.vspoker.VsPokerXiazhu;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.vspoker.SPlayerInfo;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayTypeWin;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayerXiazhu;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRoomInfo;
 import com.ydqp.common.service.PlayerService;
@@ -20,7 +22,7 @@ import com.ydqp.vspoker.cache.RankingCache;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -75,7 +77,11 @@ public class VsPokerRoom extends Room {
 
     @Getter
     @Setter
-    private Map<Integer, List<Boolean>> trendMap = new HashMap<>();
+    private List<SVsPlayTypeWin> trendList = new ArrayList<>();
+
+    @Getter
+    @Setter
+    private VsRaceConfig vsRaceConfig;
 
     @Override
     public void monitor() {
@@ -143,23 +149,43 @@ public class VsPokerRoom extends Room {
         if (this.getStatus() == 3 || this.getStatus() == 4) {
             sVsPokerRoomInfo.setBankPoker(this.getPokerMap().get(1));
         }
+        sVsPokerRoomInfo.setBasePoint(this.getBasePoint());
 
         this.sendMessageToBattle(sVsPokerRoomInfo, battleRole.getPlayerId());
     }
 
     public void playerXiazhu(Player player, BattleRole battleRole, VsPokerXiazhu vsPokerXiazhu) {
-
-        battleRole.setPlayerZJ(battleRole.getPlayerZJ() - vsPokerXiazhu.getMoney());
-        SVsPlayerXiazhu sVsPlayerXiazhu = new SVsPlayerXiazhu();
-        sVsPlayerXiazhu.setRoomId(this.getRoomId());
-        sVsPlayerXiazhu.setPlayerId(battleRole.getPlayerId());
-        sVsPlayerXiazhu.setBetMoney(vsPokerXiazhu.getMoney());
-
         PlayerObject playerObject = this.getPlayerObjectMap().get(vsPokerXiazhu.getPlayType());
         if (playerObject == null) {
             logger.error("用户下注,传入类型不对, playtype = {}", vsPokerXiazhu.getPlayType());
             return;
         }
+
+        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
+        if (vsPokerRoom.getRoomType() == 3 && battleRole.getIsVir() == 0) {
+            PlayerService.getInstance().updatePlayerZjPoint(-vsPokerXiazhu.getMoney(), battleRole.getPlayerId());
+            if (player == null) {
+                player = PlayerService.getInstance().queryByPlayerId(battleRole.getPlayerId());
+            }
+            PlayerData playerData = PlayerCache.getInstance().getPlayer(vsPokerXiazhu.getConnId());
+            playerData.setZjPoint(playerData.getZjPoint() - vsPokerXiazhu.getMoney());
+            PlayerCache.getInstance().addPlayer(vsPokerXiazhu.getConnId(), playerData);
+
+            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+            coinPointSuccess.setCoinPoint(player.getZjPoint() - vsPokerXiazhu.getMoney());
+            coinPointSuccess.setPlayerId(player.getId());
+            this.sendMessageToBattle(coinPointSuccess, battleRole.getPlayerId());
+        }
+
+        if (battleRole.getIsVir() == 0) {
+            battleRole.setPlayerZJ(battleRole.getPlayerZJ() - vsPokerXiazhu.getMoney());
+        }
+        SVsPlayerXiazhu sVsPlayerXiazhu = new SVsPlayerXiazhu();
+        sVsPlayerXiazhu.setRoomId(this.getRoomId());
+        sVsPlayerXiazhu.setPlayerId(battleRole.getPlayerId());
+        sVsPlayerXiazhu.setBetMoney(vsPokerXiazhu.getMoney());
+
+
         playerObject.setBetPool(playerObject.getBetPool() + vsPokerXiazhu.getMoney());
 
         Double betMoney = playerObject.getBetBattleRoleId().get(battleRole.getPlayerId());
@@ -178,16 +204,6 @@ public class VsPokerRoom extends Room {
         sVsPlayerXiazhu.setBattleRoleMoney(battleRole.getPlayerZJ());
         if (battleRole.getIsVir() == 0) {
             this.sendMessageToBattle(sVsPlayerXiazhu, battleRole.getPlayerId());
-        }
-
-        VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
-        if (vsPokerRoom.getRoomType() == 3) {
-            PlayerService.getInstance().updatePlayerZjPoint(vsPokerXiazhu.getMoney(), player.getId());
-
-            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
-            coinPointSuccess.setCoinPoint(player.getZjPoint() - vsPokerXiazhu.getMoney());
-            coinPointSuccess.setPlayerId(player.getId());
-            this.sendMessageToBattle(coinPointSuccess, battleRole.getPlayerId());
         }
     }
 }

@@ -11,7 +11,7 @@ import com.cfq.message.NetProtoMessage;
 import lombok.Getter;
 import lombok.Setter;
 
-@ReceiveCommandAnnotation(command = 7000007)
+@ReceiveCommandAnnotation(command = 7000032)
 @GenProto(modulePro = "vsPoker")
 public class VsPokerTrend extends AbstartParaseMessage {
 

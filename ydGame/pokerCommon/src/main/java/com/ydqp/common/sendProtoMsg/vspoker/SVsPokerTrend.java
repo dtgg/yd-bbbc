@@ -12,15 +12,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
-@SendCommandAnnotation(command = 7001026)
+@SendCommandAnnotation(command = 7001032)
 @GenProto(modulePro = "vsPoker")
 public class SVsPokerTrend extends AbstartCreateMessage {
 
     @Getter
     @Setter
     @Protobuf(fieldType = FieldType.OBJECT , order = 1, description = "区域走势图")
-    private List<Boolean> trendList;
+    private List<SVsPlayTypeWin> trendList;
 
     @Override
     public NetProtoMessage encodeSendMessage() {

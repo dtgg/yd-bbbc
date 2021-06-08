@@ -47,4 +47,10 @@ public class BattleRole {
     @Setter
     @Getter
     private boolean isQuite;
+    @Setter
+    @Getter
+    private int appId;
+    @Getter
+    @Setter
+    private long kfId;
 }

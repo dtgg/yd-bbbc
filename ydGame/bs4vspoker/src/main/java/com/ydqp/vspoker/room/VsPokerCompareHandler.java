@@ -4,11 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
+import com.ydqp.common.poker.CompareUtil;
 import com.ydqp.common.poker.Poker;
 import com.ydqp.common.poker.room.BattleRole;
 import com.ydqp.common.sendProtoMsg.vspoker.SPlayerInfo;
 import com.ydqp.common.sendProtoMsg.vspoker.SVsCompareResult;
-import com.ydqp.common.sendProtoMsg.vspoker.SVsPokerRoomInfo;
+import com.ydqp.common.sendProtoMsg.vspoker.SVsPlayTypeWin;
 
 import java.util.*;
 
@@ -25,6 +26,8 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
 
         if (vsPokerRoom.getRoomType() == 3) {
             zjPokerCompare(vsPokerRoom, bankPoker, sVsCompareResult);
+            vsPokerRoom.setStatus(4);
+            vsPokerRoom.setCurWaitTime(15);
             return;
         }
 
@@ -78,8 +81,12 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
     }
 
     private void zjPokerCompare(VsPokerRoom vsPokerRoom, Poker bankPoker, SVsCompareResult sVsCompareResult) {
+        logger.info("现金场比牌");
         if (vsPokerRoom.isHarvest()) {
-            changePoker(vsPokerRoom, bankPoker);
+            logger.info("换牌前bankPoker：{}", JSON.toJSONString(bankPoker));
+            changePoker(vsPokerRoom);
+            bankPoker = vsPokerRoom.getPokerMap().get(1);
+            logger.info("换牌后bankPoker：{}", JSON.toJSONString(bankPoker));
         }
 
         for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
@@ -94,18 +101,12 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
 
                 Double betMoney = playerObject.getBetBattleRoleId().get(entry.getKey());
                 betMoney = betMoney == null ? 0 : betMoney;
-                sPlayerInfo.setBetPool(betMoney * 2);
+                sPlayerInfo.setBetPool(betMoney * 1.95);
 
                 if (isBankWin(bankPoker, playerPoker)) {
                     sPlayerInfo.setWin(0);
-                    sPlayerInfo.setWinBetPool(betMoney * 2);
+                    sPlayerInfo.setWinBetPool(betMoney * 1.95);
                     vsPokerRoom.getPlayerObjectMap().get(i).setWin(0);
-
-                    if (vsPokerRoom.getTrendMap().get(i + 1) == null) {
-                        vsPokerRoom.getTrendMap().put(i + 1, new ArrayList<Boolean>(){{add(!isBankWin(bankPoker, playerPoker));}});
-                    } else {
-                        vsPokerRoom.getTrendMap().get(i + 1).add(!isBankWin(bankPoker, playerPoker));
-                    }
                 }
                 sVsCompareResult.getSPlayerInfoMap().put(i, sPlayerInfo);
             }
@@ -114,23 +115,42 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
             //发送大小结果
             vsPokerRoom.sendMessageToBattle(sVsCompareResult, entry.getKey());
         }
+
+        Map<Integer, Poker> pokerMap = vsPokerRoom.getPokerMap();
+        Poker newBankPoker = pokerMap.get(1);
+        Map<Integer, Boolean> pokerWinMap = new HashMap<>();
+        for (int i = 1; i <= 4; i++) {
+            Poker playerPoker = vsPokerRoom.getPokerMap().get(i + 1);
+            pokerWinMap.put(i + 1, !isBankWin(newBankPoker, playerPoker));
+        }
+        SVsPlayTypeWin sVsPlayTypeWin = new SVsPlayTypeWin();
+        sVsPlayTypeWin.setPlayTypeWinMap(pokerWinMap);
+        vsPokerRoom.getTrendList().add(sVsPlayTypeWin);
+        if (vsPokerRoom.getTrendList().size() > 20) vsPokerRoom.getTrendList().remove(0);
     }
 
-    private void changePoker(VsPokerRoom vsPokerRoom, Poker bankPoker) {
+    private void changePoker(VsPokerRoom vsPokerRoom) {
         logger.info("换牌前：{}", JSON.toJSONString(vsPokerRoom.getPokerMap()));
         //真实用户下注金额, <poker,betAmount>
         Map<Integer, Double> pokerBetMap = new HashMap<>();
+        List<Poker> pokers = new ArrayList<>();
+        for (Map.Entry<Integer, Poker> entry : vsPokerRoom.getPokerMap().entrySet()) {
+            pokers.add(entry.getValue());
+        }
+
+        Double totalBet = 0D;
         for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
             //过滤虚拟用户
             if (entry.getValue().getIsVir() == 1) continue;
             for (int i = 1; i <= 4; i++) {
-//                Poker playerPoker = vsPokerRoom.getPokerMap().get(i + 1);
                 PlayerObject playerObject = vsPokerRoom.getPlayerObjectMap().get(i);
                 Double betMoney = playerObject.getBetBattleRoleId().get(entry.getKey());
                 betMoney = betMoney == null ? 0 : betMoney;
 
+                totalBet += betMoney;
                 if (pokerBetMap.get(i + 1) == null) {
-                    pokerBetMap.put(i + 1, betMoney);
+                    //加上区域ID，防止金额相同
+                    pokerBetMap.put(i + 1, betMoney + i + 1);
                 } else {
                     pokerBetMap.put(i + 1, pokerBetMap.get(i + 1) + betMoney);
                 }
@@ -138,6 +158,8 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
         }
         if (pokerBetMap.size() == 0) return;
         logger.info("各区域下注金额：{}", JSON.toJSONString(pokerBetMap));
+        if (totalBet == 0D) return;
+        if (vsPokerRoom.getVsRaceConfig().getKillArea() == 0) return;
 
         List<Double> list = new ArrayList<>();
         for (Map.Entry<Integer, Double> entry : pokerBetMap.entrySet()) {
@@ -145,28 +167,25 @@ public class VsPokerCompareHandler implements IRoomStatusHandler {
         }
         //下注金额从小到大排序
         Collections.sort(list);
+        //手牌从小到大排序
+        logger.info("排序前手牌：{}", JSON.toJSONString(pokers));
+        Collections.sort(pokers, new CompareUtil(1));
+        logger.info("排序后手牌：{}", JSON.toJSONString(pokers));
+
+        logger.info("排序后手牌：{}", JSON.toJSONString(pokers));
+        Poker bankPoker = pokers.get(vsPokerRoom.getVsRaceConfig().getKillArea());
+        vsPokerRoom.getPokerMap().put(1, bankPoker);
+        pokers.remove(vsPokerRoom.getVsRaceConfig().getKillArea());
 
         //换牌
         for (int i = 0; i < list.size(); i++) {
             for (Map.Entry<Integer, Double> entry : pokerBetMap.entrySet()) {
-                //比庄家小的两个牌
                 if (list.get(i).equals(entry.getValue())) {
-                    Poker playerPoker = vsPokerRoom.getPokerMap().get(entry.getKey());
-                    if (i < 2) {
-                        if (isBankWin(bankPoker, playerPoker)) {
-                            vsPokerRoom.getPokerMap().put(entry.getKey(), bankPoker);
-                            bankPoker = playerPoker;
-                        }
-                    } else {
-                        if (!isBankWin(bankPoker, playerPoker)) {
-                            vsPokerRoom.getPokerMap().put(entry.getKey(), bankPoker);
-                            bankPoker = playerPoker;
-                        }
-                    }
+                    Poker playerPoker = pokers.get(3-i);
+                    vsPokerRoom.getPokerMap().put(entry.getKey(), playerPoker);
                 }
             }
         }
-        vsPokerRoom.getPokerMap().put(1, bankPoker);
         logger.info("换牌后：{}", JSON.toJSONString(vsPokerRoom.getPokerMap()));
     }
 }
