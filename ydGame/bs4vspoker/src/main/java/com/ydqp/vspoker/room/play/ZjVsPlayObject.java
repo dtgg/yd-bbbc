@@ -62,18 +62,6 @@ public class ZjVsPlayObject extends AbstractVsPokerPlay {
 
         roomIdList.add(vsPokerRoom.getRoomId());
 
-        VsRaceConfig raceConfig = getRaceConfig();
-        vsPokerRoom.setHarvest(raceConfig != null && getFrequencyNum() <= raceConfig.getFrequency());
-
         return vsPokerRoom;
-    }
-
-    private VsRaceConfig getRaceConfig() {
-        return VsRaceConfigDao.getInstance().getZjRaceConfig();
-    }
-
-    private int getFrequencyNum() {
-        Random random = new Random();
-        return 1 + random.nextInt(10);
     }
 }

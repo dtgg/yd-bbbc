@@ -14,7 +14,7 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
-@SendCommandAnnotation(command = 7001026)
+@SendCommandAnnotation(command = 7001032)
 @GenProto(modulePro = "vsPoker")
 public class SVsPokerTrend extends AbstartCreateMessage {
 

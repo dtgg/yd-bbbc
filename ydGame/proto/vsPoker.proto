@@ -85,6 +85,7 @@ message SVsPokerRoomInfo {
   int32 rank = 8;
   int32 round = 9;
   int32 raceId = 10;
+  int32 basePoint = 11;
 }
 message SVsTaoTai {
   // roomId

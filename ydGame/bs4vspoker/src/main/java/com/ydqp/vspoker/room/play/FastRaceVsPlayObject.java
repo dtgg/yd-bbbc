@@ -62,6 +62,7 @@ public class FastRaceVsPlayObject extends AbstractVsPokerPlay {
 
     @Override
     public boolean checkRoomId(PlayerData playerData, long playerId) {
+        if (playerData.getRoomId() == 0) return false;
         if (roomIdList.contains(playerData.getRoomId())) {
             VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(playerData.getRoomId());
             if (vsPokerRoom == null) {

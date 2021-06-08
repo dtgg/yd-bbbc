@@ -4,6 +4,7 @@ import com.cfq.connection.ISession;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.cfq.util.StackTraceUtil;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.data.PlayerData;
 import com.ydqp.common.entity.Player;
 import com.ydqp.common.entity.VsRaceConfig;
@@ -22,7 +23,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -78,6 +78,10 @@ public class VsPokerRoom extends Room {
     @Getter
     @Setter
     private List<SVsPlayTypeWin> trendList = new ArrayList<>();
+
+    @Getter
+    @Setter
+    private VsRaceConfig vsRaceConfig;
 
     @Override
     public void monitor() {
@@ -145,6 +149,7 @@ public class VsPokerRoom extends Room {
         if (this.getStatus() == 3 || this.getStatus() == 4) {
             sVsPokerRoomInfo.setBankPoker(this.getPokerMap().get(1));
         }
+        sVsPokerRoomInfo.setBasePoint(this.getBasePoint());
 
         this.sendMessageToBattle(sVsPokerRoomInfo, battleRole.getPlayerId());
     }
@@ -158,10 +163,14 @@ public class VsPokerRoom extends Room {
 
         VsPokerRoom vsPokerRoom = RoomManager.getInstance().getRoom(vsPokerXiazhu.getRoomId());
         if (vsPokerRoom.getRoomType() == 3 && battleRole.getIsVir() == 0) {
-            PlayerService.getInstance().updatePlayerZjPoint(vsPokerXiazhu.getMoney(), battleRole.getPlayerId());
+            PlayerService.getInstance().updatePlayerZjPoint(-vsPokerXiazhu.getMoney(), battleRole.getPlayerId());
             if (player == null) {
                 player = PlayerService.getInstance().queryByPlayerId(battleRole.getPlayerId());
             }
+            PlayerData playerData = PlayerCache.getInstance().getPlayer(vsPokerXiazhu.getConnId());
+            playerData.setZjPoint(playerData.getZjPoint() - vsPokerXiazhu.getMoney());
+            PlayerCache.getInstance().addPlayer(vsPokerXiazhu.getConnId(), playerData);
+
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
             coinPointSuccess.setCoinPoint(player.getZjPoint() - vsPokerXiazhu.getMoney());
             coinPointSuccess.setPlayerId(player.getId());

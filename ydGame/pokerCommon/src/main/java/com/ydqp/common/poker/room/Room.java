@@ -163,6 +163,8 @@ public abstract class Room implements IRoom{
         battleRole.setPlayerUrl(playerData.getHeadUrl());
         battleRole.setIsVir(playerData.getIsVir());
         battleRole.setQuite(false);
+        battleRole.setAppId(playerData.getAppId());
+        battleRole.setKfId(playerData.getKfId());
         battleRole.setISession(iSession);
 
         getBattleRoleMap().put(playerData.getPlayerId(),battleRole);
@@ -194,6 +196,8 @@ public abstract class Room implements IRoom{
         battleRole.setPlayerUrl(playerData.getHeadUrl());
         battleRole.setIsVir(playerData.getIsVir());
         battleRole.setQuite(false);
+        battleRole.setAppId(playerData.getAppId());
+        battleRole.setKfId(playerData.getKfId());
         battleRole.setISession(iSession);
 
         getBattleRoleMap().put(playerData.getPlayerId(),battleRole);

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@ServerHandler(command = 7000014, module = "vsPoker")
+@ServerHandler(command = 7000032, module = "vsPoker")
 public class VsPokerTrendHandler implements IServerHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(VsPokerTrendHandler.class);

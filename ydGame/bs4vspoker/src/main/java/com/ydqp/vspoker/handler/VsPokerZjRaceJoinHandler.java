@@ -1,5 +1,6 @@
 package com.ydqp.vspoker.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.cfq.annotation.ServerHandler;
 import com.cfq.connection.ISession;
 import com.cfq.handler.IServerHandler;
@@ -64,6 +65,7 @@ public class VsPokerZjRaceJoinHandler implements IServerHandler {
             iSession.sendMessageByID(pokerZjRaceJoin, vsPokerZjRaceJoin.getConnId());
             return;
         }
+        playerData.setZjPoint(player.getZjPoint());
 
         VsPokerBasePlay vsPokerBasePlay = PlayVsPokerManager.getInstance().getPlayObject(3, 0, 0);
         vsPokerBasePlay.enterRoom(playerData, iSession, playerData.getRoomId());
