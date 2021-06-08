@@ -75,16 +75,22 @@ public class VsPokerBeginHandler implements IRoomStatusHandler{
 
     private void addVir(VsPokerRoom vsPokerRoom) {
         int j = 0;
+        int k = 0;
         for (Map.Entry<Long, BattleRole> entry : vsPokerRoom.getBattleRoleMap().entrySet()) {
-            if (entry.getValue().getIsVir() == 1) j += 1;
+            if (entry.getValue().getIsVir() == 1) {
+                j += 1;
+            } else {
+                k += 1;
+            }
         }
-        if (j >= vsPokerRoom.getMaxPlayerNum()) {
+        logger.info("现金场真实用户人数：{}", k);
+        if (j >= 6) {
             return;
         }
 
         List<Player> players = PlayerDao.getInstance().getVirPlayer();
         //10个机器人
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 6; i++) {
             PlayerData playerData = new PlayerData(players.get(i));
 
             vsPokerRoom.vsEnterRoom(playerData, null);

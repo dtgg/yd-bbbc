@@ -27,7 +27,8 @@ public class VsPokerFastRaceJoinHandler implements IServerHandler {
         VsPokerFastRaceJoin fastRaceJoin = (VsPokerFastRaceJoin) abstartParaseMessage;
 
         SVsPokerFastRaceJoin pokerFastRaceJoin = new SVsPokerFastRaceJoin();
-        if (ManageLottery.getInstance().getCloseServer() == 1) {
+//        if (ManageLottery.getInstance().getCloseServer() == 1) {
+        if (true) {
             pokerFastRaceJoin.setEnterRoomSuccess(false);
             pokerFastRaceJoin.setMessage("The server is under maintenance");
             iSession.sendMessageByID(pokerFastRaceJoin, fastRaceJoin.getConnId());
