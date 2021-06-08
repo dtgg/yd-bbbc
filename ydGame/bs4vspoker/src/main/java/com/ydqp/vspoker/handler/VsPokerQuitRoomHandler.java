@@ -51,6 +51,9 @@ public class VsPokerQuitRoomHandler implements IServerHandler {
         }
 
         battleRole.setQuite(true);
+        PlayerService.getInstance().updatePlayerRoomId(playerData.getPlayerId(), 0);
+        playerData.setRoomId(0);
+        PlayerCache.getInstance().addPlayer(vsPokerQuitRoom.getConnId(), playerData);
 //        if (vsPokerRoom.getRoomType() == 3) {
 //            vsPokerRoom.getBattleRoleMap().remove(vsPokerQuitRoom.getPlayerId());
 //            PlayerService.getInstance().updatePlayerRoomId(playerData.getPlayerId(), 0);
