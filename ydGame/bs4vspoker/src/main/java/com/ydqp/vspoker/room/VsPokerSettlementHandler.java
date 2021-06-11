@@ -1,6 +1,5 @@
 package com.ydqp.vspoker.room;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
@@ -18,7 +17,6 @@ import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsZjPlayerRaceDao;
 import com.ydqp.vspoker.room.play.PlayVsPokerManager;
 import com.ydqp.vspoker.room.play.VsPokerBasePlay;
-import com.ydqp.vspoker.room.play.ZjVsPlayObject;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -29,7 +27,12 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
     @Override
     public void doHandler(VsPokerRoom vsPokerRoom) {
         if (vsPokerRoom.getRoomType() == 3) {
-            zjPaiFu(vsPokerRoom);
+            try {
+                zjPaiFu(vsPokerRoom);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("现金场赔付失败：{}", e.getMessage());
+            }
         } else {
             paiFu(vsPokerRoom);
             vsPokerRoom.setRankPlayerIds(new ArrayList<>());
