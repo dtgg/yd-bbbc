@@ -194,18 +194,6 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             sVsPlayerWin.setWinTypes(entry.getValue().getWinTypes());
 
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
-            //数据库更新
-            PlayerData playerData = PlayerCache.getInstance().getPlayer(battleRole.getConnId());
-            playerData.setZjPoint(playerData.getZjPoint() + peiM);
-            PlayerCache.getInstance().addPlayer(battleRole.getConnId(), playerData);
-
-            PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
-            logger.info("现金场赔付：playerId:{}, amount:{}", entry.getKey(), peiM);
-
-            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
-            coinPointSuccess.setPlayerId(entry.getKey());
-            coinPointSuccess.setCoinPoint(playerData.getZjPoint());
-            vsPokerRoom.sendMessageToBattle(coinPointSuccess, entry.getKey());
 
             if (playerAmountMap.get(battleRole.getPlayerId()) == null) {
                 playerAmountMap.put(battleRole.getPlayerId(), entry.getValue().getWinMoney());
@@ -217,6 +205,24 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             } else {
                 playerBonusMap.put(battleRole.getPlayerId(), playerBonusMap.get(battleRole.getPlayerId()) + peiM);
             }
+
+            //数据库更新
+            PlayerData playerData = PlayerCache.getInstance().getPlayer(battleRole.getConnId());
+            if (playerData == null) {
+                logger.error("现金场赔付, 用户不在线：playerId:{}", battleRole.getPlayerId());
+                PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
+                continue;
+            }
+            playerData.setZjPoint(playerData.getZjPoint() + peiM);
+            PlayerCache.getInstance().addPlayer(battleRole.getConnId(), playerData);
+
+            PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
+            logger.info("现金场赔付：playerId:{}, amount:{}", entry.getKey(), peiM);
+
+            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+            coinPointSuccess.setPlayerId(entry.getKey());
+            coinPointSuccess.setCoinPoint(playerData.getZjPoint());
+            vsPokerRoom.sendMessageToBattle(coinPointSuccess, entry.getKey());
         }
 
         for (Map.Entry<Long, Double> entry : playerAmountMap.entrySet()) {
