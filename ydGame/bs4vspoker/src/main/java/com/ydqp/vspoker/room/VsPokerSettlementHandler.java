@@ -195,10 +195,11 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
 
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
             //数据库更新
-            PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
             PlayerData playerData = PlayerCache.getInstance().getPlayer(battleRole.getConnId());
             playerData.setZjPoint(playerData.getZjPoint() + peiM);
             PlayerCache.getInstance().addPlayer(battleRole.getConnId(), playerData);
+
+            PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
             logger.info("现金场赔付：playerId:{}, amount:{}", entry.getKey(), peiM);
 
             CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
