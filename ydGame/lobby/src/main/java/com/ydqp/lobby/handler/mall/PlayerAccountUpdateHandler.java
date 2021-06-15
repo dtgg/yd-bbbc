@@ -39,9 +39,9 @@ public class PlayerAccountUpdateHandler implements IServerHandler {
         }
 
         long playerId = playerData.getPlayerId();
-        String name = playerAccountUpdate.getName();
+        String name = playerAccountUpdate.getName().trim();
         String mobile = playerAccountUpdate.getMobile();
-        String bankName = playerAccountUpdate.getBankName();
+        String bankName = playerAccountUpdate.getBankName().trim();
         String accNo = playerAccountUpdate.getAccNo();
         String ifsc = playerAccountUpdate.getIfsc();
         String verifyCode = playerAccountUpdate.getVerificationCode();

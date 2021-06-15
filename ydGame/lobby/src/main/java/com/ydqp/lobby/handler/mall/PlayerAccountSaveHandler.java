@@ -40,9 +40,9 @@ public class PlayerAccountSaveHandler implements IServerHandler {
         }
 
         long playerId = playerData.getPlayerId();
-        String name = playerAccountSave.getName();
+        String name = playerAccountSave.getName().trim();
         String mobile = playerAccountSave.getMobile();
-        String bankName = playerAccountSave.getBankName();
+        String bankName = playerAccountSave.getBankName().trim();
         String accNo = playerAccountSave.getAccNo();
         String ifsc = playerAccountSave.getIfsc();
         String password = playerAccountSave.getPassword();
