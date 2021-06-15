@@ -4,6 +4,7 @@ import com.cfq.connection.ISession;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
 import com.ydqp.common.ManagePlayerPromote;
+import com.ydqp.common.cache.PlayerCache;
 import com.ydqp.common.dao.PlayerOrderDao;
 import com.ydqp.common.dao.PlayerPromoteDetailDao;
 import com.ydqp.common.dao.lottery.PlayerPromoteDao;
@@ -14,6 +15,7 @@ import com.ydqp.common.entity.PlayerPromoteConfig;
 import com.ydqp.common.entity.PlayerPromoteDetail;
 import com.ydqp.common.sendProtoMsg.CoinPointSuccess;
 import com.ydqp.common.sendProtoMsg.mission.ParityOrderSuc;
+import com.ydqp.common.service.PlayerService;
 import com.ydqp.common.utils.ShortCodeKit;
 
 import java.math.BigDecimal;
@@ -107,7 +109,7 @@ public class PlayerPromoteTask implements Runnable {
         //给上级玩家加钱
 //        if (playerPromote.getSuperiorId() != null && playerPromote.getSuperiorId() != 0) {
 //            PlayerService.getInstance().updatePlayerZjPoint(playerPromoteDetail.getSuperiorAmount().doubleValue(), playerPromote.getSuperiorId());
-//
+//            logger.info("彩票下注，上级玩家加钱：playerId:{}, amount:{}", playerPromote.getSuperiorId(), playerPromoteDetail.getSuperiorAmount());
 //            PlayerData data = PlayerCache.getInstance().getPlayerByPlayerID(playerPromote.getSuperiorId());
 //            if (data != null) {
 //                PlayerData playerData = PlayerCache.getInstance().getPlayer(data.getSessionId());
@@ -119,9 +121,9 @@ public class PlayerPromoteTask implements Runnable {
 //                }
 //            }
 //        }
-//        if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0 && superior.getIsEffective() == 1 && superiorTotal > 0) {
+//        if (playerPromote.getGrandId() != null && playerPromote.getGrandId() != 0) {
 //            PlayerService.getInstance().updatePlayerZjPoint(playerPromoteDetail.getGrandAmount().doubleValue(), playerPromote.getGrandId());
-//
+//            logger.info("彩票下注，上上级玩家加钱：playerId:{}, amount:{}", playerPromote.getGrandId(), playerPromoteDetail.getGrandAmount());
 //            PlayerData data = PlayerCache.getInstance().getPlayerByPlayerID(playerPromote.getGrandId());
 //            if (data != null) {
 //                PlayerData playerData = PlayerCache.getInstance().getPlayer(data.getSessionId());

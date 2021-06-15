@@ -52,7 +52,6 @@ public class PayPlus extends OrderPay {
         params.put("desc", "desc");
         params.put("ip", "147.139.42.92");
         params.put("notifyUrl", config.getPaymentNotifyUrl());
-//        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/payplus/notify");
         params.put("returnUrl", "https://paycoco.cocohaoya.com/api/pay/success");
         params.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
 
@@ -61,8 +60,6 @@ public class PayPlus extends OrderPay {
         String signUpper = DigestUtils.md5Hex(signStr).toUpperCase();
         logger.info("signStr to upper:{}", signUpper);
         try {
-//            RSAUtils.RSAKeyPair keyPair = RSAUtils.generateKeyPair(config.getAppId(), config.getSecretKey());
-//            String sign = RSAUtils.encryptByPrivateKey(keyPair.getPrivateKey(), signUpper);
             String sign = SHA256WithRSAUtils.buildRSASignByPrivateKey(signUpper, config.getSecretKey());
             params.put("sign", sign);
             logger.info("sign:{}", sign);
@@ -77,10 +74,9 @@ public class PayPlus extends OrderPay {
             return playerOrderSuccess;
         }
 
-        String proxy = PayUrlUtil.getInstance().getUrl("isDebug");
         logger.info("payplus payment params:{}", JSONObject.toJSONString(params));
         JSONObject jsonParams = JSONObject.parseObject(JSONObject.toJSONString(params));
-        String result = HttpUtils.getInstance().post(HOST + "/pay", header, jsonParams, Boolean.parseBoolean(proxy));
+        String result = HttpUtils.getInstance().sendPostNoSsl(HOST + "/pay", header, jsonParams, false);
         logger.info("payplus payment response:{}", result);
 
         JSONObject response = JSONObject.parseObject(result);

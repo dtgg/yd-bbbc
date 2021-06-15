@@ -59,7 +59,7 @@ public class VsPokerZjRaceJoinHandler implements IServerHandler {
         }
         Player player = PlayerDao.getInstance().queryById(playerData.getPlayerId());
         if (player.getZjPoint() < 10) {
-            logger.error("you have not enough balance");
+            logger.error("you have not enough balance, playerId:{}, zj:{}", player.getId(), player.getZjPoint());
             pokerZjRaceJoin.setEnterRoomSuccess(false);
             pokerZjRaceJoin.setMessage("you have not enough balance");
             iSession.sendMessageByID(pokerZjRaceJoin, vsPokerZjRaceJoin.getConnId());

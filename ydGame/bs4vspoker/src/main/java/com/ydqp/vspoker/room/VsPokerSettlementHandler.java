@@ -1,6 +1,5 @@
 package com.ydqp.vspoker.room;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cfq.log.Logger;
 import com.cfq.log.LoggerFactory;
@@ -18,7 +17,6 @@ import com.ydqp.vspoker.cache.RankingCache;
 import com.ydqp.vspoker.dao.VsZjPlayerRaceDao;
 import com.ydqp.vspoker.room.play.PlayVsPokerManager;
 import com.ydqp.vspoker.room.play.VsPokerBasePlay;
-import com.ydqp.vspoker.room.play.ZjVsPlayObject;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
@@ -29,7 +27,12 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
     @Override
     public void doHandler(VsPokerRoom vsPokerRoom) {
         if (vsPokerRoom.getRoomType() == 3) {
-            zjPaiFu(vsPokerRoom);
+            try {
+                zjPaiFu(vsPokerRoom);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("现金场赔付失败：{}", e.getMessage());
+            }
         } else {
             paiFu(vsPokerRoom);
             vsPokerRoom.setRankPlayerIds(new ArrayList<>());
@@ -194,17 +197,6 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             sVsPlayerWin.setWinTypes(entry.getValue().getWinTypes());
 
             vsPokerRoom.sendMessageToBattle(sVsPlayerWin, battleRole.getPlayerId());
-            //数据库更新
-            PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
-            PlayerData playerData = PlayerCache.getInstance().getPlayer(battleRole.getConnId());
-            playerData.setZjPoint(playerData.getZjPoint() + peiM);
-            PlayerCache.getInstance().addPlayer(battleRole.getConnId(), playerData);
-            logger.info("现金场赔付：playerId:{}, amount:{}", entry.getKey(), peiM);
-
-            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
-            coinPointSuccess.setPlayerId(entry.getKey());
-            coinPointSuccess.setCoinPoint(playerData.getZjPoint());
-            vsPokerRoom.sendMessageToBattle(coinPointSuccess, entry.getKey());
 
             if (playerAmountMap.get(battleRole.getPlayerId()) == null) {
                 playerAmountMap.put(battleRole.getPlayerId(), entry.getValue().getWinMoney());
@@ -216,6 +208,24 @@ public class VsPokerSettlementHandler implements IRoomStatusHandler{
             } else {
                 playerBonusMap.put(battleRole.getPlayerId(), playerBonusMap.get(battleRole.getPlayerId()) + peiM);
             }
+
+            //数据库更新
+            PlayerData playerData = PlayerCache.getInstance().getPlayer(battleRole.getConnId());
+            if (playerData == null) {
+                logger.error("现金场赔付, 用户不在线：playerId:{}", battleRole.getPlayerId());
+                PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
+                continue;
+            }
+            playerData.setZjPoint(playerData.getZjPoint() + peiM);
+            PlayerCache.getInstance().addPlayer(battleRole.getConnId(), playerData);
+
+            PlayerService.getInstance().updatePlayerZjPoint(peiM, entry.getKey());
+            logger.info("现金场赔付：playerId:{}, amount:{}", entry.getKey(), peiM);
+
+            CoinPointSuccess coinPointSuccess = new CoinPointSuccess();
+            coinPointSuccess.setPlayerId(entry.getKey());
+            coinPointSuccess.setCoinPoint(playerData.getZjPoint());
+            vsPokerRoom.sendMessageToBattle(coinPointSuccess, entry.getKey());
         }
 
         for (Map.Entry<Long, Double> entry : playerAmountMap.entrySet()) {
