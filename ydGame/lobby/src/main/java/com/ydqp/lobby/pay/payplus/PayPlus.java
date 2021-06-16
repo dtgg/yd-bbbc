@@ -46,7 +46,10 @@ public class PayPlus extends OrderPay {
 
         Map<String, String> params = new HashMap<>();
         params.put("merId", config.getMchId());
-        params.put("orderId", order.getOrderId().substring(0, 30));
+        String orderId = order.getOrderId().substring(0, 30);
+        params.put("orderId", orderId);
+        order.setOrderId(orderId);
+        order.setTxnOrderId(orderId);
         params.put("orderAmt", String.valueOf(Double.valueOf(order.getAmount()).intValue()));
         params.put("channel", "PAYU");
         params.put("desc", "desc");
@@ -118,7 +121,10 @@ public class PayPlus extends OrderPay {
 
         HashMap<String, String> params = new HashMap<>();
         params.put("merId", config.getMchId());
-        params.put("orderId", withdrawal.getTransferId().substring(0, 30));
+        String orderId = withdrawal.getTransferId().substring(0, 30);
+        params.put("orderId", orderId);
+        withdrawal.setTransferId(orderId);
+        withdrawal.setReferenceId(orderId);
         BigDecimal am = new BigDecimal(String.valueOf(withdrawal.getAmount()));
         BigDecimal amount = am.multiply(BigDecimal.ONE.subtract(config.getWithdrawFee())).setScale(2, RoundingMode.DOWN);
         params.put("money", amount.toString());
@@ -127,7 +133,6 @@ public class PayPlus extends OrderPay {
         params.put("zhihang", account.getIfsc());
         params.put("bank", account.getBankName());
         params.put("notifyUrl", config.getPayoutNotifyUrl());
-//        params.put("notifyurl", "http://whw.ngrok2.xiaomiqiu.cn/api/payplus/notify");
         params.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
 
         String signStr = Md5Utils.sortMapAndSign(params, config.getBusinessAccount());
@@ -149,10 +154,9 @@ public class PayPlus extends OrderPay {
             return playerWithdrawalSuccess;
         }
 
-        String proxy = PayUrlUtil.getInstance().getUrl("isDebug");
         logger.info("payplus payout params:{}", JSONObject.toJSONString(params));
         JSONObject jsonParams = JSONObject.parseObject(JSONObject.toJSONString(params));
-        String result = HttpUtils.getInstance().post(HOST + "/pay/repay", header, jsonParams, Boolean.parseBoolean(proxy));
+        String result = HttpUtils.getInstance().sendPostNoSsl(HOST + "/pay/repay", header, jsonParams, false);
         logger.info("payplus payout response:{}", result);
 
         JSONObject response = JSONObject.parseObject(result);
@@ -175,7 +179,6 @@ public class PayPlus extends OrderPay {
             return playerWithdrawalSuccess;
         }
 
-//        withdrawal.setReferenceId(data.getString("ticket"));
         withdrawal.setStatus(1);
 
         playerWithdrawalSuccess.setSuccess(true);

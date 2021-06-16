@@ -232,6 +232,12 @@ public class PlayerWithdrawalHandler implements IServerHandler {
                         return;
                     }
                 }
+            } else {
+                if ("payplus".equals(config.getName())) {
+                    String transferId = withdrawal.getTransferId().substring(0, 30);
+                    withdrawal.setTransferId(transferId);
+                    withdrawal.setReferenceId(transferId);
+                }
             }
 
             //提现次数加一
