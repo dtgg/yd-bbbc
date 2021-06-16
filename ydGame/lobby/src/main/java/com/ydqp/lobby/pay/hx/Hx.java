@@ -44,7 +44,7 @@ public class Hx extends OrderPay {
         params.put("email", player.getPlayerName() + "@gmail.com");
         params.put("phone", player.getPlayerName());
         params.put("remark", "Recharge");
-        params.put("redirect_url", "http://whw.ngrok2.xiaomiqiu.cn/api/redirect");
+        params.put("redirect_url", "https://api.paycici.com/api/redirect");
 
         String signStr = config.getAppId() + order.getOrderId() + amount + config.getSecretKey();
         logger.info("payment sign str:{}", signStr);
@@ -55,7 +55,7 @@ public class Hx extends OrderPay {
         String proxy = PayUrlUtil.getInstance().getUrl("isDebug");
 
         logger.info("hx payment params:{}", params.toJSONString());
-        String result = HttpUtils.getInstance().sendPostNoSsl("https://upi.cash/gateway/payin/", header, params, Boolean.parseBoolean(proxy));
+        String result = HttpUtils.getInstance().sendPostNoSsl("https://upi.best/gateway/payin/", header, params, Boolean.parseBoolean(proxy));
         logger.info("hx payment response:{}", result);
 
         JSONObject response = JSONObject.parseObject(result);
@@ -108,7 +108,7 @@ public class Hx extends OrderPay {
         String proxy = PayUrlUtil.getInstance().getUrl("isDebug");
 
         logger.info("hx payout params:{}", params.toJSONString());
-        String result = HttpUtils.getInstance().sendPostNoSsl("https://upi.cash/gateway/payout/", header, params, Boolean.parseBoolean(proxy));
+        String result = HttpUtils.getInstance().sendPostNoSsl("https://upi.best/gateway/payout/", header, params, Boolean.parseBoolean(proxy));
         logger.info("hx payout response:{}", result);
 
         JSONObject response = JSONObject.parseObject(result);
